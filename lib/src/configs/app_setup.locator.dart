@@ -6,10 +6,10 @@
 
 // ignore_for_file: public_member_api_docs, implementation_imports, depend_on_referenced_packages
 
-import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_services/src/bottom_sheet/bottom_sheet_service.dart';
 import 'package:stacked_services/src/dialog/dialog_service.dart';
 import 'package:stacked_services/src/navigation/navigation_service.dart';
+import 'package:stacked_shared/stacked_shared.dart';
 
 import '../services/local/auth_service.dart';
 import '../services/local/connectivity_service.dart';
@@ -18,8 +18,10 @@ import '../services/remote/api_service.dart';
 
 final locator = StackedLocator.instance;
 
-Future<void> setupLocator(
-    {String? environment, EnvironmentFilter? environmentFilter}) async {
+Future<void> setupLocator({
+  String? environment,
+  EnvironmentFilter? environmentFilter,
+}) async {
 // Register environments
   locator.registerEnvironment(
       environment: environment, environmentFilter: environmentFilter);

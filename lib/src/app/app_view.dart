@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:starter_app/src/base/utils/constants.dart';
-import 'package:starter_app/src/configs/go_router.dart';
+import 'package:starter_app/src/services/local/navigation_service.dart';
 import 'package:starter_app/src/styles/app_colors.dart';
 
 class AppView extends StatelessWidget {
@@ -16,31 +16,33 @@ class AppView extends StatelessWidget {
       statusBarBrightness: Brightness.dark,
     ));
     return ScreenUtilInit(
-      designSize: Size(375, 812),
+      designSize: Size(430, 932),
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, snapshot) {
-        return MaterialApp.router(
+        return MaterialApp(
           title: Constants.appTitle,
           debugShowCheckedModeBanner: false,
-          routerConfig: NewGoRoute.router,
+          navigatorKey: NavService.key,
+          onGenerateRoute: NavService.onGenerateRoute,
           theme: ThemeData(
-              scaffoldBackgroundColor: Colors.white,
-              useMaterial3: true,
-              colorScheme: ColorScheme(
-                brightness: Brightness.light,
-                primary: AppColors.primary,
-                onPrimary: AppColors.white,
-                secondary: AppColors.secondary,
-                onSecondary: AppColors.white,
-                error: AppColors.red,
-                onError: AppColors.white,
-                background: AppColors.white,
-                onBackground: AppColors.white,
-                surface: AppColors.white,
-                onSurface: AppColors.primary,
-              ),
-              fontFamily: 'Poppins'),
+            scaffoldBackgroundColor: AppColors.appDarkBlue,
+            useMaterial3: true,
+            colorScheme: ColorScheme(
+              brightness: Brightness.light,
+              primary: AppColors.appDarkBlue,
+              onPrimary: AppColors.white,
+              secondary: AppColors.appFaddedBlue,
+              onSecondary: AppColors.white,
+              error: AppColors.red,
+              onError: AppColors.white,
+              background: AppColors.white,
+              onBackground: AppColors.appDarkBlue,
+              surface: AppColors.white,
+              onSurface: AppColors.appDarkBlue,
+            ),
+            fontFamily: 'Poppins',
+          ),
           builder: (context, child) {
             return Stack(
               children: [child!],
