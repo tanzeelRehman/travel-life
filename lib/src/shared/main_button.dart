@@ -36,7 +36,7 @@ class _LoadingButtonState extends State<MainButton> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: widget.height ?? 65.h,
+      height: widget.height ?? 60.h,
       width: widget.fullWidth ? double.infinity : widget.width,
       decoration: BoxDecoration(
         gradient: widget.gradient ?? AppColors.mainButtonGradient,

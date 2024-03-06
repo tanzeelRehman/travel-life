@@ -9,12 +9,15 @@ class AssetImages {
   static const String mainBgWithoutGlow =
       'assets/images/main_bg_without_glow.png';
   static const String bgImage = 'assets/images/bg_image.png';
-  static const String treesBg = 'assets/images/trees_bg.png';
+  static const String treesBg = 'assets/images/trees_bg.jpg';
+  static const String squaresBg = 'assets/images/background.png';
 }
 
 class AssetIcons {
   AssetIcons._();
 
-  static const String imagesPlaceholder250 =
-      'assets/images/placeholder_250.png';
+  static const String mailIcon = 'assets/icons/Mail.svg';
+  static const String lockIcon = 'assets/icons/Lock.svg';
+  static const String mobileIcon = 'assets/icons/Mobile.svg';
+  static const String userIcon = 'assets/icons/User.svg';
 }

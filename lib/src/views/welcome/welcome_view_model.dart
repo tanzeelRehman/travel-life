@@ -8,10 +8,10 @@ class WelcomeViewModel extends ReactiveViewModel
   init() {}
 
   onClickRegister() {
-    NavService.register();
+    NavService.navigateToRegister();
   }
 
   onClickLogin() {
-    NavService.login();
+    NavService.navigateToLogin();
   }
 }

@@ -29,10 +29,11 @@ class NavService {
   //NAVIGATE_TO
 
   static Future<dynamic>? navigateToRegister({dynamic arguments}) =>
-      _navigationService!
-          .clearStackAndShow(Routes.registerView, arguments: arguments);
+      _navigationService!.navigateTo(Routes.registerView, arguments: arguments);
 
   static Future<dynamic>? navigateToLogin({dynamic arguments}) =>
-      _navigationService!
-          .clearStackAndShow(Routes.loginView, arguments: arguments);
+      _navigationService!.navigateTo(Routes.loginView, arguments: arguments);
+
+  //TO GO BACK
+  static bool back({dynamic arguments}) => _navigationService!.back();
 }

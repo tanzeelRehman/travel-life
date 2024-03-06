@@ -14,17 +14,18 @@ import 'package:starter_app/src/services/remote/base/api_view_model.dart';
 class RegisterViewModel extends ReactiveViewModel with ApiViewModel {
   init() {}
 
-  final TextEditingController _emailController = TextEditingController();
-  TextEditingController get emailController => _emailController;
+  final TextEditingController emailController = TextEditingController();
 
-  final TextEditingController _passwordController = TextEditingController();
-  TextEditingController get passwordController => _passwordController;
+  final TextEditingController passwordController = TextEditingController();
 
-  final TextEditingController _numberController = TextEditingController();
-  TextEditingController get numberController => _numberController;
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
 
-  final TextEditingController _nameController = TextEditingController();
-  TextEditingController get nameController => _nameController;
+  final TextEditingController numberController = TextEditingController();
+
+  final TextEditingController firstNameController = TextEditingController();
+
+  final TextEditingController lastNameController = TextEditingController();
 
   final formKey = GlobalKey<FormState>();
 
@@ -105,10 +106,12 @@ class RegisterViewModel extends ReactiveViewModel with ApiViewModel {
 
   @override
   void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    _numberController.dispose();
-    _nameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    numberController.dispose();
+    firstNameController.dispose();
+    lastNameController.dispose();
+    confirmPasswordController.dispose();
 
     super.dispose();
   }

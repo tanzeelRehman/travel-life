@@ -47,7 +47,8 @@ class WelcomeView extends StackedView<WelcomeViewModel> {
             ),
             Expanded(
               flex: 6,
-              child: Image.asset(AssetImages.imagesPlaceholder250),
+              // child: Image.asset(AssetImages.imagesPlaceholder250),
+              child: Container(),
             ),
             SizedBox(height: 40.h),
             MainButton(
@@ -76,9 +77,4 @@ class WelcomeView extends StackedView<WelcomeViewModel> {
 
   @override
   void onViewModelReady(WelcomeViewModel model) => model.init();
-
-  // @override
-  // void onDispose(LoginViewModel model) {
-  //   super.onDispose(model);
-  // }
 }
