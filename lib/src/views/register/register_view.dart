@@ -45,7 +45,7 @@ class RegisterView extends StackedView<RegisterViewModel> {
                 Expanded(
                   child: SingleChildScrollView(
                     child: Container(
-                      height: context.screenSize().height * 0.90,
+                      height: context.screenSize().height * 0.95,
                       padding: EdgeInsets.symmetric(
                         horizontal: 24.w,
                         vertical: 16.h,
@@ -84,7 +84,14 @@ class RegisterView extends StackedView<RegisterViewModel> {
                               labelText: 'First Name',
                               isPassword: false,
                               validatorFunction: (v) {
-                                // return ValidationUtils.validateEmail(v);
+                                if (v!.isEmpty) {
+                                  return 'Please enter your first name';
+                                }
+
+                                if (v.length < 3) {
+                                  return 'first name must be at least 3 characters';
+                                }
+
                                 return null;
                               },
                               primaryColor: AppColors.white,
@@ -101,7 +108,15 @@ class RegisterView extends StackedView<RegisterViewModel> {
                               labelText: 'Last Name',
                               isPassword: false,
                               validatorFunction: (v) {
-                                // return ValidationUtils.validateEmail(v);
+                                // return null;
+                                if (v!.isEmpty) {
+                                  return 'Please enter your last name';
+                                }
+
+                                if (v.length < 2) {
+                                  return 'first name must be at least 2 characters';
+                                }
+
                                 return null;
                               },
                               primaryColor: AppColors.white,
@@ -168,7 +183,11 @@ class RegisterView extends StackedView<RegisterViewModel> {
                               labelText: 'Repeat Password',
                               isPassword: true,
                               validatorFunction: (v) {
-                                return ValidationUtils.validatePassword(v);
+                                // return ValidationUtils.validatePassword(v);
+                                return ValidationUtils.validateConfirmPassword(
+                                  confirmPassword: v,
+                                  password: model.passwordController.text,
+                                );
                               },
                               primaryColor: AppColors.white,
                               textColor: AppColors.white,
@@ -178,7 +197,7 @@ class RegisterView extends StackedView<RegisterViewModel> {
                             MainButton(
                               buttonText: 'Sign Up',
                               buttonFontColor: AppColors.white,
-                              onPressed: () {},
+                              onPressed: model.onRegister,
                               isLoading: model.isBusy,
                             ),
                             Spacer(

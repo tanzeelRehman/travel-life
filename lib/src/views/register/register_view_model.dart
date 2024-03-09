@@ -6,12 +6,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:stacked/stacked.dart';
 import 'package:starter_app/src/base/utils/constants.dart';
+import 'package:starter_app/src/services/local/base/connectivity_view_model.dart';
 // import 'package:starter_app/src/models/register_model.dart';
 // import 'package:starter_app/src/services/local/bottomsheet_service.dart';
 import 'package:starter_app/src/services/local/navigation_service.dart';
 import 'package:starter_app/src/services/remote/base/api_view_model.dart';
+import 'package:starter_app/src/services/remote/base/supabase_auth_view_model.dart';
+import 'package:starter_app/src/services/remote/supabase_auth_service.dart';
 
-class RegisterViewModel extends ReactiveViewModel with ApiViewModel {
+class RegisterViewModel extends ReactiveViewModel
+    with SupabaseAuthViewModel, ConnectivityViewModel {
   init() {}
 
   final TextEditingController emailController = TextEditingController();
@@ -76,32 +80,52 @@ class RegisterViewModel extends ReactiveViewModel with ApiViewModel {
   }
 
   onRegister() async {
-    // if ((formKey.currentState?.validate() ?? false)) {
-    // setBusy(true);
-    // final _data = RegisterModel(
-    //   email: _emailController.text,
-    //   password: _passwordController.text,
-    //   phone: '+92' + _numberController.text,
-    //   username: _nameController.text,
-    // );
-    // var response = await apiService.userRegister(_data);
-    // if (response == null) {
-    //   setBusy(false);
-    //   return;
-    // }
-    // response.when(success: (res) async {
-    //   if (res.users != null && (res.users?.isNotEmpty ?? false)) {
-    //     NavService.otp(user: res.users?.first);
-    //   } else {
-    //     Constants.customWarningSnack('Something went wrong');
-    //   }
-    //   setBusy(false);
-    // }, failure: (error) {
-    //   setBusy(false);
-    //   return print(error);
-    // });
-    // }
-    // NavService.otp();
+    if (formKey.currentState!.validate()) {
+      setBusy(true);
+      try {
+        if (!connectivityService.isInternetConnected) {
+          Constants.customErrorSnack('No internet connection');
+          setBusy(false);
+          return;
+        }
+
+        final response = await supabaseAuthService.register(
+          emailController.text,
+          passwordController.text,
+          firstName: firstNameController.text,
+          phone: numberController.text,
+          lastName: lastNameController.text,
+        );
+
+        if (response == null) {
+          Constants.customWarningSnack('Error registering the user');
+          setBusy(false);
+
+          return;
+        }
+        Constants.customSuccessSnack('Welcome ${response.firstname}');
+
+        setBusy(false);
+
+        NavService.home();
+      } on AuthExcepection catch (e) {
+        print(e.message);
+        Constants.customErrorSnack(e.message);
+
+        setBusy(false);
+      } on CustomNoInternetException catch (e) {
+        print(e.message);
+        Constants.customErrorSnack(e.message);
+
+        setBusy(false);
+      } catch (e) {
+        print(e);
+        setBusy(false);
+
+        Constants.customErrorSnack(e.toString());
+        return;
+      }
+    }
   }
 
   @override

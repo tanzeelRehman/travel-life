@@ -112,7 +112,11 @@ class LoginView extends StackedView<LoginViewModel> {
                     labelText: 'Password',
                     isPassword: true,
                     validatorFunction: (v) {
-                      return ValidationUtils.validatePassword(v);
+                      if (v!.isEmpty) {
+                        return 'Please enter password';
+                      }
+
+                      return null;
                     },
                     primaryColor: AppColors.white,
                     textColor: AppColors.white,

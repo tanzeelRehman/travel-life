@@ -4,7 +4,10 @@ import 'package:starter_app/src/services/local/auth_service.dart';
 import 'package:starter_app/src/services/local/connectivity_service.dart';
 import 'package:starter_app/src/services/local/keyboard_service.dart';
 import 'package:starter_app/src/services/remote/api_service.dart';
+import 'package:starter_app/src/services/remote/supabase_auth_service.dart';
+import 'package:starter_app/src/views/home/home_view.dart';
 import 'package:starter_app/src/views/login/login_view.dart';
+import 'package:starter_app/src/views/profile/profile_view.dart';
 import 'package:starter_app/src/views/register/register_view.dart';
 import 'package:starter_app/src/views/splash/splash_view.dart';
 import 'package:starter_app/src/views/welcome/welcome_view.dart';
@@ -15,6 +18,8 @@ import 'package:starter_app/src/views/welcome/welcome_view.dart';
     MaterialRoute(page: WelcomeView),
     MaterialRoute(page: RegisterView),
     MaterialRoute(page: LoginView),
+    MaterialRoute(page: HomeView),
+    MaterialRoute(page: ProfileView),
   ],
   dependencies: [
     // Lazy singletons
@@ -23,6 +28,7 @@ import 'package:starter_app/src/views/welcome/welcome_view.dart';
     LazySingleton(classType: NavigationService),
     LazySingleton(classType: AuthService),
     LazySingleton(classType: ConnectivityService),
+    LazySingleton(classType: SupabaseAuthService),
     LazySingleton(classType: KeyboardService),
     LazySingleton(classType: ApiService),
   ],

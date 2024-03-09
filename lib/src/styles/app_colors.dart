@@ -22,6 +22,15 @@ class AppColors {
   static HexColor appFaddedBlue = HexColor("#323B4F");
   static HexColor appSkyBlue = HexColor("#3C9FEB");
 
+  static HexColor appTextfieldBorderColor = HexColor("#3E3C52");
+
+  static HexColor tripPlannerColor = HexColor("#805EF1");
+  static HexColor vehicleRegistrationColor = HexColor("#35A7F2");
+  static HexColor groupsColor = HexColor("#FE4BDC");
+  static HexColor moneyManagerColor = HexColor("#FB9255");
+  static HexColor chatsColor = HexColor("#527DFB");
+  static HexColor eventMoneyManagerColor = HexColor("#20D256");
+
   static Gradient mainButtonGradient = LinearGradient(
     colors: [
       HexColor("#34C8E8"),
@@ -40,6 +49,71 @@ class AppColors {
     end: Alignment.bottomCenter,
   );
 
+  //MAIN BUTTON BG GRADIENT
+  static Gradient homeButtonGradient = LinearGradient(
+    colors: [
+      HexColor("#353F54").withOpacity(0.60),
+      HexColor("#222834").withOpacity(0.60),
+    ],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  //Buttons linear gradients
+  static Gradient tripPlannerGradient = LinearGradient(
+    colors: [
+      HexColor("#B392F1"),
+      HexColor("#7856F3"),
+    ],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  static Gradient vehicleRegistrationGradient = LinearGradient(
+    colors: [
+      HexColor("#94D8FD"),
+      HexColor("#259FF1"),
+    ],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  static Gradient groupsGradient = LinearGradient(
+    colors: [
+      HexColor("#FF9AF1"),
+      HexColor("#FF3FDA"),
+    ],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  static Gradient moneyManagerGradient = LinearGradient(
+    colors: [
+      HexColor("#FFC7A2"),
+      HexColor("#FC8B49"),
+    ],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  static Gradient chatsGradient = LinearGradient(
+    colors: [
+      HexColor("#86ACFE"),
+      HexColor("#4A77FE"),
+    ],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  static Gradient eventMoneyManagerGradient = LinearGradient(
+    colors: [
+      HexColor("#A8FFA8"),
+      HexColor("#0BCD4A"),
+    ],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
   static List<BoxShadow> appNameBoxShadows = [
     BoxShadow(
       offset: Offset(4, 4),
@@ -50,6 +124,19 @@ class AppColors {
       offset: Offset(-4, -4),
       blurRadius: 10,
       color: HexColor("#D3D3D3").withOpacity(0.15),
+    ),
+  ];
+
+  static List<BoxShadow> homeScreenButtonIconsBoxShadows = [
+    BoxShadow(
+      offset: Offset(4, 4),
+      blurRadius: 10,
+      color: HexColor("#080727"),
+    ),
+    BoxShadow(
+      offset: Offset(-4, -4),
+      blurRadius: 10,
+      color: HexColor("#FFFFFF").withOpacity(0.12),
     ),
   ];
 }

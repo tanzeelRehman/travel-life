@@ -11,6 +11,7 @@ class AssetImages {
   static const String bgImage = 'assets/images/bg_image.png';
   static const String treesBg = 'assets/images/trees_bg.jpg';
   static const String squaresBg = 'assets/images/background.png';
+  static const String homeBikeBg = 'assets/images/home_bike_bg.png';
 }
 
 class AssetIcons {
@@ -20,4 +21,22 @@ class AssetIcons {
   static const String lockIcon = 'assets/icons/Lock.svg';
   static const String mobileIcon = 'assets/icons/Mobile.svg';
   static const String userIcon = 'assets/icons/User.svg';
+  static const String cameraIcon = 'assets/icons/Add.svg';
+
+  //GENDER ICONS
+  static const String maleIcon = 'assets/icons/Male.svg';
+  static const String femaleIcon = 'assets/icons/Female.svg';
+  static const String othersIcon = 'assets/icons/Others.svg';
+
+  //buttons
+  static const String tripPlannerButtonIcon = 'assets/icons/Trip.svg';
+  static const String chatsButtonIcon = 'assets/icons/chats.svg';
+  static const String vehicleRegistrationButtonIcon =
+      'assets/icons/vehicle_registraion.svg';
+
+  static const String accessoriesButtonIcon = 'assets/icons/Accessories.svg';
+  static const String groupsButtonIcon = 'assets/icons/Groups.svg';
+  static const String eventMoneyMngButtonIcon =
+      'assets/icons/Event money manager.svg';
+  static const String moneyManagerButtonIcon = 'assets/icons/Money Manager.svg';
 }

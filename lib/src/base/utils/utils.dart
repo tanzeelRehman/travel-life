@@ -64,16 +64,16 @@ class ValidationUtils {
     }
   }
 
-  // static String? validateConfirmPassword(
-  //     String? password, String? confirmPassword) {
-  //   if (password != confirmPassword) {
-  //     return 'Password doesn\'t match';
-  //   } else if (confirmPassword?.isEmpty ?? true) {
-  //     return 'Confirm password is required';
-  //   } else {
-  //     return null;
-  //   }
-  // }
+  static String? validateConfirmPassword(
+      {String? password, String? confirmPassword}) {
+    if (password != confirmPassword) {
+      return 'Password doesn\'t match';
+    } else if (confirmPassword?.isEmpty ?? true) {
+      return 'Confirm password is required';
+    } else {
+      return null;
+    }
+  }
 
   static List<TextInputFormatter> numberTextInputFormater = [
     FilteringTextInputFormatter.digitsOnly

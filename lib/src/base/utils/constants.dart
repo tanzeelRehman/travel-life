@@ -24,8 +24,8 @@ class Constants {
         style:
             TextStyling.regular.copyWith(color: AppColors.red, fontSize: 12.sp),
       ),
-      backgroundColor: AppColors.white.withOpacity(0.4),
-      duration: Duration(seconds: 6),
+      backgroundColor: AppColors.white.withOpacity(0.3),
+      duration: Duration(seconds: 3),
       icon: Icon(
         Icons.error,
         color: AppColors.red,
@@ -48,8 +48,8 @@ class Constants {
         style: TextStyling.regular
             .copyWith(color: AppColors.green, fontSize: 12.sp),
       ),
-      backgroundColor: AppColors.white.withOpacity(0.4),
-      duration: Duration(seconds: 6),
+      backgroundColor: AppColors.white.withOpacity(0.3),
+      duration: Duration(seconds: 3),
       icon: Icon(
         Icons.done,
         color: AppColors.green,
@@ -72,10 +72,10 @@ class Constants {
         style:
             TextStyling.regular.copyWith(color: Colors.orange, fontSize: 12.sp),
       ),
-      backgroundColor: AppColors.white.withOpacity(0.4),
-      duration: Duration(seconds: 6),
+      backgroundColor: AppColors.white.withOpacity(0.3),
+      duration: Duration(seconds: 3),
       icon: Icon(
-        CupertinoIcons.info,
+        Icons.info_rounded,
         color: Colors.orange,
         size: 30,
       ),

@@ -26,6 +26,9 @@ class NavService {
   static Future<dynamic>? welcome({dynamic arguments}) => _navigationService!
       .clearStackAndShow(Routes.welcomeView, arguments: arguments);
 
+  static Future<dynamic>? home({dynamic arguments}) => _navigationService!
+      .clearStackAndShow(Routes.homeView, arguments: arguments);
+
   //NAVIGATE_TO
 
   static Future<dynamic>? navigateToRegister({dynamic arguments}) =>
@@ -33,6 +36,9 @@ class NavService {
 
   static Future<dynamic>? navigateToLogin({dynamic arguments}) =>
       _navigationService!.navigateTo(Routes.loginView, arguments: arguments);
+
+  static Future<dynamic>? navigateToProfile({dynamic arguments}) =>
+      _navigationService!.navigateTo(Routes.profileView, arguments: arguments);
 
   //TO GO BACK
   static bool back({dynamic arguments}) => _navigationService!.back();

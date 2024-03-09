@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
-import 'package:starter_app/src/services/local/base/auth_view_model.dart';
+import 'package:starter_app/src/base/utils/constants.dart';
+import 'package:starter_app/src/models/app_user.dart';
+import 'package:starter_app/src/services/local/base/connectivity_view_model.dart';
 import 'package:starter_app/src/services/local/navigation_service.dart';
-import 'package:starter_app/src/services/remote/base/api_view_model.dart';
+import 'package:starter_app/src/services/remote/base/supabase_auth_view_model.dart';
+import 'package:starter_app/src/services/remote/supabase_auth_service.dart';
 
 class LoginViewModel extends ReactiveViewModel
-    with ApiViewModel, AuthViewModel {
+    with SupabaseAuthViewModel, ConnectivityViewModel {
   final TextEditingController _emailController = TextEditingController();
   TextEditingController get emailController => _emailController;
 
   final TextEditingController _passwordController = TextEditingController();
   TextEditingController get passwordController => _passwordController;
-
-  final TextEditingController _numberController = TextEditingController();
-  TextEditingController get numberController => _numberController;
 
   final formKey = GlobalKey<FormState>();
 
@@ -23,42 +23,50 @@ class LoginViewModel extends ReactiveViewModel
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
-    _numberController.dispose();
 
     super.dispose();
   }
 
   onLogin() async {
-    // if ((formKey.currentState?.validate() ?? false)) {
-    //   setBusy(true);
-    //   var response = await apiService.userLogin(
-    //     _emailController.text,
-    //     _passwordController.text,
-    //   );
-    //   if (response == null) {
-    //     setBusy(false);
-    //     return;
-    //   }
-    //   response.when(success: (user) async {
-    //     if (user.user?.id != null) {
-    //       authService.user = user;
-    //       Constants.customSuccessSnack('Welcome back!');
-    //     }
-    //     NavService.home();
-    //     setBusy(false);
-    //   }, failure: (error) {
-    //     setBusy(false);
-    //     return print(error);
-    //   });
-    // }
-    // NavService.home();
+    if (formKey.currentState!.validate()) {
+      setBusy(true);
+      if (connectivityService.isInternetConnected == false) {
+        print('hello im here');
+        Constants.customErrorSnack('No internet connection');
+        setBusy(false);
+        return;
+      }
+      try {
+        AppUser? user = await supabaseAuthService.login(
+          emailController.text.trim(),
+          passwordController.text.trim(),
+        );
+
+        if (user != null && supabaseAuthService.userLoggedIn) {
+          Constants.customSuccessSnack('Welcome back, ${user.firstname}!');
+          setBusy(false);
+          NavService.home();
+        }
+        setBusy(false);
+      } on AuthExcepection catch (e) {
+        setBusy(false);
+        print(e);
+        // Constants.customErrorSnack(e.message);
+      } on CustomNoInternetException catch (e) {
+        print(e.message);
+        Constants.customErrorSnack(e.message);
+        setBusy(false);
+      } catch (e) {
+        setBusy(false);
+        print(e);
+        Constants.customErrorSnack(e.toString());
+      }
+    }
   }
 
   onClickRegister() async {
     NavService.navigateToRegister();
   }
 
-  onClickForgetPassword() {
-    // NavService.forgetPassword();
-  }
+  onClickForgetPassword() {}
 }

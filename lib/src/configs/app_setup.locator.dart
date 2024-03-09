@@ -15,6 +15,7 @@ import '../services/local/auth_service.dart';
 import '../services/local/connectivity_service.dart';
 import '../services/local/keyboard_service.dart';
 import '../services/remote/api_service.dart';
+import '../services/remote/supabase_auth_service.dart';
 
 final locator = StackedLocator.instance;
 
@@ -32,6 +33,7 @@ Future<void> setupLocator({
   locator.registerLazySingleton(() => NavigationService());
   locator.registerLazySingleton(() => AuthService());
   locator.registerLazySingleton(() => ConnectivityService());
+  locator.registerLazySingleton(() => SupabaseAuthService());
   locator.registerLazySingleton(() => KeyboardService());
   locator.registerLazySingleton(() => ApiService());
 }
