@@ -6,8 +6,12 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:stacked/stacked.dart';
 import 'package:starter_app/generated/assets.dart';
+import 'package:starter_app/src/base/enums/blood_group.dart';
+import 'package:starter_app/src/base/enums/gender.dart';
+import 'package:starter_app/src/base/enums/riding_experience.dart';
 import 'package:starter_app/src/base/utils/constants.dart';
 import 'package:starter_app/src/services/local/bottom_sheet_service.dart';
+import 'package:starter_app/src/services/local/navigation_service.dart';
 import 'package:starter_app/src/services/remote/base/supabase_auth_view_model.dart';
 import 'package:starter_app/src/services/remote/supabase_auth_service.dart';
 
@@ -36,6 +40,8 @@ class ProfileViewModel extends ReactiveViewModel with SupabaseAuthViewModel {
   BloodGroup? bloodGroup;
 
   BloodGroup? selectedBloodGroup;
+
+  RidingExperience? ridingExperience;
 
   final formKey = GlobalKey<FormState>();
 
@@ -80,33 +86,6 @@ class ProfileViewModel extends ReactiveViewModel with SupabaseAuthViewModel {
   final websiteController = TextEditingController();
 
   final currencyController = TextEditingController();
-
-  onSelectDob(DateTime? dateTime) {
-    if (dateTime != null) {
-      dob = dateTime;
-      dobController.text = DateFormat('dd-MM-yyyy').format(dateTime);
-
-      ageController.text = calculateAge(dateTime).toString();
-      notifyListeners();
-    }
-  }
-
-  onSelectGender(Gender? gender) {
-    if (gender != null) {
-      this.gender = gender;
-      this.selectedGender = gender;
-      genderController.text = getReadableGender(gender);
-      notifyListeners();
-    }
-  }
-
-  onSelectBloodGroup(BloodGroup? bloodGroup) {
-    if (bloodGroup != null) {
-      this.bloodGroup = bloodGroup;
-      bloodGroupController.text = getReadableBloodGroup(bloodGroup);
-      notifyListeners();
-    }
-  }
 
   int calculateAge(DateTime dob) {
     DateTime now = DateTime.now();
@@ -198,42 +177,15 @@ class ProfileViewModel extends ReactiveViewModel with SupabaseAuthViewModel {
       if (user.bloodGroup != null && user.bloodGroup!.isNotEmpty) {
         bloodGroup = getBloodGroupFromReadable(user.bloodGroup!);
       }
-
-      //EXTENDED PROFILE
+      if (user.ridingExperience != null && user.ridingExperience!.isNotEmpty) {
+        ridingExperience =
+            getRidingExperienceFromReadable(user.ridingExperience!);
+        ridingExperienceController.text =
+            getReadableRidingExperience(ridingExperience!);
+      }
     }
   }
 
-  @override
-  void dispose() {
-    firstnameController.dispose();
-    lastnameController.dispose();
-    emailController.dispose();
-    dobController.dispose();
-    bioController.dispose();
-    mobileController.dispose();
-    ageController.dispose();
-    ridingExperienceController.dispose();
-    nextOfKin.dispose();
-    nextOfKinMobile.dispose();
-    aliasController.dispose();
-
-    genderController.dispose();
-    bloodGroupController.dispose();
-
-    //EXTENDED PROFILE
-
-    addressController.dispose();
-    stateController.dispose();
-    cityController.dispose();
-    countryController.dispose();
-    zipCodeController.dispose();
-    websiteController.dispose();
-    currencyController.dispose();
-
-    super.dispose();
-  }
-
-  // onClickAddImage() {}
   Future<void> _pickCameraImage() async {
     try {
       final image = await ImagePicker().pickImage(
@@ -281,35 +233,59 @@ class ProfileViewModel extends ReactiveViewModel with SupabaseAuthViewModel {
     }
   }
 
+  onClickLogout() async {
+    try {
+      setIsUploading(true);
+      await supabaseAuthService.logout();
+      setIsUploading(false);
+
+      NavService.login();
+    } on CustomNoInternetException catch (e) {
+      setIsUploading(false);
+
+      print(e.message);
+    } on AuthExcepection catch (e) {
+      setIsUploading(false);
+
+      print(e.message);
+    } catch (e) {
+      setIsUploading(false);
+
+      print(e);
+    }
+  }
+
   onClickSave() async {
     try {
       setBusy(true);
       final newUser = supabaseAuthService.user!.copyWith(
-        address: addressController.text,
-        city: cityController.text,
-        state: stateController.text,
-        country: countryController.text,
-        zip: zipCodeController.text,
-        website: websiteController.text,
-        currency: currencyController.text,
+        address: addressController.text.trim(),
+        city: cityController.text.trim(),
+        state: stateController.text.trim(),
+        country: countryController.text.trim(),
+        zip: zipCodeController.text.trim(),
+        website: websiteController.text.trim(),
+        currency: currencyController.text.trim(),
         age: int.tryParse(ageController.text),
-        alias: aliasController.text,
-        gender: genderController.text,
-        bio: bioController.text,
+        alias: aliasController.text.trim(),
+        gender: genderController.text.trim(),
+        bio: bioController.text.trim(),
         dob: dob,
-        bloodGroup: bloodGroupController.text,
-        mobile: mobileController.text,
-        nextOfKin: nextOfKin.text,
-        nextOfKinMobile: int.tryParse(nextOfKinMobile.text),
-        ridingExperience: ridingExperienceController.text,
-        firstname: firstnameController.text,
-        lastname: lastnameController.text,
+        bloodGroup: bloodGroupController.text.trim(),
+        mobile: mobileController.text.trim(),
+        nextOfKin: nextOfKin.text.trim(),
+        nextOfKinMobile: int.tryParse(nextOfKinMobile.text.trim()),
+        ridingExperience: ridingExperienceController.text.trim(),
+        firstname: firstnameController.text.trim(),
+        lastname: lastnameController.text.trim(),
         updatedAt: DateTime.now(),
       );
 
       final updatedUser = await supabaseAuthService.updateUser(newUser);
 
       if (updatedUser != null) {
+        NavService.back();
+
         Constants.customSuccessSnack('Profile updated successfully');
       }
       setBusy(false);
@@ -317,95 +293,79 @@ class ProfileViewModel extends ReactiveViewModel with SupabaseAuthViewModel {
     } on CustomNoInternetException catch (e) {
       Constants.customWarningSnack(e.message);
       setBusy(false);
+    } on AuthExcepection catch (e) {
+      Constants.customWarningSnack(e.message);
+      setBusy(false);
     } catch (e) {
       Constants.customWarningSnack(e.toString());
       setBusy(false);
     }
   }
-}
 
-enum Gender { male, female, others }
-
-enum BloodGroup {
-  o_positive,
-  o_negative,
-  a_positive,
-  a_negative,
-  b_positive,
-  b_negative,
-  ab_positive,
-  ab_negative
-}
-
-String getReadableBloodGroup(BloodGroup bloodGroup) {
-  switch (bloodGroup) {
-    case BloodGroup.o_positive:
-      return 'O+';
-    case BloodGroup.o_negative:
-      return 'O-';
-    case BloodGroup.a_positive:
-      return 'A+';
-    case BloodGroup.a_negative:
-      return 'A-';
-    case BloodGroup.b_positive:
-      return 'B+';
-    case BloodGroup.b_negative:
-      return 'B-';
-    case BloodGroup.ab_positive:
-      return 'AB+';
-    case BloodGroup.ab_negative:
-      return 'AB-';
-    default:
-      throw ArgumentError('Invalid blood group: $bloodGroup');
+  onSelectRidingExperience(RidingExperience? ridingExperience) {
+    if (ridingExperience != null) {
+      this.ridingExperience = ridingExperience;
+      ridingExperienceController.text =
+          getReadableRidingExperience(ridingExperience);
+      notifyListeners();
+    }
   }
-}
 
-BloodGroup getBloodGroupFromReadable(String text) {
-  switch (text) {
-    case 'O+':
-      return BloodGroup.o_positive;
-    case 'O-':
-      return BloodGroup.o_negative;
-    case 'A+':
-      return BloodGroup.a_positive;
-    case 'A-':
-      return BloodGroup.a_negative;
-    case 'B+':
-      return BloodGroup.b_positive;
-    case 'B-':
-      return BloodGroup.b_negative;
-    case 'AB+':
-      return BloodGroup.ab_positive;
-    case 'AB-':
-      return BloodGroup.ab_negative;
-    default:
-      throw ArgumentError('Invalid blood group text: $text');
+  onSelectDob(DateTime? dateTime) {
+    if (dateTime != null) {
+      dob = dateTime;
+      dobController.text = DateFormat('dd-MM-yyyy').format(dateTime);
+
+      ageController.text = calculateAge(dateTime).toString();
+      notifyListeners();
+    }
   }
-}
 
-String getReadableGender(Gender gender) {
-  switch (gender) {
-    case Gender.male:
-      return 'Male';
-    case Gender.female:
-      return 'Female';
-    case Gender.others:
-      return 'Others';
-    default:
-      throw ArgumentError('Invalid gender: $gender');
+  onSelectGender(Gender? gender) {
+    if (gender != null) {
+      this.gender = gender;
+      this.selectedGender = gender;
+      genderController.text = getReadableGender(gender);
+      notifyListeners();
+    }
   }
-}
 
-Gender getGenderFromReadable(String text) {
-  switch (text.toLowerCase()) {
-    case 'male':
-      return Gender.male;
-    case 'female':
-      return Gender.female;
-    case 'others':
-      return Gender.others;
-    default:
-      throw ArgumentError('Invalid gender text: $text');
+  onSelectBloodGroup(BloodGroup? bloodGroup) {
+    if (bloodGroup != null) {
+      this.bloodGroup = bloodGroup;
+      bloodGroupController.text = getReadableBloodGroup(bloodGroup);
+      notifyListeners();
+    }
+  }
+
+  @override
+  void dispose() {
+    firstnameController.dispose();
+    lastnameController.dispose();
+    emailController.dispose();
+    dobController.dispose();
+    bioController.dispose();
+    mobileController.dispose();
+    ageController.dispose();
+    ridingExperienceController.dispose();
+    nextOfKin.dispose();
+    nextOfKinMobile.dispose();
+    aliasController.dispose();
+
+    genderController.dispose();
+    bloodGroupController.dispose();
+
+    //EXTENDED PROFILE
+
+    addressController.dispose();
+    stateController.dispose();
+    cityController.dispose();
+    countryController.dispose();
+    zipCodeController.dispose();
+    websiteController.dispose();
+    currencyController.dispose();
+
+    super.dispose();
   }
 }
 

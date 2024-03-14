@@ -5,6 +5,7 @@ import 'package:starter_app/src/services/local/connectivity_service.dart';
 import 'package:starter_app/src/services/local/keyboard_service.dart';
 import 'package:starter_app/src/services/remote/api_service.dart';
 import 'package:starter_app/src/services/remote/supabase_auth_service.dart';
+import 'package:starter_app/src/views/email_confirmation/email_confirmation_view.dart';
 import 'package:starter_app/src/views/home/home_view.dart';
 import 'package:starter_app/src/views/login/login_view.dart';
 import 'package:starter_app/src/views/profile/profile_view.dart';
@@ -20,6 +21,7 @@ import 'package:starter_app/src/views/welcome/welcome_view.dart';
     MaterialRoute(page: LoginView),
     MaterialRoute(page: HomeView),
     MaterialRoute(page: ProfileView),
+    MaterialRoute(page: EmailConfrimationView),
   ],
   dependencies: [
     // Lazy singletons

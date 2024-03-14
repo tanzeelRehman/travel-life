@@ -22,6 +22,7 @@ class CustomFormField extends StatefulWidget {
   int? maxLength;
   List<TextInputFormatter>? textInputFormatters;
   final BorderRadius? borderRadius;
+  final TextInputType? textInputType;
 
   CustomFormField({
     this.textInputFormatters,
@@ -39,6 +40,7 @@ class CustomFormField extends StatefulWidget {
     this.textFieldBgColor,
     required this.isLabelCenter,
     this.borderRadius,
+    this.textInputType,
   });
 
   @override
@@ -49,6 +51,7 @@ class _CustomFormFieldState extends State<CustomFormField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      keyboardType: widget.textInputType,
       readOnly: widget.readOnly,
       controller: widget.controller,
       obscureText: widget.isPassword,

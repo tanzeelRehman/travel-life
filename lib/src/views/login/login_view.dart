@@ -115,7 +115,6 @@ class LoginView extends StackedView<LoginViewModel> {
                       if (v!.isEmpty) {
                         return 'Please enter password';
                       }
-
                       return null;
                     },
                     primaryColor: AppColors.white,
@@ -190,9 +189,4 @@ class LoginView extends StackedView<LoginViewModel> {
 
   @override
   void onViewModelReady(LoginViewModel model) => model.init();
-
-  // @override
-  // void onDispose(LoginViewModel model) {
-  //   super.onDispose(model);
-  // }
 }

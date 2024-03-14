@@ -108,7 +108,6 @@ class RegisterView extends StackedView<RegisterViewModel> {
                               labelText: 'Last Name',
                               isPassword: false,
                               validatorFunction: (v) {
-                                // return null;
                                 if (v!.isEmpty) {
                                   return 'Please enter your last name';
                                 }
@@ -154,6 +153,7 @@ class RegisterView extends StackedView<RegisterViewModel> {
                               primaryColor: AppColors.white,
                               textColor: AppColors.white,
                               isLabelCenter: false,
+                              textInputType: TextInputType.phone,
                             ),
                             VerticalSpacing(24.h),
                             CustomFormField(
@@ -183,7 +183,6 @@ class RegisterView extends StackedView<RegisterViewModel> {
                               labelText: 'Repeat Password',
                               isPassword: true,
                               validatorFunction: (v) {
-                                // return ValidationUtils.validatePassword(v);
                                 return ValidationUtils.validateConfirmPassword(
                                   confirmPassword: v,
                                   password: model.passwordController.text,
@@ -255,9 +254,4 @@ class RegisterView extends StackedView<RegisterViewModel> {
 
   @override
   void onViewModelReady(RegisterViewModel model) => model.init();
-
-  // @override
-  // void onDispose(RegisterViewModel model) {
-  //   super.onDispose(model);
-  // }
 }

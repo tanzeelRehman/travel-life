@@ -40,6 +40,10 @@ class NavService {
   static Future<dynamic>? navigateToProfile({dynamic arguments}) =>
       _navigationService!.navigateTo(Routes.profileView, arguments: arguments);
 
+  static Future<dynamic>? navigateToEmailConfirmation({dynamic arguments}) =>
+      _navigationService!
+          .navigateTo(Routes.emailConfrimationView, arguments: arguments);
+
   //TO GO BACK
   static bool back({dynamic arguments}) => _navigationService!.back();
 }

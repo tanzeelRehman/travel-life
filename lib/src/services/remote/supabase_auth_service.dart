@@ -23,6 +23,12 @@ class SupabaseAuthService with ListenableServiceMixin {
 
   ReactiveValue<AppUser?> _appUser = ReactiveValue<AppUser?>(null);
 
+  ReactiveValue<String?> currentOTPEmail = ReactiveValue<String?>(null);
+  ReactiveValue<String?> _currentOTPPassword = ReactiveValue<String?>(null);
+  ReactiveValue<String?> _currentOTPFirstName = ReactiveValue<String?>(null);
+  ReactiveValue<String?> _currentOTPLastName = ReactiveValue<String?>(null);
+  ReactiveValue<String?> _currentOTPPhone = ReactiveValue<String?>(null);
+
   AppUser? get user => _appUser.value;
 
   bool get userLoggedIn => _userLoggedIn.value;
@@ -109,8 +115,15 @@ class SupabaseAuthService with ListenableServiceMixin {
   }
 
   Future logout() async {
-    await supabase.auth.signOut();
-    _clearUserFromLocal();
+    if (!connectivityService.isInternetConnected) {
+      throw CustomNoInternetException(message: 'No Internet Connection');
+    }
+    try {
+      await supabase.auth.signOut();
+      _clearUserFromLocal();
+    } catch (e) {
+      throw AuthExcepection(message: e.toString());
+    }
   }
 
   Future<AppUser?> _createUser(AppUser? user) async {
@@ -153,6 +166,11 @@ class SupabaseAuthService with ListenableServiceMixin {
     if (!connectivityService.isInternetConnected) {
       print('no internet');
     }
+    if (supabase.auth.currentSession == null) {
+      print('supabase auth session is null');
+      return;
+    }
+
     final response = await _getUser(supabase.auth.currentUser!.id);
 
     if (response != null) {
@@ -234,6 +252,15 @@ class SupabaseAuthService with ListenableServiceMixin {
       _appUser.value = AppUser.fromMap(response);
       _storeLocally();
       return AppUser.fromMap(response);
+    } on PostgrestException catch (e) {
+      if (e.code == '23505') {
+        throw AuthExcepection(
+          message: 'This alias is already taken, please choose another one',
+        );
+      }
+      throw AuthExcepection(
+        message: e.message.toString(),
+      );
     } catch (e) {
       print(e);
       return null;
@@ -284,3 +311,81 @@ class CustomNoInternetException implements Exception {
 
   CustomNoInternetException({required this.message});
 }
+
+
+
+//EXTRA CODE (Email verification and OTP)
+
+  // Future<bool> registerWithOTP(
+  //   String email,
+  //   String password, {
+  //   required String firstName,
+  //   String? lastName,
+  //   required String phone,
+  // }) async {
+  //   if (!connectivityService.isInternetConnected) {
+  //     throw CustomNoInternetException(message: 'No Internet Connection');
+  //   }
+  //   try {
+  //     currentOTPEmail.value = email;
+  //     _currentOTPPassword.value = password;
+  //     _currentOTPFirstName.value = firstName;
+  //     _currentOTPLastName.value = lastName;
+  //     _currentOTPPhone.value = phone;
+
+  //     final response = await supabase.auth.signInWithOtp(
+  //       email: email.trim(),
+  //       shouldCreateUser: false,
+  //     );
+  //     return true;
+  //   } catch (e) {
+  //     throw AuthExcepection(message: e.toString());
+  //   }
+  // }
+
+  // Future<AppUser?> verifyOTP(String otp) async {
+  //   if (!connectivityService.isInternetConnected) {
+  //     throw CustomNoInternetException(message: 'No Internet Connection');
+  //   }
+  //   try {
+  //     final response = await supabase.auth.verifyOTP(
+  //       email: currentOTPEmail.value,
+  //       token: otp,
+  //       type: OtpType.email,
+  //     );
+
+  //     // print(response);
+  //     if (response.user == null) {
+  //       throw AuthExcepection(message: 'Verification failed');
+  //     }
+
+  //     //update the password for the user so they can sign in with password in future.
+  //     await supabase.auth.updateUser(
+  //       UserAttributes(
+  //         password: _currentOTPPassword.value,
+  //       ),
+  //     );
+
+  //     final AppUser user = AppUser(
+  //       id: response.user?.id,
+  //       email: response.user!.email,
+  //       user: response.user?.id,
+  //       firstname: _currentOTPFirstName.value,
+  //       lastname: _currentOTPLastName.value,
+  //       mobile: _currentOTPPhone.value,
+  //     );
+
+  //     final createdUser = await _createUser(user);
+
+  //     if (createdUser == null) {
+  //       throw AuthExcepection(message: 'Unable to create user');
+  //     }
+
+  //     _appUser.value = createdUser;
+  //     _storeLocally();
+
+  //     return createdUser;
+  //   } catch (e) {
+  //     throw AuthExcepection(message: e.toString());
+  //   }
+  // }

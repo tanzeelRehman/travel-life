@@ -5,7 +5,7 @@ import 'package:starter_app/src/services/remote/base/supabase_auth_view_model.da
 class SplashViewModel extends ReactiveViewModel with SupabaseAuthViewModel {
   init() {
     Future.delayed(
-      Duration(seconds: 2),
+      Duration(milliseconds: 1500),
       () {
         print(supabaseAuthService.userLoggedIn);
         if (supabaseAuthService.userLoggedIn) {

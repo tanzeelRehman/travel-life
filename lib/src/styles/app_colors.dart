@@ -49,6 +49,16 @@ class AppColors {
     end: Alignment.bottomCenter,
   );
 
+  //LOGOUT BUTTON BG GRADIENT
+  static Gradient logoutButtonGradient = LinearGradient(
+    colors: [
+      HexColor("#FF9AA0"),
+      HexColor("#E0A9A9"),
+    ],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
   //MAIN BUTTON BG GRADIENT
   static Gradient homeButtonGradient = LinearGradient(
     colors: [

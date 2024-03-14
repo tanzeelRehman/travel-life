@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:starter_app/generated/assets.dart';
 import 'package:starter_app/src/services/local/navigation_service.dart';
 import 'package:starter_app/src/styles/app_colors.dart';
 import 'package:starter_app/src/styles/text_theme.dart';
@@ -51,14 +49,6 @@ class CustomAppBar extends StatelessWidget {
                 height: 25.w,
                 width: 25.w,
                 child: Center(
-                  // child: IconButton(
-                  //   constraints: BoxConstraints(),
-                  //   onPressed: () {
-                  //     NavService.back();
-                  //   },
-                  //   padding: EdgeInsets.zero,
-                  //   icon: Icon(Icons.arrow_back_ios),
-                  // ),
                   child: Icon(
                     Icons.arrow_back_ios_new_outlined,
                     size: 20.sp,
