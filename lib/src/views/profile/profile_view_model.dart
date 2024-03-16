@@ -10,6 +10,8 @@ import 'package:starter_app/src/base/enums/blood_group.dart';
 import 'package:starter_app/src/base/enums/gender.dart';
 import 'package:starter_app/src/base/enums/riding_experience.dart';
 import 'package:starter_app/src/base/utils/constants.dart';
+import 'package:starter_app/src/base/utils/utils.dart';
+import 'package:starter_app/src/models/ui_models/gender_button_model.dart';
 import 'package:starter_app/src/services/local/bottom_sheet_service.dart';
 import 'package:starter_app/src/services/local/navigation_service.dart';
 import 'package:starter_app/src/services/remote/base/supabase_auth_view_model.dart';
@@ -18,28 +20,27 @@ import 'package:starter_app/src/services/remote/supabase_auth_service.dart';
 class ProfileViewModel extends ReactiveViewModel with SupabaseAuthViewModel {
   int selectedTab = 0;
 
+  toggleSelectedTab(int index) {
+    selectedTab = index;
+    notifyListeners();
+  }
+
   List<GenderButtonModel> genderButtons = [
     GenderButtonModel(gender: Gender.male, iconPath: AssetIcons.maleIcon),
     GenderButtonModel(gender: Gender.female, iconPath: AssetIcons.femaleIcon),
     GenderButtonModel(gender: Gender.others, iconPath: AssetIcons.othersIcon),
   ];
 
-  toggleSelectedTab(int index) {
-    selectedTab = index;
-    notifyListeners();
-  }
-
-  File? selectedImage;
+  File? selectedImage; //for updating the profile image
 
   DateTime? dob;
 
   Gender? gender;
-
-  Gender? selectedGender;
+  Gender? selectedGender; //for dialog (temporarily selected)
 
   BloodGroup? bloodGroup;
 
-  BloodGroup? selectedBloodGroup;
+  BloodGroup? selectedBloodGroup; //for dialog (temporarily selected)
 
   RidingExperience? ridingExperience;
 
@@ -87,16 +88,6 @@ class ProfileViewModel extends ReactiveViewModel with SupabaseAuthViewModel {
 
   final currencyController = TextEditingController();
 
-  int calculateAge(DateTime dob) {
-    DateTime now = DateTime.now();
-    int age = now.year - dob.year;
-    if (now.month < dob.month ||
-        (now.month == dob.month && now.day < dob.day)) {
-      age--;
-    }
-    return age;
-  }
-
   toggleGender(Gender gender) {
     selectedGender = gender;
     notifyListeners();
@@ -139,6 +130,7 @@ class ProfileViewModel extends ReactiveViewModel with SupabaseAuthViewModel {
   init() {
     final user = supabaseAuthService.user;
     if (user != null) {
+      //PERSONAL DETAILS
       firstnameController.text = user.firstname ?? "";
       lastnameController.text = user.lastname ?? "";
       emailController.text = user.email ?? "";
@@ -152,30 +144,17 @@ class ProfileViewModel extends ReactiveViewModel with SupabaseAuthViewModel {
           user.nextOfKinMobile != null ? user.nextOfKinMobile.toString() : "";
       aliasController.text = user.alias ?? "";
 
-      //EXTENDED PROFILE
-      genderController.text = user.gender ?? "";
-      bloodGroupController.text = user.bloodGroup ?? "";
-
-      //EXTENDED PROFILE
-
-      addressController.text = user.address ?? "";
-      stateController.text = user.state ?? "";
-      cityController.text = user.city ?? "";
-      countryController.text = user.country ?? "";
-      zipCodeController.text = user.zip ?? "";
-      websiteController.text = user.website ?? "";
-      currencyController.text = user.currency ?? "";
-
-      print('user dob is: ${user.dob}');
       if (user.dob != null) {
         dob = user.dob;
         dobController.text = DateFormat('dd/MM/yyyy').format(user.dob!);
       }
       if (user.gender != null && user.gender!.isNotEmpty) {
         gender = getGenderFromReadable(user.gender!);
+        genderController.text = user.gender ?? "";
       }
       if (user.bloodGroup != null && user.bloodGroup!.isNotEmpty) {
         bloodGroup = getBloodGroupFromReadable(user.bloodGroup!);
+        bloodGroupController.text = user.bloodGroup ?? "";
       }
       if (user.ridingExperience != null && user.ridingExperience!.isNotEmpty) {
         ridingExperience =
@@ -183,6 +162,15 @@ class ProfileViewModel extends ReactiveViewModel with SupabaseAuthViewModel {
         ridingExperienceController.text =
             getReadableRidingExperience(ridingExperience!);
       }
+
+      //EXTENDED PROFILE
+      addressController.text = user.address ?? "";
+      stateController.text = user.state ?? "";
+      cityController.text = user.city ?? "";
+      countryController.text = user.country ?? "";
+      zipCodeController.text = user.zip ?? "";
+      websiteController.text = user.website ?? "";
+      currencyController.text = user.currency ?? "";
     }
   }
 
@@ -259,25 +247,36 @@ class ProfileViewModel extends ReactiveViewModel with SupabaseAuthViewModel {
     try {
       setBusy(true);
       final newUser = supabaseAuthService.user!.copyWith(
-        address: addressController.text.trim(),
-        city: cityController.text.trim(),
-        state: stateController.text.trim(),
-        country: countryController.text.trim(),
-        zip: zipCodeController.text.trim(),
-        website: websiteController.text.trim(),
-        currency: currencyController.text.trim(),
+        address:
+            addressController.text.isNotEmpty ? addressController.text : null,
+        city: cityController.text.isNotEmpty ? cityController.text : null,
+        state: stateController.text.isNotEmpty ? stateController.text : null,
+        country:
+            countryController.text.isNotEmpty ? countryController.text : null,
+        zip: zipCodeController.text.isNotEmpty ? zipCodeController.text : null,
+        website:
+            websiteController.text.isNotEmpty ? websiteController.text : null,
+        currency:
+            currencyController.text.isNotEmpty ? currencyController.text : null,
         age: int.tryParse(ageController.text),
-        alias: aliasController.text.trim(),
-        gender: genderController.text.trim(),
-        bio: bioController.text.trim(),
+        alias: aliasController.text.isNotEmpty ? aliasController.text : null,
+        gender: genderController.text.isNotEmpty ? genderController.text : null,
+        bio: bioController.text.isNotEmpty ? bioController.text : null,
         dob: dob,
-        bloodGroup: bloodGroupController.text.trim(),
-        mobile: mobileController.text.trim(),
-        nextOfKin: nextOfKin.text.trim(),
-        nextOfKinMobile: int.tryParse(nextOfKinMobile.text.trim()),
-        ridingExperience: ridingExperienceController.text.trim(),
-        firstname: firstnameController.text.trim(),
-        lastname: lastnameController.text.trim(),
+        bloodGroup: bloodGroupController.text.isNotEmpty
+            ? bloodGroupController.text
+            : null,
+        mobile: mobileController.text.isNotEmpty ? mobileController.text : null,
+        nextOfKin: nextOfKin.text.isNotEmpty ? nextOfKin.text : null,
+        nextOfKinMobile: int.tryParse(nextOfKinMobile.text),
+        ridingExperience: ridingExperienceController.text.isNotEmpty
+            ? ridingExperienceController.text
+            : null,
+        firstname: firstnameController.text.isNotEmpty
+            ? firstnameController.text
+            : null,
+        lastname:
+            lastnameController.text.isNotEmpty ? lastnameController.text : null,
         updatedAt: DateTime.now(),
       );
 
@@ -302,6 +301,28 @@ class ProfileViewModel extends ReactiveViewModel with SupabaseAuthViewModel {
     }
   }
 
+  removeWhiteSpaces() {
+    addressController.text = addressController.text.trim();
+    cityController.text = cityController.text.trim();
+    stateController.text = stateController.text.trim();
+    countryController.text = countryController.text.trim();
+    zipCodeController.text = countryController.text.trim();
+    websiteController.text = websiteController.text.trim();
+    currencyController.text = currencyController.text.trim();
+
+    ageController.text = ageController.text.trim();
+    aliasController.text = aliasController.text.trim();
+    genderController.text = genderController.text.trim();
+    bioController.text = bioController.text.trim();
+    bloodGroupController.text = bloodGroupController.text.trim();
+    mobileController.text = mobileController.text.trim();
+    nextOfKin.text = nextOfKin.text.trim();
+    nextOfKinMobile.text = nextOfKinMobile.text.trim();
+    ridingExperienceController.text = ridingExperienceController.text.trim();
+    firstnameController.text = firstnameController.text.trim();
+    lastnameController.text = lastnameController.text.trim();
+  }
+
   onSelectRidingExperience(RidingExperience? ridingExperience) {
     if (ridingExperience != null) {
       this.ridingExperience = ridingExperience;
@@ -316,7 +337,7 @@ class ProfileViewModel extends ReactiveViewModel with SupabaseAuthViewModel {
       dob = dateTime;
       dobController.text = DateFormat('dd-MM-yyyy').format(dateTime);
 
-      ageController.text = calculateAge(dateTime).toString();
+      ageController.text = UtilFunctions.calculateAge(dateTime).toString();
       notifyListeners();
     }
   }
@@ -324,7 +345,6 @@ class ProfileViewModel extends ReactiveViewModel with SupabaseAuthViewModel {
   onSelectGender(Gender? gender) {
     if (gender != null) {
       this.gender = gender;
-      this.selectedGender = gender;
       genderController.text = getReadableGender(gender);
       notifyListeners();
     }
@@ -351,12 +371,10 @@ class ProfileViewModel extends ReactiveViewModel with SupabaseAuthViewModel {
     nextOfKin.dispose();
     nextOfKinMobile.dispose();
     aliasController.dispose();
-
     genderController.dispose();
     bloodGroupController.dispose();
 
     //EXTENDED PROFILE
-
     addressController.dispose();
     stateController.dispose();
     cityController.dispose();
@@ -367,11 +385,4 @@ class ProfileViewModel extends ReactiveViewModel with SupabaseAuthViewModel {
 
     super.dispose();
   }
-}
-
-class GenderButtonModel {
-  final Gender gender;
-  final String iconPath;
-
-  GenderButtonModel({required this.gender, required this.iconPath});
 }

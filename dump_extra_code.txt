@@ -1,0 +1,128 @@
+//EXTRA CODE (Email verification and OTP)
+
+  //// supabaseAuthService file
+
+  // ReactiveValue<String?> currentOTPEmail = ReactiveValue<String?>(null);
+  // ReactiveValue<String?> _currentOTPPassword = ReactiveValue<String?>(null);
+  // ReactiveValue<String?> _currentOTPFirstName = ReactiveValue<String?>(null);
+  // ReactiveValue<String?> _currentOTPLastName = ReactiveValue<String?>(null);
+  // ReactiveValue<String?> _currentOTPPhone = ReactiveValue<String?>(null);
+
+  // Future<bool> registerWithOTP(
+  //   String email,
+  //   String password, {
+  //   required String firstName,
+  //   String? lastName,
+  //   required String phone,
+  // }) async {
+  //   if (!connectivityService.isInternetConnected) {
+  //     throw CustomNoInternetException(message: 'No Internet Connection');
+  //   }
+  //   try {
+  //     currentOTPEmail.value = email;
+  //     _currentOTPPassword.value = password;
+  //     _currentOTPFirstName.value = firstName;
+  //     _currentOTPLastName.value = lastName;
+  //     _currentOTPPhone.value = phone;
+
+  //     final response = await supabase.auth.signInWithOtp(
+  //       email: email.trim(),
+  //       shouldCreateUser: false,
+  //     );
+  //     return true;
+  //   } catch (e) {
+  //     throw AuthExcepection(message: e.toString());
+  //   }
+  // }
+
+  // Future<AppUser?> verifyOTP(String otp) async {
+  //   if (!connectivityService.isInternetConnected) {
+  //     throw CustomNoInternetException(message: 'No Internet Connection');
+  //   }
+  //   try {
+  //     final response = await supabase.auth.verifyOTP(
+  //       email: currentOTPEmail.value,
+  //       token: otp,
+  //       type: OtpType.email,
+  //     );
+
+  //     // print(response);
+  //     if (response.user == null) {
+  //       throw AuthExcepection(message: 'Verification failed');
+  //     }
+
+  //     //update the password for the user so they can sign in with password in future.
+  //     await supabase.auth.updateUser(
+  //       UserAttributes(
+  //         password: _currentOTPPassword.value,
+  //       ),
+  //     );
+
+  //     final AppUser user = AppUser(
+  //       id: response.user?.id,
+  //       email: response.user!.email,
+  //       user: response.user?.id,
+  //       firstname: _currentOTPFirstName.value,
+  //       lastname: _currentOTPLastName.value,
+  //       mobile: _currentOTPPhone.value,
+  //     );
+
+  //     final createdUser = await _createUser(user);
+
+  //     if (createdUser == null) {
+  //       throw AuthExcepection(message: 'Unable to create user');
+  //     }
+
+  //     _appUser.value = createdUser;
+  //     _storeLocally();
+
+  //     return createdUser;
+  //   } catch (e) {
+  //     throw AuthExcepection(message: e.toString());
+  //   }
+  // }
+
+
+
+  //// register view model
+
+  // onRegisterOTP() async {
+  //   if (formKey.currentState!.validate()) {
+  //     setBusy(true);
+  //     try {
+  //       if (!connectivityService.isInternetConnected) {
+  //         Constants.customErrorSnack('No internet connection');
+  //         setBusy(false);
+  //         return;
+  //       }
+
+  //       final response = await supabaseAuthService.registerWithOTP(
+  //         emailController.text,
+  //         passwordController.text,
+  //         firstName: firstNameController.text,
+  //         phone: numberController.text,
+  //         lastName: lastNameController.text,
+  //       );
+
+  //       setBusy(false);
+
+  //       NavService.navigateToEmailConfirmation();
+  //     } on AuthExcepection catch (e) {
+  //       print(e.message);
+  //       Constants.customErrorSnack(e.message);
+
+  //       setBusy(false);
+  //     } on CustomNoInternetException catch (e) {
+  //       print(e.message);
+  //       Constants.customErrorSnack(e.message);
+
+  //       setBusy(false);
+  //     } catch (e) {
+  //       print(e);
+  //       setBusy(false);
+
+  //       Constants.customErrorSnack(e.toString());
+  //       return;
+  //     }
+  //   }
+  // }

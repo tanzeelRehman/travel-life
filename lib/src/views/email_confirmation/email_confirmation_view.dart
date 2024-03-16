@@ -37,71 +37,71 @@ class EmailConfrimationView extends StackedView<EmailConfrimationViewModel> {
         return willLeave;
       },
       child: Scaffold(
-        // appBar: AppBar(
-        //   leading: IconButton(
-        //     color: AppColors.white,
-        //     onPressed: () {
-        //       NavService.back();
-        //     },
-        //     icon: Icon(
-        //       Icons.arrow_back_ios,
-        //     ),
-        //   ),
-        //   title: Text(
-        //     'OTP',
-        //     style: TextStyling.semiBold,
-        //   ),
-        //   centerTitle: true,
-        //   backgroundColor: AppColors.primary,
-        // ),
-        body: Column(
-          children: [
-            CustomAppBar(
-              titleText: 'Email Verification',
-            ),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Container(
-                  width: context.screenSize().width,
-                  height: context.screenSize().height - kToolbarHeight,
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 16.w,
-                    vertical: 16.h,
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(height: 40.h),
-                      Text(
-                        'Enter the code sent on your emial\n${model.supabaseAuthService.currentOTPEmail}',
-                        style: TextStyling.medium,
-                        textAlign: TextAlign.center,
-                      ),
-                      SizedBox(height: 40.h),
-                      Pinput(
-                        defaultPinTheme: defaultPinTheme,
-                        focusedPinTheme: focusedPinTheme,
-                        length: 6,
-                        controller: model.pinController,
-                      ),
-                      SizedBox(height: 40.h),
-                      MainButton(
-                        fullWidth: false,
-                        buttonText: 'Verify',
-                        onPressed: model.onVerify,
-                        isLoading: model.isBusy,
-                      ),
-                      Spacer(),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
+          // appBar: AppBar(
+          //   leading: IconButton(
+          //     color: AppColors.white,
+          //     onPressed: () {
+          //       NavService.back();
+          //     },
+          //     icon: Icon(
+          //       Icons.arrow_back_ios,
+          //     ),
+          //   ),
+          //   title: Text(
+          //     'OTP',
+          //     style: TextStyling.semiBold,
+          //   ),
+          //   centerTitle: true,
+          //   backgroundColor: AppColors.primary,
+          // ),
+          // body: Column(
+          //   children: [
+          //     CustomAppBar(
+          //       titleText: 'Email Verification',
+          //     ),
+          //     Expanded(
+          //       child: SingleChildScrollView(
+          //         child: Container(
+          //           width: context.screenSize().width,
+          //           height: context.screenSize().height - kToolbarHeight,
+          //           padding: EdgeInsets.symmetric(
+          //             horizontal: 16.w,
+          //             vertical: 16.h,
+          //           ),
+          //           child: Column(
+          //             mainAxisSize: MainAxisSize.min,
+          //             crossAxisAlignment: CrossAxisAlignment.center,
+          //             mainAxisAlignment: MainAxisAlignment.center,
+          //             children: [
+          //               SizedBox(height: 40.h),
+          //               Text(
+          //                 'Enter the code sent on your emial\n${model.supabaseAuthService.currentOTPEmail}',
+          //                 style: TextStyling.medium,
+          //                 textAlign: TextAlign.center,
+          //               ),
+          //               SizedBox(height: 40.h),
+          //               Pinput(
+          //                 defaultPinTheme: defaultPinTheme,
+          //                 focusedPinTheme: focusedPinTheme,
+          //                 length: 6,
+          //                 controller: model.pinController,
+          //               ),
+          //               SizedBox(height: 40.h),
+          //               MainButton(
+          //                 fullWidth: false,
+          //                 buttonText: 'Verify',
+          //                 onPressed: model.onVerify,
+          //                 isLoading: model.isBusy,
+          //               ),
+          //               Spacer(),
+          //             ],
+          //           ),
+          //         ),
+          //       ),
+          //     ),
+          //   ],
+          // ),
+          ),
     );
   }
 

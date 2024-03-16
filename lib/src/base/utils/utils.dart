@@ -15,6 +15,7 @@ extension UIExt on BuildContext {
 }
 
 class ValidationUtils {
+  ValidationUtils._();
   static String? validateName(String? value) {
     String pattern = r'(^[a-zA-Z ]*$)';
     RegExp regExp = RegExp(pattern);
@@ -78,4 +79,18 @@ class ValidationUtils {
   static List<TextInputFormatter> numberTextInputFormater = [
     FilteringTextInputFormatter.digitsOnly
   ];
+}
+
+class UtilFunctions {
+  UtilFunctions._();
+
+  static int calculateAge(DateTime dob) {
+    DateTime now = DateTime.now();
+    int age = now.year - dob.year;
+    if (now.month < dob.month ||
+        (now.month == dob.month && now.day < dob.day)) {
+      age--;
+    }
+    return age;
+  }
 }

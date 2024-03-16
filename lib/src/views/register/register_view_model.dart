@@ -36,11 +36,11 @@ class RegisterViewModel extends ReactiveViewModel
         }
 
         final response = await supabaseAuthService.register(
-          emailController.text,
-          passwordController.text,
-          firstName: firstNameController.text,
-          phone: numberController.text,
-          lastName: lastNameController.text,
+          emailController.text.trim(),
+          passwordController.text.trim(),
+          firstName: firstNameController.text.trim(),
+          phone: numberController.text.trim(),
+          lastName: lastNameController.text.trim(),
         );
 
         if (response == null) {
@@ -73,47 +73,6 @@ class RegisterViewModel extends ReactiveViewModel
       }
     }
   }
-
-  // onRegisterOTP() async {
-  //   if (formKey.currentState!.validate()) {
-  //     setBusy(true);
-  //     try {
-  //       if (!connectivityService.isInternetConnected) {
-  //         Constants.customErrorSnack('No internet connection');
-  //         setBusy(false);
-  //         return;
-  //       }
-
-  //       final response = await supabaseAuthService.registerWithOTP(
-  //         emailController.text,
-  //         passwordController.text,
-  //         firstName: firstNameController.text,
-  //         phone: numberController.text,
-  //         lastName: lastNameController.text,
-  //       );
-
-  //       setBusy(false);
-
-  //       NavService.navigateToEmailConfirmation();
-  //     } on AuthExcepection catch (e) {
-  //       print(e.message);
-  //       Constants.customErrorSnack(e.message);
-
-  //       setBusy(false);
-  //     } on CustomNoInternetException catch (e) {
-  //       print(e.message);
-  //       Constants.customErrorSnack(e.message);
-
-  //       setBusy(false);
-  //     } catch (e) {
-  //       print(e);
-  //       setBusy(false);
-
-  //       Constants.customErrorSnack(e.toString());
-  //       return;
-  //     }
-  //   }
-  // }
 
   @override
   void dispose() {

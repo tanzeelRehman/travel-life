@@ -32,7 +32,7 @@ Future<void> setupLocator({
   locator.registerLazySingleton(() => BottomSheetService());
   locator.registerLazySingleton(() => NavigationService());
   locator.registerLazySingleton(() => AuthService());
-  locator.registerLazySingleton(() => ConnectivityService());
+  locator.registerSingleton(ConnectivityService());
   locator.registerLazySingleton(() => SupabaseAuthService());
   locator.registerLazySingleton(() => KeyboardService());
   locator.registerLazySingleton(() => ApiService());

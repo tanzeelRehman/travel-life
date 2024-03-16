@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -7,7 +6,8 @@ import 'package:starter_app/generated/assets.dart';
 import 'package:starter_app/src/base/utils/utils.dart';
 import 'package:starter_app/src/shared/custom_app_bar.dart';
 import 'package:starter_app/src/shared/custom_tab.dart';
-import 'package:starter_app/src/shared/full_loading_indicator.dart';
+import 'package:starter_app/src/shared/editable_profile_avatar.dart';
+import 'package:starter_app/src/shared/full_screen_loading_indicator.dart';
 import 'package:starter_app/src/shared/main_button.dart';
 import 'package:starter_app/src/shared/spacing.dart';
 import 'package:starter_app/src/styles/app_colors.dart';
@@ -67,44 +67,9 @@ class ProfileView extends StackedView<ProfileViewModel> {
                   ),
                 ),
                 VerticalSpacing(20.h),
-                Stack(
-                  children: [
-                    SizedBox(
-                      height: 160.w,
-                      width: 160.w,
-                      child: CircleAvatar(
-                        backgroundColor: AppColors.appFaddedBlue,
-                        backgroundImage:
-                            model.supabaseAuthService.user?.avatar != null
-                                ? CachedNetworkImageProvider(
-                                    model.supabaseAuthService.user!.avatar!,
-                                  )
-                                : Image.asset(AssetImages.defaultUser).image,
-                      ),
-                    ),
-                    Positioned(
-                      bottom: 0,
-                      right: 0,
-                      child: GestureDetector(
-                        onTap: model.onClickAddImage,
-                        child: Material(
-                          elevation: 10,
-                          borderRadius: BorderRadius.circular(100),
-                          color: AppColors.appDarkBlue,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: AppColors.appDarkBlue,
-                              shape: BoxShape.circle,
-                            ),
-                            height: 50.w,
-                            width: 50.w,
-                            padding: EdgeInsets.all(8),
-                            child: SvgPicture.asset(AssetIcons.cameraIcon),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+                EditableProfileAvatar(
+                  avatarUrl: model.supabaseAuthService.user?.avatar,
+                  onClickCamera: model.onClickAddImage,
                 ),
                 VerticalSpacing(15.h),
                 Padding(
@@ -144,8 +109,10 @@ class ProfileView extends StackedView<ProfileViewModel> {
                 ),
                 Expanded(
                   child: SingleChildScrollView(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 27.w, vertical: 16.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 27.w,
+                      vertical: 16.h,
+                    ),
                     child: model.selectedTab == 0
                         ? PersonalDetailSection(
                             model: model,
@@ -158,7 +125,7 @@ class ProfileView extends StackedView<ProfileViewModel> {
           ),
         ),
         if (model.isUploading)
-          FullLoadingIndicator(
+          FullScreenLoadingIndicator(
             color: AppColors.primary,
             size: 50.r,
           ),

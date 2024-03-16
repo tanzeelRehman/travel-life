@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -8,7 +7,7 @@ import 'package:starter_app/src/styles/text_theme.dart';
 class Constants {
   Constants._();
 
-  static String get appTitle => "Flutter Starter App";
+  static String get appTitle => "TravelLife";
 
   static customErrorSnack(String? msg, {String? title}) {
     Get.snackbar(

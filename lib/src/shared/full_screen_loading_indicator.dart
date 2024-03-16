@@ -3,8 +3,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:starter_app/src/styles/app_colors.dart';
 
-class FullLoadingIndicator extends StatelessWidget {
-  const FullLoadingIndicator({
+class FullScreenLoadingIndicator extends StatelessWidget {
+  const FullScreenLoadingIndicator({
     Key? key,
     this.size = 30,
     this.strokeWidth = 3,

@@ -29,7 +29,7 @@ import 'package:starter_app/src/views/welcome/welcome_view.dart';
     LazySingleton(classType: BottomSheetService),
     LazySingleton(classType: NavigationService),
     LazySingleton(classType: AuthService),
-    LazySingleton(classType: ConnectivityService),
+    Singleton(classType: ConnectivityService), // changed to singleton
     LazySingleton(classType: SupabaseAuthService),
     LazySingleton(classType: KeyboardService),
     LazySingleton(classType: ApiService),
