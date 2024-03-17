@@ -13,6 +13,23 @@ class AssetImages {
   static const String squaresBg = 'assets/images/background.png';
   static const String homeBikeBg = 'assets/images/home_bike_bg.png';
 
+  static const String vehicleRegistrationBg =
+      'assets/images/vehicle_registration_bg.png';
+
+  static const String vehicleRegistrationBikeSVG =
+      'assets/images/vehicle_bike_bg.svg';
+  static const String vehicleRegistrationCarSVG =
+      'assets/images/vehicle_car_bg.svg';
+  static const String vehicleRegistrationFinanceSVG =
+      'assets/images/vehicle_finance_bg.svg';
+
+  static const String vehicleRegistrationBikePNG =
+      'assets/images/vehicle_bike_bg.png';
+  static const String vehicleRegistrationCarPNG =
+      'assets/images/vehicle_car_bg.png';
+  static const String vehicleRegistrationFinancePNG =
+      'assets/images/vehicle_finance_bg.png';
+
   //default user image
   static const String defaultUser = 'assets/images/default_user_image.jpg';
 }

@@ -11,6 +11,7 @@ import 'package:starter_app/src/views/login/login_view.dart';
 import 'package:starter_app/src/views/profile/profile_view.dart';
 import 'package:starter_app/src/views/register/register_view.dart';
 import 'package:starter_app/src/views/splash/splash_view.dart';
+import 'package:starter_app/src/views/vehicle_registration/vehicle_registration_view.dart';
 import 'package:starter_app/src/views/welcome/welcome_view.dart';
 
 @StackedApp(
@@ -21,7 +22,8 @@ import 'package:starter_app/src/views/welcome/welcome_view.dart';
     MaterialRoute(page: LoginView),
     MaterialRoute(page: HomeView),
     MaterialRoute(page: ProfileView),
-    MaterialRoute(page: EmailConfrimationView),
+    MaterialRoute(page: EmailConfrimationView), //not used for now.
+    MaterialRoute(page: VehicleRegistrationView),
   ],
   dependencies: [
     // Lazy singletons

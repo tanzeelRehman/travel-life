@@ -9,33 +9,27 @@ class CustomAppBar extends StatelessWidget {
     Key? key,
     this.title,
     this.titleText,
-    this.showNotification = true,
     this.showBackButton = true,
-    this.showSettings = false,
     this.trailingWidget,
+    this.padding,
+    this.titleTextStyle,
   }) : super(key: key);
 
   final bool showBackButton;
-  final bool showNotification;
-  final bool showSettings;
 
   final Widget? title;
   final String? titleText;
   final Widget? trailingWidget;
+  final EdgeInsets? padding;
+  final TextStyle? titleTextStyle;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top: 40.h, left: 27.w, right: 27.w),
+      padding: padding ?? EdgeInsets.only(top: 50.h, left: 27.w, right: 27.w),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // if (!showBackButton)
-          //   SvgPicture.asset(
-          //     AssetIcons.logo,
-          //     height: 40.h,
-          //   ),
-          // // HorizontalSpacing(20.w),
           if (showBackButton)
             GestureDetector(
               onTap: () {
@@ -61,29 +55,13 @@ class CustomAppBar extends StatelessWidget {
           title ??
               Text(
                 titleText ?? '',
-                style: TextStyling.bold.copyWith(fontSize: 20.sp),
+                style: titleTextStyle ??
+                    TextStyling.semiBold.copyWith(fontSize: 17.sp),
               ),
           Spacer(),
           Row(
-            children: [
-              if (showNotification)
-                IconButton(
-                  onPressed: () {},
-                  icon: Icon(Icons.notifications),
-                  constraints: BoxConstraints(),
-                  padding: EdgeInsets.zero,
-                  visualDensity: VisualDensity.compact,
-                ),
-              if (showSettings)
-                IconButton(
-                  onPressed: () {},
-                  icon: Icon(Icons.settings),
-                  constraints: BoxConstraints(),
-                  padding: EdgeInsets.zero,
-                  visualDensity: VisualDensity.compact,
-                ),
-              if (trailingWidget != null) trailingWidget!
-            ],
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [if (trailingWidget != null) trailingWidget!],
           ),
         ],
       ),

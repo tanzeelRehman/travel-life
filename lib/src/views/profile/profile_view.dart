@@ -10,6 +10,7 @@ import 'package:starter_app/src/shared/editable_profile_avatar.dart';
 import 'package:starter_app/src/shared/full_screen_loading_indicator.dart';
 import 'package:starter_app/src/shared/main_button.dart';
 import 'package:starter_app/src/shared/spacing.dart';
+import 'package:starter_app/src/shared/tab_switcher_widget.dart';
 import 'package:starter_app/src/styles/app_colors.dart';
 import 'package:starter_app/src/views/profile/extended_profile_section.dart';
 import 'package:starter_app/src/views/profile/personal_detail_section.dart';
@@ -72,40 +73,23 @@ class ProfileView extends StackedView<ProfileViewModel> {
                   onClickCamera: model.onClickAddImage,
                 ),
                 VerticalSpacing(15.h),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 27.w),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: AppColors.white,
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(15.r),
-                      ),
+                TabSwitcherWidget(
+                  tabs: [
+                    CustomTab(
+                      title: 'Personal Details',
+                      onTap: () {
+                        model.toggleSelectedTab(0);
+                      },
+                      isSelected: model.selectedTab == 0,
                     ),
-                    padding: EdgeInsets.all(2.w),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: CustomTab(
-                            title: 'Personal Details',
-                            onTap: () {
-                              model.toggleSelectedTab(0);
-                            },
-                            isSelected: model.selectedTab == 0,
-                          ),
-                        ),
-                        HorizontalSpacing(5.w),
-                        Expanded(
-                          child: CustomTab(
-                            title: 'Extended Profile',
-                            onTap: () {
-                              model.toggleSelectedTab(1);
-                            },
-                            isSelected: model.selectedTab == 1,
-                          ),
-                        ),
-                      ],
+                    CustomTab(
+                      title: 'Extended Profile',
+                      onTap: () {
+                        model.toggleSelectedTab(1);
+                      },
+                      isSelected: model.selectedTab == 1,
                     ),
-                  ),
+                  ],
                 ),
                 Expanded(
                   child: SingleChildScrollView(

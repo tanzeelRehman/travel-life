@@ -5,10 +5,10 @@
 // **************************************************************************
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:flutter/material.dart' as _i9;
+import 'package:flutter/material.dart' as _i10;
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart' as _i1;
-import 'package:stacked_services/stacked_services.dart' as _i10;
+import 'package:stacked_services/stacked_services.dart' as _i11;
 import 'package:starter_app/src/views/email_confirmation/email_confirmation_view.dart'
     as _i8;
 import 'package:starter_app/src/views/home/home_view.dart' as _i6;
@@ -16,6 +16,8 @@ import 'package:starter_app/src/views/login/login_view.dart' as _i5;
 import 'package:starter_app/src/views/profile/profile_view.dart' as _i7;
 import 'package:starter_app/src/views/register/register_view.dart' as _i4;
 import 'package:starter_app/src/views/splash/splash_view.dart' as _i2;
+import 'package:starter_app/src/views/vehicle_registration/vehicle_registration_view.dart'
+    as _i9;
 import 'package:starter_app/src/views/welcome/welcome_view.dart' as _i3;
 
 class Routes {
@@ -33,6 +35,8 @@ class Routes {
 
   static const emailConfrimationView = '/email-confrimation-view';
 
+  static const vehicleRegistrationView = '/vehicle-registration-view';
+
   static const all = <String>{
     splashView,
     welcomeView,
@@ -41,6 +45,7 @@ class Routes {
     homeView,
     profileView,
     emailConfrimationView,
+    vehicleRegistrationView,
   };
 }
 
@@ -74,48 +79,58 @@ class StackedRouter extends _i1.RouterBase {
       Routes.emailConfrimationView,
       page: _i8.EmailConfrimationView,
     ),
+    _i1.RouteDef(
+      Routes.vehicleRegistrationView,
+      page: _i9.VehicleRegistrationView,
+    ),
   ];
 
   final _pagesMap = <Type, _i1.StackedRouteFactory>{
     _i2.SplashView: (data) {
-      return _i9.MaterialPageRoute<dynamic>(
+      return _i10.MaterialPageRoute<dynamic>(
         builder: (context) => _i2.SplashView(),
         settings: data,
       );
     },
     _i3.WelcomeView: (data) {
-      return _i9.MaterialPageRoute<dynamic>(
+      return _i10.MaterialPageRoute<dynamic>(
         builder: (context) => _i3.WelcomeView(),
         settings: data,
       );
     },
     _i4.RegisterView: (data) {
-      return _i9.MaterialPageRoute<dynamic>(
+      return _i10.MaterialPageRoute<dynamic>(
         builder: (context) => _i4.RegisterView(),
         settings: data,
       );
     },
     _i5.LoginView: (data) {
-      return _i9.MaterialPageRoute<dynamic>(
+      return _i10.MaterialPageRoute<dynamic>(
         builder: (context) => _i5.LoginView(),
         settings: data,
       );
     },
     _i6.HomeView: (data) {
-      return _i9.MaterialPageRoute<dynamic>(
+      return _i10.MaterialPageRoute<dynamic>(
         builder: (context) => _i6.HomeView(),
         settings: data,
       );
     },
     _i7.ProfileView: (data) {
-      return _i9.MaterialPageRoute<dynamic>(
+      return _i10.MaterialPageRoute<dynamic>(
         builder: (context) => _i7.ProfileView(),
         settings: data,
       );
     },
     _i8.EmailConfrimationView: (data) {
-      return _i9.MaterialPageRoute<dynamic>(
+      return _i10.MaterialPageRoute<dynamic>(
         builder: (context) => _i8.EmailConfrimationView(),
+        settings: data,
+      );
+    },
+    _i9.VehicleRegistrationView: (data) {
+      return _i10.MaterialPageRoute<dynamic>(
+        builder: (context) => _i9.VehicleRegistrationView(),
         settings: data,
       );
     },
@@ -128,7 +143,7 @@ class StackedRouter extends _i1.RouterBase {
   Map<Type, _i1.StackedRouteFactory> get pagesMap => _pagesMap;
 }
 
-extension NavigatorStateExtension on _i10.NavigationService {
+extension NavigatorStateExtension on _i11.NavigationService {
   Future<dynamic> navigateToSplashView([
     int? routerId,
     bool preventDuplicates = true,
@@ -227,6 +242,20 @@ extension NavigatorStateExtension on _i10.NavigationService {
         transition: transition);
   }
 
+  Future<dynamic> navigateToVehicleRegistrationView([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return navigateTo<dynamic>(Routes.vehicleRegistrationView,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
   Future<dynamic> replaceWithSplashView([
     int? routerId,
     bool preventDuplicates = true,
@@ -319,6 +348,20 @@ extension NavigatorStateExtension on _i10.NavigationService {
         transition,
   ]) async {
     return replaceWith<dynamic>(Routes.emailConfrimationView,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> replaceWithVehicleRegistrationView([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return replaceWith<dynamic>(Routes.vehicleRegistrationView,
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
