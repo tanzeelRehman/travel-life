@@ -23,6 +23,7 @@ class CustomFormField extends StatefulWidget {
   List<TextInputFormatter>? textInputFormatters;
   final BorderRadius? borderRadius;
   final TextInputType? textInputType;
+  final TextInputAction? textInputAction;
 
   CustomFormField({
     this.textInputFormatters,
@@ -41,6 +42,7 @@ class CustomFormField extends StatefulWidget {
     required this.isLabelCenter,
     this.borderRadius,
     this.textInputType,
+    this.textInputAction,
   });
 
   @override
@@ -51,6 +53,7 @@ class _CustomFormFieldState extends State<CustomFormField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      textInputAction: widget.textInputAction ?? TextInputAction.next,
       keyboardType: widget.textInputType,
       readOnly: widget.readOnly,
       controller: widget.controller,
