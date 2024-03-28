@@ -31,10 +31,21 @@ class AppColors {
   static HexColor chatsColor = HexColor("#527DFB");
   static HexColor eventMoneyManagerColor = HexColor("#20D256");
 
+  static HexColor vehicleRegTextFieldBgColor = HexColor("#242C3B");
+
   static Gradient mainButtonGradient = LinearGradient(
     colors: [
       HexColor("#34C8E8"),
       HexColor("#4E4AF2"),
+    ],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+  );
+
+  static Gradient fabCloseButtonGradient = LinearGradient(
+    colors: [
+      HexColor("#222834"),
+      HexColor("#090C2D"),
     ],
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
@@ -147,6 +158,17 @@ class AppColors {
       offset: Offset(-4, -4),
       blurRadius: 10,
       color: HexColor("#FFFFFF").withOpacity(0.12),
+    ),
+  ];
+
+  static List<BoxShadow> vehicleRegTextFieldBoxShadows = [
+    BoxShadow(
+      color: AppColors.vehicleRegTextFieldBgColor,
+    ),
+    BoxShadow(
+      blurRadius: 30,
+      color: HexColor("#191E29"),
+      blurStyle: BlurStyle.inner,
     ),
   ];
 }

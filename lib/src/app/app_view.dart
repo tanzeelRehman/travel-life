@@ -11,7 +11,8 @@ class AppView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
+      statusBarColor:
+          AppColors.appDarkBlue, //TODO: this was transparent before.
       statusBarIconBrightness: Brightness.light,
       statusBarBrightness: Brightness.dark,
     ));

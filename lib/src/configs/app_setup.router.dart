@@ -5,10 +5,12 @@
 // **************************************************************************
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:flutter/material.dart' as _i10;
+import 'package:flutter/material.dart' as _i13;
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart' as _i1;
-import 'package:stacked_services/stacked_services.dart' as _i11;
+import 'package:stacked_services/stacked_services.dart' as _i15;
+import 'package:starter_app/src/base/enums/vehicle_registration_action.dart'
+    as _i14;
 import 'package:starter_app/src/views/email_confirmation/email_confirmation_view.dart'
     as _i8;
 import 'package:starter_app/src/views/home/home_view.dart' as _i6;
@@ -16,6 +18,12 @@ import 'package:starter_app/src/views/login/login_view.dart' as _i5;
 import 'package:starter_app/src/views/profile/profile_view.dart' as _i7;
 import 'package:starter_app/src/views/register/register_view.dart' as _i4;
 import 'package:starter_app/src/views/splash/splash_view.dart' as _i2;
+import 'package:starter_app/src/views/vehicle_registration/accessory_detail/accessory_detail_view.dart'
+    as _i12;
+import 'package:starter_app/src/views/vehicle_registration/operational_cost_detail/operational_cost_detail_view.dart'
+    as _i11;
+import 'package:starter_app/src/views/vehicle_registration/vehicle_detail/vehicle_detail_view.dart'
+    as _i10;
 import 'package:starter_app/src/views/vehicle_registration/vehicle_registration_view.dart'
     as _i9;
 import 'package:starter_app/src/views/welcome/welcome_view.dart' as _i3;
@@ -37,6 +45,12 @@ class Routes {
 
   static const vehicleRegistrationView = '/vehicle-registration-view';
 
+  static const vehicleDetailView = '/vehicle-detail-view';
+
+  static const operationalCostDetailView = '/operational-cost-detail-view';
+
+  static const accessoryDetailView = '/accessory-detail-view';
+
   static const all = <String>{
     splashView,
     welcomeView,
@@ -46,6 +60,9 @@ class Routes {
     profileView,
     emailConfrimationView,
     vehicleRegistrationView,
+    vehicleDetailView,
+    operationalCostDetailView,
+    accessoryDetailView,
   };
 }
 
@@ -83,54 +100,89 @@ class StackedRouter extends _i1.RouterBase {
       Routes.vehicleRegistrationView,
       page: _i9.VehicleRegistrationView,
     ),
+    _i1.RouteDef(
+      Routes.vehicleDetailView,
+      page: _i10.VehicleDetailView,
+    ),
+    _i1.RouteDef(
+      Routes.operationalCostDetailView,
+      page: _i11.OperationalCostDetailView,
+    ),
+    _i1.RouteDef(
+      Routes.accessoryDetailView,
+      page: _i12.AccessoryDetailView,
+    ),
   ];
 
   final _pagesMap = <Type, _i1.StackedRouteFactory>{
     _i2.SplashView: (data) {
-      return _i10.MaterialPageRoute<dynamic>(
+      return _i13.MaterialPageRoute<dynamic>(
         builder: (context) => _i2.SplashView(),
         settings: data,
       );
     },
     _i3.WelcomeView: (data) {
-      return _i10.MaterialPageRoute<dynamic>(
+      return _i13.MaterialPageRoute<dynamic>(
         builder: (context) => _i3.WelcomeView(),
         settings: data,
       );
     },
     _i4.RegisterView: (data) {
-      return _i10.MaterialPageRoute<dynamic>(
+      return _i13.MaterialPageRoute<dynamic>(
         builder: (context) => _i4.RegisterView(),
         settings: data,
       );
     },
     _i5.LoginView: (data) {
-      return _i10.MaterialPageRoute<dynamic>(
+      return _i13.MaterialPageRoute<dynamic>(
         builder: (context) => _i5.LoginView(),
         settings: data,
       );
     },
     _i6.HomeView: (data) {
-      return _i10.MaterialPageRoute<dynamic>(
+      return _i13.MaterialPageRoute<dynamic>(
         builder: (context) => _i6.HomeView(),
         settings: data,
       );
     },
     _i7.ProfileView: (data) {
-      return _i10.MaterialPageRoute<dynamic>(
+      return _i13.MaterialPageRoute<dynamic>(
         builder: (context) => _i7.ProfileView(),
         settings: data,
       );
     },
     _i8.EmailConfrimationView: (data) {
-      return _i10.MaterialPageRoute<dynamic>(
+      return _i13.MaterialPageRoute<dynamic>(
         builder: (context) => _i8.EmailConfrimationView(),
         settings: data,
       );
     },
     _i9.VehicleRegistrationView: (data) {
-      return _i10.MaterialPageRoute<dynamic>(
+      return _i13.MaterialPageRoute<dynamic>(
         builder: (context) => _i9.VehicleRegistrationView(),
+        settings: data,
+      );
+    },
+    _i10.VehicleDetailView: (data) {
+      final args = data.getArgs<VehicleDetailViewArguments>(nullOk: false);
+      return _i13.MaterialPageRoute<dynamic>(
+        builder: (context) => _i10.VehicleDetailView(action: args.action),
+        settings: data,
+      );
+    },
+    _i11.OperationalCostDetailView: (data) {
+      final args =
+          data.getArgs<OperationalCostDetailViewArguments>(nullOk: false);
+      return _i13.MaterialPageRoute<dynamic>(
+        builder: (context) =>
+            _i11.OperationalCostDetailView(action: args.action),
+        settings: data,
+      );
+    },
+    _i12.AccessoryDetailView: (data) {
+      final args = data.getArgs<AccessoryDetailViewArguments>(nullOk: false);
+      return _i13.MaterialPageRoute<dynamic>(
+        builder: (context) => _i12.AccessoryDetailView(action: args.action),
         settings: data,
       );
     },
@@ -143,7 +195,73 @@ class StackedRouter extends _i1.RouterBase {
   Map<Type, _i1.StackedRouteFactory> get pagesMap => _pagesMap;
 }
 
-extension NavigatorStateExtension on _i11.NavigationService {
+class VehicleDetailViewArguments {
+  const VehicleDetailViewArguments({required this.action});
+
+  final _i14.VehicleRegistrationAction action;
+
+  @override
+  String toString() {
+    return '{"action": "$action"}';
+  }
+
+  @override
+  bool operator ==(covariant VehicleDetailViewArguments other) {
+    if (identical(this, other)) return true;
+    return other.action == action;
+  }
+
+  @override
+  int get hashCode {
+    return action.hashCode;
+  }
+}
+
+class OperationalCostDetailViewArguments {
+  const OperationalCostDetailViewArguments({required this.action});
+
+  final _i14.VehicleRegistrationAction action;
+
+  @override
+  String toString() {
+    return '{"action": "$action"}';
+  }
+
+  @override
+  bool operator ==(covariant OperationalCostDetailViewArguments other) {
+    if (identical(this, other)) return true;
+    return other.action == action;
+  }
+
+  @override
+  int get hashCode {
+    return action.hashCode;
+  }
+}
+
+class AccessoryDetailViewArguments {
+  const AccessoryDetailViewArguments({required this.action});
+
+  final _i14.VehicleRegistrationAction action;
+
+  @override
+  String toString() {
+    return '{"action": "$action"}';
+  }
+
+  @override
+  bool operator ==(covariant AccessoryDetailViewArguments other) {
+    if (identical(this, other)) return true;
+    return other.action == action;
+  }
+
+  @override
+  int get hashCode {
+    return action.hashCode;
+  }
+}
+
+extension NavigatorStateExtension on _i15.NavigationService {
   Future<dynamic> navigateToSplashView([
     int? routerId,
     bool preventDuplicates = true,
@@ -256,6 +374,54 @@ extension NavigatorStateExtension on _i11.NavigationService {
         transition: transition);
   }
 
+  Future<dynamic> navigateToVehicleDetailView({
+    required _i14.VehicleRegistrationAction action,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return navigateTo<dynamic>(Routes.vehicleDetailView,
+        arguments: VehicleDetailViewArguments(action: action),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> navigateToOperationalCostDetailView({
+    required _i14.VehicleRegistrationAction action,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return navigateTo<dynamic>(Routes.operationalCostDetailView,
+        arguments: OperationalCostDetailViewArguments(action: action),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> navigateToAccessoryDetailView({
+    required _i14.VehicleRegistrationAction action,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return navigateTo<dynamic>(Routes.accessoryDetailView,
+        arguments: AccessoryDetailViewArguments(action: action),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
   Future<dynamic> replaceWithSplashView([
     int? routerId,
     bool preventDuplicates = true,
@@ -362,6 +528,54 @@ extension NavigatorStateExtension on _i11.NavigationService {
         transition,
   ]) async {
     return replaceWith<dynamic>(Routes.vehicleRegistrationView,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> replaceWithVehicleDetailView({
+    required _i14.VehicleRegistrationAction action,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return replaceWith<dynamic>(Routes.vehicleDetailView,
+        arguments: VehicleDetailViewArguments(action: action),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> replaceWithOperationalCostDetailView({
+    required _i14.VehicleRegistrationAction action,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return replaceWith<dynamic>(Routes.operationalCostDetailView,
+        arguments: OperationalCostDetailViewArguments(action: action),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> replaceWithAccessoryDetailView({
+    required _i14.VehicleRegistrationAction action,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return replaceWith<dynamic>(Routes.accessoryDetailView,
+        arguments: AccessoryDetailViewArguments(action: action),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,

@@ -18,7 +18,7 @@ class SplashView extends StackedView<SplashViewModel> {
           children: [
             Spacer(),
             Image.asset(
-              AssetImages.imagesPlaceholder250,
+              AssetImages.logo,
               height: 387.h,
             ),
             Spacer(),

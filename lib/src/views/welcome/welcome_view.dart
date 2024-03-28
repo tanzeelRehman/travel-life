@@ -17,6 +17,7 @@ class WelcomeView extends StackedView<WelcomeViewModel> {
         decoration: BoxDecoration(
           image: DecorationImage(
             image: Image.asset(AssetImages.mainBgWithoutGlow).image,
+            opacity: 0.5,
             fit: BoxFit.cover,
           ),
         ),
@@ -32,23 +33,26 @@ class WelcomeView extends StackedView<WelcomeViewModel> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Spacer(),
-            Container(
-              height: 55.h,
-              decoration: BoxDecoration(
-                boxShadow: AppColors.appNameBoxShadows,
-                color: AppColors.appDarkBlue,
-                borderRadius: BorderRadius.circular(10.r),
-              ),
-              child: Center(
-                child: Text(
-                  'Travel Life',
-                  style: TextStyling.bold.copyWith(fontSize: 24.sp),
-                ),
-              ),
-            ),
+            // Container(
+            //   height: 55.h,
+            //   decoration: BoxDecoration(
+            //     boxShadow: AppColors.appNameBoxShadows,
+            //     color: AppColors.appDarkBlue,
+            //     borderRadius: BorderRadius.circular(10.r),
+            //   ),
+            //   child: Center(
+            //     child: Text(
+            //       'Travel Life',
+            //       style: TextStyling.bold.copyWith(fontSize: 24.sp),
+            //     ),
+            //   ),
+            // ),
             Expanded(
-              flex: 6,
-              child: Container(),
+              flex: 10,
+              child: Image.asset(
+                AssetImages.logo,
+                alignment: Alignment.topCenter,
+              ),
             ),
             VerticalSpacing(40.h),
             MainButton(
@@ -65,7 +69,7 @@ class WelcomeView extends StackedView<WelcomeViewModel> {
               isLoading: model.isBusy,
               gradient: AppColors.secondaryButtonGradient,
             ),
-            Spacer(flex: 1),
+            Spacer(),
           ],
         ),
       ),

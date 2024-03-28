@@ -1,0 +1,1 @@
+enum VehicleRegistrationAction { add, edit }

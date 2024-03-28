@@ -14,6 +14,8 @@ class MainButton extends StatefulWidget {
   final EdgeInsets? padding;
   final double? fontSize;
   final Gradient? gradient;
+  final BorderRadiusGeometry? borderRadius;
+  final Widget? child;
   const MainButton({
     Key? key,
     required this.buttonText,
@@ -26,6 +28,8 @@ class MainButton extends StatefulWidget {
     this.padding,
     this.fontSize,
     this.gradient,
+    this.borderRadius,
+    this.child,
   }) : super(key: key);
 
   @override
@@ -40,7 +44,7 @@ class _LoadingButtonState extends State<MainButton> {
       width: widget.fullWidth ? double.infinity : widget.width,
       decoration: BoxDecoration(
         gradient: widget.gradient ?? AppColors.mainButtonGradient,
-        borderRadius: BorderRadius.circular(10.r),
+        borderRadius: widget.borderRadius ?? BorderRadius.circular(10.r),
       ),
       child: ElevatedButton(
         onPressed: widget.onPressed,
@@ -70,12 +74,13 @@ class _LoadingButtonState extends State<MainButton> {
                   ),
                 ),
               )
-            : Text(
-                widget.buttonText,
-                style: TextStyling.bold.copyWith(
-                  fontSize: widget.fontSize ?? 18.sp,
+            : widget.child ??
+                Text(
+                  widget.buttonText,
+                  style: TextStyling.bold.copyWith(
+                    fontSize: widget.fontSize ?? 18.sp,
+                  ),
                 ),
-              ),
       ),
     );
   }

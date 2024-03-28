@@ -11,6 +11,9 @@ import 'package:starter_app/src/views/login/login_view.dart';
 import 'package:starter_app/src/views/profile/profile_view.dart';
 import 'package:starter_app/src/views/register/register_view.dart';
 import 'package:starter_app/src/views/splash/splash_view.dart';
+import 'package:starter_app/src/views/vehicle_registration/accessory_detail/accessory_detail_view.dart';
+import 'package:starter_app/src/views/vehicle_registration/operational_cost_detail/operational_cost_detail_view.dart';
+import 'package:starter_app/src/views/vehicle_registration/vehicle_detail/vehicle_detail_view.dart';
 import 'package:starter_app/src/views/vehicle_registration/vehicle_registration_view.dart';
 import 'package:starter_app/src/views/welcome/welcome_view.dart';
 
@@ -24,6 +27,10 @@ import 'package:starter_app/src/views/welcome/welcome_view.dart';
     MaterialRoute(page: ProfileView),
     MaterialRoute(page: EmailConfrimationView), //not used for now.
     MaterialRoute(page: VehicleRegistrationView),
+    //Vehicle Regsitration Detail Pages
+    MaterialRoute(page: VehicleDetailView),
+    MaterialRoute(page: OperationalCostDetailView),
+    MaterialRoute(page: AccessoryDetailView),
   ],
   dependencies: [
     // Lazy singletons

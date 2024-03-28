@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:starter_app/src/base/enums/vehicle_registration_action.dart';
 import 'package:starter_app/src/configs/app_setup.locator.dart';
 import 'package:starter_app/src/configs/app_setup.router.dart';
 
@@ -48,6 +49,28 @@ class NavService {
   static Future<dynamic>? navigateToVehicleRegistration({dynamic arguments}) =>
       _navigationService!
           .navigateTo(Routes.vehicleRegistrationView, arguments: arguments);
+
+  //Vehicle Registration Navigations:
+  static Future<dynamic>? navigateToVehicleDetail(
+          {required VehicleRegistrationAction action}) =>
+      _navigationService!.navigateTo(
+        Routes.vehicleDetailView,
+        arguments: VehicleDetailViewArguments(action: action),
+      );
+
+  static Future<dynamic>? navigateToAccessoryDetail(
+          {required VehicleRegistrationAction action}) =>
+      _navigationService!.navigateTo(
+        Routes.accessoryDetailView,
+        arguments: AccessoryDetailViewArguments(action: action),
+      );
+
+  static Future<dynamic>? navigateToOperationalCostDetail(
+          {required VehicleRegistrationAction action}) =>
+      _navigationService!.navigateTo(
+        Routes.operationalCostDetailView,
+        arguments: OperationalCostDetailViewArguments(action: action),
+      );
 
   //TO GO BACK
   static bool back({dynamic arguments}) => _navigationService!.back();

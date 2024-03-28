@@ -12,6 +12,9 @@ class BlurContainer extends StatelessWidget {
     this.border,
     this.borderRadius,
     this.radius,
+    this.width,
+    this.sigmaX,
+    this.sigmaY,
   }) : super(key: key);
 
   final double? height;
@@ -19,11 +22,15 @@ class BlurContainer extends StatelessWidget {
   final BoxBorder? border;
   final BorderRadius? borderRadius;
   final double? radius;
+  final double? width;
+  final double? sigmaX;
+  final double? sigmaY;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: height,
+      width: width,
       decoration: BoxDecoration(
         border: border ??
             Border.all(
@@ -40,8 +47,8 @@ class BlurContainer extends StatelessWidget {
         borderRadius: borderRadius ?? BorderRadius.circular(radius ?? 20.r),
         child: BackdropFilter(
           filter: ImageFilter.blur(
-            sigmaX: 3,
-            sigmaY: 3,
+            sigmaX: sigmaX ?? 3,
+            sigmaY: sigmaY ?? 3,
           ),
           child: child,
         ),
