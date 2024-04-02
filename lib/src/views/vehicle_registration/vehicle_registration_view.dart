@@ -182,7 +182,7 @@ class VehicleRegistrationView
               // crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 CustomAppBar(
-                  titleText: 'Accessory Registration',
+                  titleText: model.getAppBarTitle(),
                 ),
                 VerticalSpacing(context.screenSize().height * 0.18),
                 TabSwitcherWidget(

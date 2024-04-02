@@ -3,10 +3,11 @@ import 'package:stacked/stacked.dart';
 import 'package:starter_app/generated/assets.dart';
 import 'package:starter_app/src/base/enums/vehicle_registration_action.dart';
 import 'package:starter_app/src/services/local/navigation_service.dart';
+import 'package:starter_app/src/services/remote/base/database_view_model.dart';
 import 'package:starter_app/src/services/remote/base/supabase_auth_view_model.dart';
 
 class VehicleRegistrationViewModel extends ReactiveViewModel
-    with SupabaseAuthViewModel {
+    with SupabaseAuthViewModel, DatabaseViewModel {
   int selectedTab = 0;
 
   ValueNotifier<bool> isFabOpen = ValueNotifier(false);
@@ -15,11 +16,30 @@ class VehicleRegistrationViewModel extends ReactiveViewModel
   bool extend = false;
   bool rmIcons = false;
 
-  void init() {}
+  void init() {
+    // getAllVehicles();
+    // getAllAccessories();
+    // getAllOperationalCosts();
+    // getAllManufacturers();
+    getAllVehicleModels();
+  }
 
   onChangeTab(int v) {
     selectedTab = v;
     notifyListeners();
+  }
+
+  getAppBarTitle() {
+    switch (selectedTab) {
+      case 0:
+        return 'Vehicle Registration';
+      case 1:
+        return 'Accessory Registration';
+      case 2:
+        return 'Operational Cost';
+      default:
+        return '';
+    }
   }
 
   onClickAddActionButton() {
@@ -49,6 +69,39 @@ class VehicleRegistrationViewModel extends ReactiveViewModel
     }
   }
 
+//////////////////////////// VEHICLE VIEW ///////////////////////////////////////
+
+  getAllVehicles() async {
+    print('hello im called');
+    final res = await databaseService.getAllVehicles();
+    print('res: $res');
+  }
+
+  getAllAccessories() async {
+    print('hello im called');
+    final res = await databaseService.getAllAccessories();
+    print('res: $res');
+  }
+
+  getAllOperationalCosts() async {
+    print('hello im called');
+    final res = await databaseService.getAllOperationalCosts();
+    print('res: $res');
+  }
+
+  getAllManufacturers() async {
+    print('hello im called');
+    final res = await databaseService.getAllManufacturers();
+    print('res: $res');
+  }
+
+  getAllVehicleModels() async {
+    print('hello im called');
+    final res = await databaseService.getAllVehicleModels(1);
+    print('res: $res');
+  }
+
+////////////////////////////////////////////////////////////////////////////////
   ////////////For accessories view
   int selectedAccessoryCategory = 0;
   List<String> accessoryCategories = [

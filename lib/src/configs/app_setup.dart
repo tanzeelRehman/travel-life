@@ -4,6 +4,7 @@ import 'package:starter_app/src/services/local/auth_service.dart';
 import 'package:starter_app/src/services/local/connectivity_service.dart';
 import 'package:starter_app/src/services/local/keyboard_service.dart';
 import 'package:starter_app/src/services/remote/api_service.dart';
+import 'package:starter_app/src/services/remote/database_service.dart';
 import 'package:starter_app/src/services/remote/supabase_auth_service.dart';
 import 'package:starter_app/src/views/email_confirmation/email_confirmation_view.dart';
 import 'package:starter_app/src/views/home/home_view.dart';
@@ -42,6 +43,7 @@ import 'package:starter_app/src/views/welcome/welcome_view.dart';
     LazySingleton(classType: SupabaseAuthService),
     LazySingleton(classType: KeyboardService),
     LazySingleton(classType: ApiService),
+    LazySingleton(classType: DatabaseService),
   ],
 )
 class AppSetup {

@@ -8,9 +8,10 @@
 import 'package:flutter/material.dart' as _i13;
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart' as _i1;
-import 'package:stacked_services/stacked_services.dart' as _i15;
+import 'package:stacked_services/stacked_services.dart' as _i16;
 import 'package:starter_app/src/base/enums/vehicle_registration_action.dart'
     as _i14;
+import 'package:starter_app/src/models/vehicle.dart' as _i15;
 import 'package:starter_app/src/views/email_confirmation/email_confirmation_view.dart'
     as _i8;
 import 'package:starter_app/src/views/home/home_view.dart' as _i6;
@@ -166,7 +167,8 @@ class StackedRouter extends _i1.RouterBase {
     _i10.VehicleDetailView: (data) {
       final args = data.getArgs<VehicleDetailViewArguments>(nullOk: false);
       return _i13.MaterialPageRoute<dynamic>(
-        builder: (context) => _i10.VehicleDetailView(action: args.action),
+        builder: (context) =>
+            _i10.VehicleDetailView(action: args.action, vehicle: args.vehicle),
         settings: data,
       );
     },
@@ -196,24 +198,29 @@ class StackedRouter extends _i1.RouterBase {
 }
 
 class VehicleDetailViewArguments {
-  const VehicleDetailViewArguments({required this.action});
+  const VehicleDetailViewArguments({
+    required this.action,
+    required this.vehicle,
+  });
 
   final _i14.VehicleRegistrationAction action;
 
+  final _i15.Vehicle? vehicle;
+
   @override
   String toString() {
-    return '{"action": "$action"}';
+    return '{"action": "$action", "vehicle": "$vehicle"}';
   }
 
   @override
   bool operator ==(covariant VehicleDetailViewArguments other) {
     if (identical(this, other)) return true;
-    return other.action == action;
+    return other.action == action && other.vehicle == vehicle;
   }
 
   @override
   int get hashCode {
-    return action.hashCode;
+    return action.hashCode ^ vehicle.hashCode;
   }
 }
 
@@ -261,7 +268,7 @@ class AccessoryDetailViewArguments {
   }
 }
 
-extension NavigatorStateExtension on _i15.NavigationService {
+extension NavigatorStateExtension on _i16.NavigationService {
   Future<dynamic> navigateToSplashView([
     int? routerId,
     bool preventDuplicates = true,
@@ -376,6 +383,7 @@ extension NavigatorStateExtension on _i15.NavigationService {
 
   Future<dynamic> navigateToVehicleDetailView({
     required _i14.VehicleRegistrationAction action,
+    required _i15.Vehicle? vehicle,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -383,7 +391,7 @@ extension NavigatorStateExtension on _i15.NavigationService {
         transition,
   }) async {
     return navigateTo<dynamic>(Routes.vehicleDetailView,
-        arguments: VehicleDetailViewArguments(action: action),
+        arguments: VehicleDetailViewArguments(action: action, vehicle: vehicle),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
@@ -536,6 +544,7 @@ extension NavigatorStateExtension on _i15.NavigationService {
 
   Future<dynamic> replaceWithVehicleDetailView({
     required _i14.VehicleRegistrationAction action,
+    required _i15.Vehicle? vehicle,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -543,7 +552,7 @@ extension NavigatorStateExtension on _i15.NavigationService {
         transition,
   }) async {
     return replaceWith<dynamic>(Routes.vehicleDetailView,
-        arguments: VehicleDetailViewArguments(action: action),
+        arguments: VehicleDetailViewArguments(action: action, vehicle: vehicle),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,

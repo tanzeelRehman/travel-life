@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -5,17 +6,23 @@ import 'package:stacked/stacked.dart';
 import 'package:starter_app/generated/assets.dart';
 import 'package:starter_app/src/base/enums/vehicle_registration_action.dart';
 import 'package:starter_app/src/base/utils/utils.dart';
+import 'package:starter_app/src/models/vehicle.dart';
 import 'package:starter_app/src/shared/custom_app_bar.dart';
 import 'package:starter_app/src/shared/main_button.dart';
 import 'package:starter_app/src/shared/spacing.dart';
 import 'package:starter_app/src/shared/vehicle_registration_textfield.dart';
 import 'package:starter_app/src/styles/app_colors.dart';
+import 'package:starter_app/src/styles/text_theme.dart';
 import 'package:starter_app/src/views/vehicle_registration/vehicle_detail/vehicle_detail_view_model.dart';
 
 class VehicleDetailView extends StackedView<VehicleDetailViewModel> {
   final VehicleRegistrationAction action;
+  final Vehicle? vehicle;
 
-  VehicleDetailView({required this.action});
+  VehicleDetailView({
+    required this.action,
+    required this.vehicle,
+  });
 
   @override
   Widget builder(
@@ -66,6 +73,44 @@ class VehicleDetailView extends StackedView<VehicleDetailViewModel> {
                       bottomRight: Radius.circular(20.r),
                     ),
                     color: AppColors.white.withOpacity(0.1),
+                    image: DecorationImage(
+                      image: CachedNetworkImageProvider(
+                        'https://imgd.aeplcdn.com/370x208/n/cw/ec/130591/fronx-exterior-right-front-three-quarter-109.jpeg?isig=0&q=80',
+                      ),
+                      fit: BoxFit.cover,
+                      opacity: 0.5,
+                    ),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          //TODO add image or whatever
+                        },
+                        child: Container(
+                          height: 60.sp,
+                          width: 60.sp,
+                          decoration: BoxDecoration(
+                            gradient: AppColors.mainButtonGradient,
+                            borderRadius: BorderRadius.circular(10.r),
+                          ),
+                          child: Icon(
+                            Icons.add,
+                            color: AppColors.white,
+                            size: 40.sp,
+                          ),
+                        ),
+                      ),
+                      VerticalSpacing(10.h),
+                      Text(
+                        'Add Image',
+                        style: TextStyling.regular.copyWith(
+                          fontSize: 12.sp,
+                        ),
+                      )
+                    ],
                   ),
                 ),
               ),
@@ -213,5 +258,6 @@ class VehicleDetailView extends StackedView<VehicleDetailViewModel> {
       VehicleDetailViewModel();
 
   @override
-  void onViewModelReady(VehicleDetailViewModel model) => model.init();
+  void onViewModelReady(VehicleDetailViewModel model) =>
+      model.init(action, vehicle);
 }

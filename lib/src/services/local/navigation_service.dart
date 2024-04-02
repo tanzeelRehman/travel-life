@@ -4,6 +4,7 @@ import 'package:stacked_services/stacked_services.dart';
 import 'package:starter_app/src/base/enums/vehicle_registration_action.dart';
 import 'package:starter_app/src/configs/app_setup.locator.dart';
 import 'package:starter_app/src/configs/app_setup.router.dart';
+import 'package:starter_app/src/models/vehicle.dart';
 
 class NavService {
   static NavigationService? _navigationService = locator<NavigationService>();
@@ -52,10 +53,10 @@ class NavService {
 
   //Vehicle Registration Navigations:
   static Future<dynamic>? navigateToVehicleDetail(
-          {required VehicleRegistrationAction action}) =>
+          {required VehicleRegistrationAction action, Vehicle? vehicle}) =>
       _navigationService!.navigateTo(
         Routes.vehicleDetailView,
-        arguments: VehicleDetailViewArguments(action: action),
+        arguments: VehicleDetailViewArguments(action: action, vehicle: vehicle),
       );
 
   static Future<dynamic>? navigateToAccessoryDetail(
