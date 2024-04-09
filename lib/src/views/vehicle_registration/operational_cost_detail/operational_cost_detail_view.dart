@@ -303,6 +303,9 @@ class OperationalCostDetailView
                       svgIconPath: AssetIcons.tfPrice,
                       labelText: 'Purchas Price',
                       controller: model.purchasePriceController,
+                      onchangeAction: (p0) {
+                        model.calculateTotalPrice(p0);
+                      },
                       inputType: TextInputType.number,
                       textInputFormatters: [
                         FilteringTextInputFormatter.allow(
@@ -313,8 +316,11 @@ class OperationalCostDetailView
                     VerticalSpacing(20.h),
                     VehicleRegistrationTextField(
                       svgIconPath: AssetIcons.tfVat,
-                      labelText: 'VAT',
+                      labelText: 'TAX/VAT',
                       controller: model.vatController,
+                      onchangeAction: (p0) {
+                        model.calculateTax(p0);
+                      },
                       inputType: TextInputType.number,
                       textInputFormatters: [
                         FilteringTextInputFormatter.allow(

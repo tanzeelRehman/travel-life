@@ -15,13 +15,14 @@ class LoginView extends StackedView<LoginViewModel> {
   @override
   Widget builder(BuildContext context, LoginViewModel model, Widget? child) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
         child: Container(
           decoration: BoxDecoration(
             image: DecorationImage(
               image: Image.asset(AssetImages.bgImage).image,
               fit: BoxFit.cover,
-              opacity: 0.5,
+              opacity: 1,
             ),
           ),
           child: Container(
