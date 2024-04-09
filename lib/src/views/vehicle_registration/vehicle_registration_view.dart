@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -6,18 +5,17 @@ import 'package:flutter_svg/svg.dart';
 import 'package:stacked/stacked.dart';
 import 'package:starter_app/generated/assets.dart';
 import 'package:starter_app/src/base/utils/utils.dart';
-import 'package:starter_app/src/shared/blur_container.dart';
+import 'package:starter_app/src/shared/accessory_card.dart';
 import 'package:starter_app/src/shared/custom_app_bar.dart';
 import 'package:starter_app/src/shared/custom_tab.dart';
-import 'package:starter_app/src/shared/editable_profile_avatar.dart';
-import 'package:starter_app/src/shared/full_screen_loading_indicator.dart';
-import 'package:starter_app/src/shared/main_button.dart';
+import 'package:starter_app/src/shared/empty_state_widget.dart';
+import 'package:starter_app/src/shared/loading_indicator.dart';
+import 'package:starter_app/src/shared/operational_cost_card.dart';
 import 'package:starter_app/src/shared/spacing.dart';
 import 'package:starter_app/src/shared/tab_switcher_widget.dart';
+import 'package:starter_app/src/shared/vehicle_card.dart';
 import 'package:starter_app/src/styles/app_colors.dart';
 import 'package:starter_app/src/styles/text_theme.dart';
-import 'package:starter_app/src/views/profile/extended_profile_section.dart';
-import 'package:starter_app/src/views/profile/personal_detail_section.dart';
 import 'package:starter_app/src/views/vehicle_registration/vehicle_registration_view_model.dart';
 
 class VehicleRegistrationView
@@ -212,7 +210,7 @@ class VehicleRegistrationView
                     ),
                   ],
                 ),
-                if (model.selectedTab == 0) VehiclesView(),
+                if (model.selectedTab == 0) VehiclesView(model: model),
                 if (model.selectedTab == 1) AccessoriesView(model: model),
                 if (model.selectedTab == 2) OperationalCostView(model: model),
               ],
@@ -234,186 +232,46 @@ class VehicleRegistrationView
 class VehiclesView extends StatelessWidget {
   const VehiclesView({
     Key? key,
+    required this.model,
   }) : super(key: key);
+
+  final VehicleRegistrationViewModel model;
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: ListView.separated(
-        padding: EdgeInsets.symmetric(
-          horizontal: 27.w,
-          vertical: 16.h,
-        ),
-        separatorBuilder: (context, index) => VerticalSpacing(20.h),
-        itemBuilder: (context, index) {
-          return VehicleCard();
-        },
-        shrinkWrap: true,
-        itemCount: 10,
-      ),
-    );
-  }
-}
-
-class VehicleCard extends StatelessWidget {
-  const VehicleCard({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return BlurContainer(
-      height: 384.h,
-      child: Stack(
-        children: [
-          Padding(
-            padding: EdgeInsets.only(
-              left: 10.w,
-              right: 10.w,
-              top: 10.h,
-              bottom: 20.w,
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(10.r),
-                  child: CachedNetworkImage(
-                    imageUrl:
-                        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSfhVdI0FxDS2N0sqI8b9Dm_H2vK19hHptpetvbBg33KQ&s',
-                    height: 173.h,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                VerticalSpacing(10.h),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        'BMW Cabrio',
-                        style: TextStyling.semiBold.copyWith(
-                          fontSize: 20.sp,
-                        ),
-                      ),
-                      VerticalSpacing(10.h),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Image.asset(
-                                AssetImages.vehicleCardFuelAverage,
-                                height: 15.h,
-                              ),
-                              HorizontalSpacing(8.w),
-                              Text(
-                                '12 Km/L',
-                                style: TextStyling.regular.copyWith(
-                                  fontSize: 13.sp,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Image.asset(
-                                AssetImages.vehicleCardBuildyear,
-                                height: 15.h,
-                              ),
-                              HorizontalSpacing(8.w),
-                              Text(
-                                '12 Km/L',
-                                style: TextStyling.regular.copyWith(
-                                  fontSize: 13.sp,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      VerticalSpacing(10.h),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Image.asset(
-                                AssetImages.vehicleCardPurchasePrice,
-                                height: 15.h,
-                              ),
-                              HorizontalSpacing(8.w),
-                              Text(
-                                '12 Km/L',
-                                style: TextStyling.regular.copyWith(
-                                  fontSize: 13.sp,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Image.asset(
-                                AssetImages.vehicleCardRunningKM,
-                                height: 15.h,
-                              ),
-                              HorizontalSpacing(8.w),
-                              Text(
-                                '12 Km/L',
-                                style: TextStyling.regular.copyWith(
-                                  fontSize: 13.sp,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                VerticalSpacing(20.h),
-                MainButton(
-                  buttonText: 'Edit Details',
-                  onPressed: () {},
-                  isLoading: false,
-                ),
-              ],
-            ),
-          ),
-          Positioned(
-            top: 5,
-            right: 5,
-            child: IconButton(
-              onPressed: () {},
-              icon: Container(
-                height: 30.w,
-                width: 30.w,
-                decoration: BoxDecoration(
-                  color: AppColors.red,
-                  shape: BoxShape.circle,
-                ),
-                child: SvgPicture.asset(
-                  AssetIcons.deleteIcon,
-                  fit: BoxFit.scaleDown,
-                ),
+      child: model.vehiclesLoading
+          ? Center(
+              child: LoadingIndicator(
+                color: AppColors.appSkyBlue,
               ),
-            ),
-          ),
-        ],
-      ),
+            )
+          : model.allVehicles.isEmpty
+              ? EmptyStateWidget(
+                  text: 'No vehicles added yet',
+                  color: AppColors.appSkyBlue,
+                )
+              : ListView.separated(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 27.w,
+                    vertical: 16.h,
+                  ),
+                  separatorBuilder: (context, index) => VerticalSpacing(20.h),
+                  itemBuilder: (context, index) {
+                    final vehicle = model.allVehicles[index];
+                    return VehicleCard(
+                      vehicle: vehicle,
+                      onEdit: () {
+                        model.onEditVehicle(vehicle);
+                      },
+                      onDelete: () {
+                        // model.onDeleteVehicle(vehicle);
+                      },
+                    );
+                  },
+                  shrinkWrap: true,
+                  itemCount: model.allVehicles.length,
+                ),
     );
   }
 }
@@ -479,7 +337,9 @@ class AccessoriesView extends StatelessWidget {
                 shrinkWrap: true,
               ),
             ),
-            AccessoryCategoryHeader(),
+            AccessoryCategoryHeader(
+              categoryName: 'front',
+            ),
             SizedBox(
               height: 32.h + 360.h,
               child: ListView.separated(
@@ -489,14 +349,19 @@ class AccessoriesView extends StatelessWidget {
                 ),
                 separatorBuilder: (context, index) => HorizontalSpacing(20.h),
                 itemBuilder: (context, index) {
-                  return AccessoryCard();
+                  final accessory = model.allAccessories[index];
+                  return AccessoryCard(
+                      accessory: accessory,
+                      onClickEdit: () {
+                        model.onEditAccessory(accessory);
+                      });
                 },
                 shrinkWrap: false,
-                itemCount: 10,
+                itemCount: model.allAccessories.length,
                 scrollDirection: Axis.horizontal,
               ),
             ),
-            AccessoryCategoryHeader(),
+            AccessoryCategoryHeader(categoryName: ''),
             SizedBox(
               height: 32.h + 360.h,
               child: ListView.separated(
@@ -506,10 +371,16 @@ class AccessoriesView extends StatelessWidget {
                 ),
                 separatorBuilder: (context, index) => HorizontalSpacing(20.h),
                 itemBuilder: (context, index) {
-                  return AccessoryCard();
+                  final accessory = model.allAccessories[index];
+                  return AccessoryCard(
+                    accessory: accessory,
+                    onClickEdit: () {
+                      model.onEditAccessory(accessory);
+                    },
+                  );
                 },
                 shrinkWrap: false,
-                itemCount: 10,
+                itemCount: model.allAccessories.length,
                 scrollDirection: Axis.horizontal,
               ),
             ),
@@ -523,7 +394,10 @@ class AccessoriesView extends StatelessWidget {
 class AccessoryCategoryHeader extends StatelessWidget {
   const AccessoryCategoryHeader({
     Key? key,
+    required this.categoryName,
   }) : super(key: key);
+
+  final String categoryName;
 
   @override
   Widget build(BuildContext context) {
@@ -538,159 +412,22 @@ class AccessoryCategoryHeader extends StatelessWidget {
             'Safety Gear',
             style: TextStyling.regular,
           ),
-          MainButton(
-            width: 25.w,
-            height: 25.w,
-            padding: EdgeInsets.zero,
-            fullWidth: false,
-            buttonText: '',
-            onPressed: () {},
-            isLoading: false,
-            child: Icon(
-              Icons.add,
-              color: AppColors.white,
-              size: 20.sp,
-            ),
-            borderRadius: BorderRadius.circular(5.r),
-          ),
+          // MainButton(
+          //   width: 25.w,
+          //   height: 25.w,
+          //   padding: EdgeInsets.zero,
+          //   fullWidth: false,
+          //   buttonText: '',
+          //   onPressed: () {},
+          //   isLoading: false,
+          //   child: Icon(
+          //     Icons.add,
+          //     color: AppColors.white,
+          //     size: 20.sp,
+          //   ),
+          //   borderRadius: BorderRadius.circular(5.r),
+          // ),
         ],
-      ),
-    );
-  }
-}
-
-class AccessoryCard extends StatelessWidget {
-  const AccessoryCard({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return BlurContainer(
-      height: 360.h,
-      width: 200.w,
-      sigmaX: 1,
-      sigmaY: 1,
-      child: Padding(
-        padding: EdgeInsets.only(
-          left: 7.w,
-          right: 7.w,
-          top: 7.h,
-          bottom: 7.w,
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10.r),
-              child: CachedNetworkImage(
-                imageUrl:
-                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSfhVdI0FxDS2N0sqI8b9Dm_H2vK19hHptpetvbBg33KQ&s',
-                height: 150.h,
-                width: double.infinity,
-                fit: BoxFit.cover,
-              ),
-            ),
-            VerticalSpacing(10.h),
-            Text(
-              '\$1400',
-              style: TextStyling.semiBold.copyWith(
-                fontSize: 15.sp,
-              ),
-            ),
-            VerticalSpacing(10.h),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Purchasing Date',
-                      style: TextStyling.regular.copyWith(
-                        fontSize: 10.sp,
-                        color: AppColors.grey,
-                      ),
-                    ),
-                    HorizontalSpacing(8.w),
-                    Text(
-                      '12-Mar-2019',
-                      style: TextStyling.medium.copyWith(
-                        fontSize: 12.sp,
-                      ),
-                    ),
-                  ],
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Purchasing Price',
-                      style: TextStyling.regular.copyWith(
-                        fontSize: 10.sp,
-                        color: AppColors.grey,
-                      ),
-                    ),
-                    HorizontalSpacing(8.w),
-                    Text(
-                      '\$1600',
-                      style: TextStyling.medium.copyWith(
-                        fontSize: 12.sp,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            VerticalSpacing(10.h),
-            Expanded(
-              child: Container(
-                padding: EdgeInsets.all(5.w),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10.r),
-                  color: AppColors.appFaddedBlue,
-                ),
-                child: Text(
-                  'Lorem ipsum dolor sit amet consectetur. Sed suspendisse lobortis pharetra tellus nulla eget luctus facilisi. Nibh eget...',
-                  style: TextStyling.regular.copyWith(fontSize: 10.sp),
-                ),
-              ),
-            ),
-            Center(
-              child: TextButton(
-                onPressed: () {},
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      'Edit',
-                      style: TextStyling.regular.copyWith(
-                        fontSize: 12.sp,
-                        decoration: TextDecoration.underline,
-                        decorationColor: AppColors.white,
-                      ),
-                    ),
-                    HorizontalSpacing(8.w),
-                    Icon(
-                      Icons.edit_outlined,
-                      color: AppColors.white,
-                      size: 15.sp,
-                    )
-                  ],
-                ),
-                style: TextButton.styleFrom(
-                  padding: EdgeInsets.zero,
-                  visualDensity: VisualDensity.compact,
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                ),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -709,6 +446,7 @@ class OperationalCostView extends StatelessWidget {
     return Expanded(
       child: Column(
         children: [
+          //TODO: this below listview is only for vehicles (user's vehicles)
           SizedBox(
             height: 45.h + 40.h,
             child: ListView.separated(
@@ -757,170 +495,43 @@ class OperationalCostView extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 20.sp,
-                mainAxisSpacing: 20.sp,
-                mainAxisExtent: 260.h,
-              ),
-              itemBuilder: (context, index) {
-                return OperationalCostCard();
-              },
-              itemCount: 4,
-              shrinkWrap: true,
-              padding: EdgeInsets.symmetric(
-                horizontal: 27.w,
-              ),
-              scrollDirection: Axis.vertical,
-            ),
+            child: model.operationsCostsLoading
+                ? Center(
+                    child: LoadingIndicator(
+                      color: AppColors.appSkyBlue,
+                    ),
+                  )
+                : model.allOperationalCosts.isEmpty
+                    ? EmptyStateWidget(
+                        text: 'No operational costs',
+                        color: AppColors.appSkyBlue,
+                      )
+                    : GridView.builder(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 20.sp,
+                          mainAxisSpacing: 20.sp,
+                          mainAxisExtent: 260.h,
+                        ),
+                        itemBuilder: (context, index) {
+                          final cost = model.allOperationalCosts[index];
+                          print(cost.toString());
+                          return OperationalCostCard(
+                            operatingCost: cost,
+                            onEdit: () {
+                              model.onEditOperatingCost(cost);
+                            },
+                          );
+                        },
+                        itemCount: model.allOperationalCosts.length,
+                        shrinkWrap: true,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 27.w,
+                        ),
+                        scrollDirection: Axis.vertical,
+                      ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class OperationalCostCard extends StatelessWidget {
-  const OperationalCostCard({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return BlurContainer(
-      sigmaX: 11,
-      sigmaY: 1,
-      child: Padding(
-        padding: EdgeInsets.only(
-          left: 7.w,
-          right: 7.w,
-          top: 7.h,
-          bottom: 7.w,
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10.r),
-                // child: CachedNetworkImage(
-                //   imageUrl:
-                //       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSfhVdI0FxDS2N0sqI8b9Dm_H2vK19hHptpetvbBg33KQ&s',
-                //   height: 150.h,
-                //   width: double.infinity,
-                //   fit: BoxFit.contain,
-                // ),
-                child: SvgPicture.asset(
-                  AssetIcons.chatsButtonIcon,
-                  height: 120.h,
-                  alignment: Alignment.center,
-                ),
-              ),
-            ),
-            VerticalSpacing(20.h),
-            Text(
-              '\$1400',
-              style: TextStyling.semiBold.copyWith(
-                fontSize: 15.sp,
-              ),
-            ),
-            VerticalSpacing(10.h),
-            Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.calendar_month_outlined,
-                          size: 10.sp,
-                          color: AppColors.white,
-                        ),
-                        HorizontalSpacing(3.w),
-                        Text(
-                          'P - Price',
-                          style: TextStyling.regular.copyWith(
-                            fontSize: 10.sp,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Text(
-                      '\$1300',
-                      style: TextStyling.medium.copyWith(
-                        fontSize: 12.sp,
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.calendar_month_outlined,
-                          size: 10.sp,
-                          color: AppColors.white,
-                        ),
-                        HorizontalSpacing(3.w),
-                        Text(
-                          'P - Date',
-                          style: TextStyling.regular.copyWith(
-                            fontSize: 10.sp,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Text(
-                      '12/3/19',
-                      style: TextStyling.medium.copyWith(
-                        fontSize: 12.sp,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            Center(
-              child: TextButton(
-                onPressed: () {},
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      'Edit',
-                      style: TextStyling.regular.copyWith(
-                        fontSize: 12.sp,
-                        decoration: TextDecoration.underline,
-                        decorationColor: AppColors.white,
-                      ),
-                    ),
-                    HorizontalSpacing(8.w),
-                    Icon(
-                      Icons.edit_outlined,
-                      color: AppColors.white,
-                      size: 15.sp,
-                    )
-                  ],
-                ),
-                style: TextButton.styleFrom(
-                  padding: EdgeInsets.zero,
-                  visualDensity: VisualDensity.compact,
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                ),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

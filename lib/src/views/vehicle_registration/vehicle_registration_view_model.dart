@@ -2,6 +2,9 @@ import 'package:flutter/foundation.dart';
 import 'package:stacked/stacked.dart';
 import 'package:starter_app/generated/assets.dart';
 import 'package:starter_app/src/base/enums/vehicle_registration_action.dart';
+import 'package:starter_app/src/models/accessory.dart';
+import 'package:starter_app/src/models/operating_cost.dart';
+import 'package:starter_app/src/models/vehicle.dart';
 import 'package:starter_app/src/services/local/navigation_service.dart';
 import 'package:starter_app/src/services/remote/base/database_view_model.dart';
 import 'package:starter_app/src/services/remote/base/supabase_auth_view_model.dart';
@@ -12,16 +15,14 @@ class VehicleRegistrationViewModel extends ReactiveViewModel
 
   ValueNotifier<bool> isFabOpen = ValueNotifier(false);
 
-  bool customDialRoot = true;
-  bool extend = false;
-  bool rmIcons = false;
+  List<Vehicle> allVehicles = [];
+  List<Accessory> allAccessories = [];
+  List<OperatingCost> allOperationalCosts = [];
 
   void init() {
-    // getAllVehicles();
-    // getAllAccessories();
-    // getAllOperationalCosts();
-    // getAllManufacturers();
-    getAllVehicleModels();
+    getAllVehicles();
+    getAllAccessories();
+    getAllOperationalCosts();
   }
 
   onChangeTab(int v) {
@@ -44,15 +45,13 @@ class VehicleRegistrationViewModel extends ReactiveViewModel
 
   onClickAddActionButton() {
     if (selectedTab == 0) {
-      NavService.navigateToVehicleDetail(action: VehicleRegistrationAction.add);
+      onInsertVehicle();
     }
     if (selectedTab == 1) {
-      NavService.navigateToAccessoryDetail(
-          action: VehicleRegistrationAction.add);
+      onInsertAccessory();
     }
     if (selectedTab == 2) {
-      NavService.navigateToOperationalCostDetail(
-          action: VehicleRegistrationAction.add);
+      onInsertOperatingCost();
     }
   }
 
@@ -71,38 +70,58 @@ class VehicleRegistrationViewModel extends ReactiveViewModel
 
 //////////////////////////// VEHICLE VIEW ///////////////////////////////////////
 
+  bool vehiclesLoading = false;
+
+  setVehiclesLoading(bool v) {
+    vehiclesLoading = v;
+    notifyListeners();
+  }
+
   getAllVehicles() async {
-    print('hello im called');
-    final res = await databaseService.getAllVehicles();
-    print('res: $res');
+    setVehiclesLoading(true);
+    allVehicles = await databaseService.getAllVehicles() ?? [];
+    setVehiclesLoading(false);
+    notifyListeners();
+  }
+
+  onEditVehicle(Vehicle v) {
+    NavService.navigateToVehicleDetail(
+        action: VehicleRegistrationAction.edit, vehicle: v);
+  }
+
+  onInsertVehicle() {
+    NavService.navigateToVehicleDetail(action: VehicleRegistrationAction.add);
+  }
+
+//////////////////////////// ACCESSORY VIEW ///////////////////////////////////////
+
+  bool accessoriesLoading = false;
+
+  setAccessoriesLoading(bool v) {
+    accessoriesLoading = v;
+    notifyListeners();
   }
 
   getAllAccessories() async {
-    print('hello im called');
-    final res = await databaseService.getAllAccessories();
-    print('res: $res');
+    setAccessoriesLoading(true);
+    allAccessories = await databaseService.getAllAccessories() ?? [];
+    notifyListeners();
+    setAccessoriesLoading(false);
   }
 
-  getAllOperationalCosts() async {
-    print('hello im called');
-    final res = await databaseService.getAllOperationalCosts();
-    print('res: $res');
+  onEditAccessory(Accessory v) {
+    NavService.navigateToAccessoryDetail(
+      action: VehicleRegistrationAction.edit,
+      accessory: v,
+    );
   }
 
-  getAllManufacturers() async {
-    print('hello im called');
-    final res = await databaseService.getAllManufacturers();
-    print('res: $res');
+  onInsertAccessory() {
+    NavService.navigateToAccessoryDetail(
+      action: VehicleRegistrationAction.add,
+    );
   }
 
-  getAllVehicleModels() async {
-    print('hello im called');
-    final res = await databaseService.getAllVehicleModels(1);
-    print('res: $res');
-  }
-
-////////////////////////////////////////////////////////////////////////////////
-  ////////////For accessories view
   int selectedAccessoryCategory = 0;
   List<String> accessoryCategories = [
     'BMW Cabiro',
@@ -116,4 +135,46 @@ class VehicleRegistrationViewModel extends ReactiveViewModel
     selectedAccessoryCategory = v;
     notifyListeners();
   }
+
+//////////////////////////// OPERATING COST VIEW ///////////////////////////////////////
+
+  bool operationsCostsLoading = false;
+
+  setOperationsCostsLoading(bool v) {
+    operationsCostsLoading = v;
+    notifyListeners();
+  }
+
+  getAllOperationalCosts() async {
+    setOperationsCostsLoading(true);
+    allOperationalCosts = await databaseService.getAllOperationalCosts() ?? [];
+    setOperationsCostsLoading(false);
+  }
+
+  onEditOperatingCost(OperatingCost v) {
+    NavService.navigateToOperationalCostDetail(
+      action: VehicleRegistrationAction.edit,
+      operatingCost: v,
+    );
+  }
+
+  onInsertOperatingCost() {
+    NavService.navigateToOperationalCostDetail(
+      action: VehicleRegistrationAction.add,
+    );
+  }
+
+  // getAllManufacturers() async {
+  //   print('hello im called');
+  //   final res = await databaseService.getAllManufacturers();
+  //   print('res: $res');
+  // }
+
+  // getAllVehicleModels() async {
+  //   print('hello im called');
+  //   final res = await databaseService.getAllVehicleModels(1);
+  //   print('res: $res');
+  // }
+
+////////////////////////////////////////////////////////////////////////////////
 }

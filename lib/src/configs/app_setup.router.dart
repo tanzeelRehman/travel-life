@@ -8,9 +8,11 @@
 import 'package:flutter/material.dart' as _i13;
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart' as _i1;
-import 'package:stacked_services/stacked_services.dart' as _i16;
+import 'package:stacked_services/stacked_services.dart' as _i18;
 import 'package:starter_app/src/base/enums/vehicle_registration_action.dart'
     as _i14;
+import 'package:starter_app/src/models/accessory.dart' as _i17;
+import 'package:starter_app/src/models/operating_cost.dart' as _i16;
 import 'package:starter_app/src/models/vehicle.dart' as _i15;
 import 'package:starter_app/src/views/email_confirmation/email_confirmation_view.dart'
     as _i8;
@@ -176,15 +178,16 @@ class StackedRouter extends _i1.RouterBase {
       final args =
           data.getArgs<OperationalCostDetailViewArguments>(nullOk: false);
       return _i13.MaterialPageRoute<dynamic>(
-        builder: (context) =>
-            _i11.OperationalCostDetailView(action: args.action),
+        builder: (context) => _i11.OperationalCostDetailView(
+            action: args.action, operatingCost: args.operatingCost),
         settings: data,
       );
     },
     _i12.AccessoryDetailView: (data) {
       final args = data.getArgs<AccessoryDetailViewArguments>(nullOk: false);
       return _i13.MaterialPageRoute<dynamic>(
-        builder: (context) => _i12.AccessoryDetailView(action: args.action),
+        builder: (context) => _i12.AccessoryDetailView(
+            action: args.action, accessory: args.accessory),
         settings: data,
       );
     },
@@ -225,50 +228,60 @@ class VehicleDetailViewArguments {
 }
 
 class OperationalCostDetailViewArguments {
-  const OperationalCostDetailViewArguments({required this.action});
+  const OperationalCostDetailViewArguments({
+    required this.action,
+    this.operatingCost,
+  });
 
   final _i14.VehicleRegistrationAction action;
 
+  final _i16.OperatingCost? operatingCost;
+
   @override
   String toString() {
-    return '{"action": "$action"}';
+    return '{"action": "$action", "operatingCost": "$operatingCost"}';
   }
 
   @override
   bool operator ==(covariant OperationalCostDetailViewArguments other) {
     if (identical(this, other)) return true;
-    return other.action == action;
+    return other.action == action && other.operatingCost == operatingCost;
   }
 
   @override
   int get hashCode {
-    return action.hashCode;
+    return action.hashCode ^ operatingCost.hashCode;
   }
 }
 
 class AccessoryDetailViewArguments {
-  const AccessoryDetailViewArguments({required this.action});
+  const AccessoryDetailViewArguments({
+    required this.action,
+    this.accessory,
+  });
 
   final _i14.VehicleRegistrationAction action;
 
+  final _i17.Accessory? accessory;
+
   @override
   String toString() {
-    return '{"action": "$action"}';
+    return '{"action": "$action", "accessory": "$accessory"}';
   }
 
   @override
   bool operator ==(covariant AccessoryDetailViewArguments other) {
     if (identical(this, other)) return true;
-    return other.action == action;
+    return other.action == action && other.accessory == accessory;
   }
 
   @override
   int get hashCode {
-    return action.hashCode;
+    return action.hashCode ^ accessory.hashCode;
   }
 }
 
-extension NavigatorStateExtension on _i16.NavigationService {
+extension NavigatorStateExtension on _i18.NavigationService {
   Future<dynamic> navigateToSplashView([
     int? routerId,
     bool preventDuplicates = true,
@@ -400,6 +413,7 @@ extension NavigatorStateExtension on _i16.NavigationService {
 
   Future<dynamic> navigateToOperationalCostDetailView({
     required _i14.VehicleRegistrationAction action,
+    _i16.OperatingCost? operatingCost,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -407,7 +421,8 @@ extension NavigatorStateExtension on _i16.NavigationService {
         transition,
   }) async {
     return navigateTo<dynamic>(Routes.operationalCostDetailView,
-        arguments: OperationalCostDetailViewArguments(action: action),
+        arguments: OperationalCostDetailViewArguments(
+            action: action, operatingCost: operatingCost),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
@@ -416,6 +431,7 @@ extension NavigatorStateExtension on _i16.NavigationService {
 
   Future<dynamic> navigateToAccessoryDetailView({
     required _i14.VehicleRegistrationAction action,
+    _i17.Accessory? accessory,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -423,7 +439,8 @@ extension NavigatorStateExtension on _i16.NavigationService {
         transition,
   }) async {
     return navigateTo<dynamic>(Routes.accessoryDetailView,
-        arguments: AccessoryDetailViewArguments(action: action),
+        arguments:
+            AccessoryDetailViewArguments(action: action, accessory: accessory),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
@@ -561,6 +578,7 @@ extension NavigatorStateExtension on _i16.NavigationService {
 
   Future<dynamic> replaceWithOperationalCostDetailView({
     required _i14.VehicleRegistrationAction action,
+    _i16.OperatingCost? operatingCost,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -568,7 +586,8 @@ extension NavigatorStateExtension on _i16.NavigationService {
         transition,
   }) async {
     return replaceWith<dynamic>(Routes.operationalCostDetailView,
-        arguments: OperationalCostDetailViewArguments(action: action),
+        arguments: OperationalCostDetailViewArguments(
+            action: action, operatingCost: operatingCost),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
@@ -577,6 +596,7 @@ extension NavigatorStateExtension on _i16.NavigationService {
 
   Future<dynamic> replaceWithAccessoryDetailView({
     required _i14.VehicleRegistrationAction action,
+    _i17.Accessory? accessory,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -584,7 +604,8 @@ extension NavigatorStateExtension on _i16.NavigationService {
         transition,
   }) async {
     return replaceWith<dynamic>(Routes.accessoryDetailView,
-        arguments: AccessoryDetailViewArguments(action: action),
+        arguments:
+            AccessoryDetailViewArguments(action: action, accessory: accessory),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,

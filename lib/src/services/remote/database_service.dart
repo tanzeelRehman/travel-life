@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:stacked/stacked.dart';
 import 'package:starter_app/src/base/utils/constants.dart';
+import 'package:starter_app/src/base/utils/supabase_buckets.dart';
 import 'package:starter_app/src/base/utils/supabase_tables.dart';
+import 'package:starter_app/src/base/utils/utils.dart';
 import 'package:starter_app/src/configs/app_setup.locator.dart';
 import 'package:starter_app/src/models/accessory.dart';
 import 'package:starter_app/src/models/accessory_category.dart';
@@ -101,7 +105,7 @@ class DatabaseService with ListenableServiceMixin {
       final res = await _supabase
           .from(SupabaseTables.vehicles)
           .insert(vehicle.insertToMap())
-          .select()
+          .select(vehicleQuery)
           .single();
 
       print(res);
@@ -123,9 +127,9 @@ class DatabaseService with ListenableServiceMixin {
 
       final res = await _supabase
           .from(SupabaseTables.vehicles)
-          .update(vehicle.insertToMap())
+          .update(vehicle.toMap())
           .eq('id', vehicle.id!)
-          .select()
+          .select(vehicleQuery)
           .single();
 
       print(res);
@@ -149,12 +153,54 @@ class DatabaseService with ListenableServiceMixin {
           .from(SupabaseTables.vehicles)
           .delete()
           .eq('id', vehicleID)
-          .select()
+          .select(vehicleQuery)
           .single();
 
       print(res);
 
       return Vehicle.fromMap(res);
+    } catch (e) {
+      print(e);
+      Constants.customErrorSnack(e.toString());
+      return null;
+    }
+  }
+
+  //UPDATE/INSERT VEHICLE IMAGE
+  Future<Vehicle?> uploadVehicleImage(int vehicleID, File image) async {
+    try {
+      if (!_isConnected()) {
+        return null;
+      }
+
+      final imageName = '${_authService.user?.id}/$vehicleID';
+
+      final publicUrl = _supabase.storage
+          .from(SupabaseBuckets.vehicleRegistrationImagesBucket)
+          .getPublicUrl(imageName);
+
+      final bool doesExists = await UtilFunctions.isResourceFound(publicUrl);
+
+      if (doesExists) {
+        final res = await _supabase.storage
+            .from(SupabaseBuckets.vehicleRegistrationImagesBucket)
+            .update(imageName, image);
+        print('update res: $res');
+      } else {
+        final res = await _supabase.storage
+            .from(SupabaseBuckets.vehicleRegistrationImagesBucket)
+            .upload(imageName, image);
+        print('upload res: $res');
+      }
+
+      final updatedUser = await _supabase
+          .from(SupabaseTables.vehicles)
+          .update({'photoURL': publicUrl})
+          .eq('id', vehicleID)
+          .select(vehicleQuery)
+          .single();
+
+      return Vehicle.fromMap(updatedUser);
     } catch (e) {
       print(e);
       Constants.customErrorSnack(e.toString());
@@ -220,7 +266,7 @@ class DatabaseService with ListenableServiceMixin {
       final res = await _supabase
           .from(SupabaseTables.accessories)
           .insert(accessory.insertToMap())
-          .select()
+          .select(accessoryQuery)
           .single();
 
       print(res);
@@ -242,9 +288,9 @@ class DatabaseService with ListenableServiceMixin {
 
       final res = await _supabase
           .from(SupabaseTables.accessories)
-          .update(accessory.insertToMap())
+          .update(accessory.toMap())
           .eq('id', accessory.id!)
-          .select()
+          .select(accessoryQuery)
           .single();
 
       print(res);
@@ -268,12 +314,98 @@ class DatabaseService with ListenableServiceMixin {
           .from(SupabaseTables.accessories)
           .delete()
           .eq('id', accessoryID)
-          .select()
+          .select(accessoryQuery)
           .single();
 
       print(res);
 
       return Accessory.fromMap(res);
+    } catch (e) {
+      print(e);
+      Constants.customErrorSnack(e.toString());
+      return null;
+    }
+  }
+
+  //ADD ACCESSORY IMAGE
+  Future<Accessory?> insertOrUpdateAccessoryImage(
+      int accessoryID, File image) async {
+    try {
+      if (!_isConnected()) {
+        return null;
+      }
+
+      final imageName = '${_authService.user?.id}/$accessoryID';
+
+      final publicUrl = await _supabase.storage
+          .from(SupabaseBuckets.accessoryImagesBucket)
+          .getPublicUrl(imageName);
+
+      final bool doesExists = await UtilFunctions.isResourceFound(publicUrl);
+
+      if (doesExists) {
+        final res = await _supabase.storage
+            .from(SupabaseBuckets.accessoryImagesBucket)
+            .update(imageName, image);
+        print('update res: $res');
+      } else {
+        final res = await _supabase.storage
+            .from(SupabaseBuckets.accessoryImagesBucket)
+            .upload(imageName, image);
+        print('upload res: $res');
+      }
+
+      final updatedUser = await _supabase
+          .from(SupabaseTables.accessories)
+          .update({'accessoryimage_attachment': publicUrl})
+          .eq('id', accessoryID)
+          .select(accessoryQuery)
+          .single();
+
+      return Accessory.fromMap(updatedUser);
+    } catch (e) {
+      print(e);
+      Constants.customErrorSnack(e.toString());
+      return null;
+    }
+  }
+
+  //ADD ACCESSORY Attachment
+  Future<Accessory?> insertOrUpdateAccessoryAttachment(
+      int accessoryID, File image) async {
+    try {
+      if (!_isConnected()) {
+        return null;
+      }
+
+      final imageName = '${_authService.user?.id}/$accessoryID';
+
+      final publicUrl = _supabase.storage
+          .from(SupabaseBuckets.accessoryAttachmentsBucket)
+          .getPublicUrl(imageName);
+
+      final bool doesExists = await UtilFunctions.isResourceFound(publicUrl);
+
+      if (doesExists) {
+        final res = await _supabase.storage
+            .from(SupabaseBuckets.accessoryAttachmentsBucket)
+            .update(imageName, image);
+        print('update res: $res');
+      } else {
+        final res = await _supabase.storage
+            .from(SupabaseBuckets.accessoryAttachmentsBucket)
+            .upload(imageName, image);
+        print('upload res: $res');
+      }
+
+      final updatedUser = await _supabase
+          .from(SupabaseTables.accessories)
+          .update({'invoice_attachment': publicUrl})
+          .eq('id', accessoryID)
+          .select(accessoryQuery)
+          .single();
+
+      return Accessory.fromMap(updatedUser);
     } catch (e) {
       print(e);
       Constants.customErrorSnack(e.toString());
@@ -313,7 +445,7 @@ class DatabaseService with ListenableServiceMixin {
       print('---------- check user id: ${_authService.user?.id}');
 
       final res = await _supabase
-          .from(SupabaseTables.accessories)
+          .from(SupabaseTables.operatingCosts)
           .select(
             operationalCostQuery,
           )
@@ -340,7 +472,7 @@ class DatabaseService with ListenableServiceMixin {
       final res = await _supabase
           .from(SupabaseTables.operatingCosts)
           .insert(operatingCost.insertToMap())
-          .select()
+          .select(operationalCostQuery)
           .single();
 
       print(res);
@@ -363,9 +495,9 @@ class DatabaseService with ListenableServiceMixin {
 
       final res = await _supabase
           .from(SupabaseTables.operatingCosts)
-          .update(operatingCost.insertToMap())
+          .update(operatingCost.toMap())
           .eq('id', operatingCost.id!)
-          .select()
+          .select(operationalCostQuery)
           .single();
 
       print(res);
@@ -388,13 +520,56 @@ class DatabaseService with ListenableServiceMixin {
       final res = await _supabase
           .from(SupabaseTables.operatingCosts)
           .delete()
-          .eq('id', operatingCostID)
+          .eq('id', operationalCostQuery)
           .select()
           .single();
 
       print(res);
 
       return OperatingCost.fromMap(res);
+    } catch (e) {
+      print(e);
+      Constants.customErrorSnack(e.toString());
+      return null;
+    }
+  }
+
+  //ADD OPERATING COST ATTACHMENT
+  Future<OperatingCost?> insertOrUpdateOperatingCostAttachment(
+      int operatingCostID, File image) async {
+    try {
+      if (!_isConnected()) {
+        return null;
+      }
+
+      final imageName = '${_authService.user?.id}/$operatingCostID';
+
+      final publicUrl = _supabase.storage
+          .from(SupabaseBuckets.operationalCostAttachmentsBucket)
+          .getPublicUrl(imageName);
+
+      final bool doesExists = await UtilFunctions.isResourceFound(publicUrl);
+
+      if (doesExists) {
+        final res = await _supabase.storage
+            .from(SupabaseBuckets.operationalCostAttachmentsBucket)
+            .update(imageName, image);
+        print('update res: $res');
+      } else {
+        final res = await _supabase.storage
+            .from(SupabaseBuckets.operationalCostAttachmentsBucket)
+            .upload(imageName, image);
+        print('upload res: $res');
+      }
+
+      final updatedUser = await _supabase
+          .from(SupabaseTables.operatingCosts)
+          .update({'attachment': publicUrl})
+          .eq('id', operatingCostID)
+          .select(operationalCostQuery)
+          .single();
+
+      return OperatingCost.fromMap(updatedUser);
     } catch (e) {
       print(e);
       Constants.customErrorSnack(e.toString());

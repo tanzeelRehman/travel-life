@@ -4,6 +4,8 @@ import 'package:stacked_services/stacked_services.dart';
 import 'package:starter_app/src/base/enums/vehicle_registration_action.dart';
 import 'package:starter_app/src/configs/app_setup.locator.dart';
 import 'package:starter_app/src/configs/app_setup.router.dart';
+import 'package:starter_app/src/models/accessory.dart';
+import 'package:starter_app/src/models/operating_cost.dart';
 import 'package:starter_app/src/models/vehicle.dart';
 
 class NavService {
@@ -56,21 +58,31 @@ class NavService {
           {required VehicleRegistrationAction action, Vehicle? vehicle}) =>
       _navigationService!.navigateTo(
         Routes.vehicleDetailView,
-        arguments: VehicleDetailViewArguments(action: action, vehicle: vehicle),
+        arguments: VehicleDetailViewArguments(
+          action: action,
+          vehicle: vehicle,
+        ),
       );
 
   static Future<dynamic>? navigateToAccessoryDetail(
-          {required VehicleRegistrationAction action}) =>
+          {required VehicleRegistrationAction action, Accessory? accessory}) =>
       _navigationService!.navigateTo(
         Routes.accessoryDetailView,
-        arguments: AccessoryDetailViewArguments(action: action),
+        arguments: AccessoryDetailViewArguments(
+          action: action,
+          accessory: accessory,
+        ),
       );
 
   static Future<dynamic>? navigateToOperationalCostDetail(
-          {required VehicleRegistrationAction action}) =>
+          {required VehicleRegistrationAction action,
+          OperatingCost? operatingCost}) =>
       _navigationService!.navigateTo(
         Routes.operationalCostDetailView,
-        arguments: OperationalCostDetailViewArguments(action: action),
+        arguments: OperationalCostDetailViewArguments(
+          action: action,
+          operatingCost: operatingCost,
+        ),
       );
 
   //TO GO BACK

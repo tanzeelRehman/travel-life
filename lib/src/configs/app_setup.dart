@@ -2,6 +2,7 @@ import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:starter_app/src/services/local/auth_service.dart';
 import 'package:starter_app/src/services/local/connectivity_service.dart';
+import 'package:starter_app/src/services/local/data_service.dart';
 import 'package:starter_app/src/services/local/keyboard_service.dart';
 import 'package:starter_app/src/services/remote/api_service.dart';
 import 'package:starter_app/src/services/remote/database_service.dart';
@@ -44,6 +45,7 @@ import 'package:starter_app/src/views/welcome/welcome_view.dart';
     LazySingleton(classType: KeyboardService),
     LazySingleton(classType: ApiService),
     LazySingleton(classType: DatabaseService),
+    LazySingleton(classType: DataService),
   ],
 )
 class AppSetup {

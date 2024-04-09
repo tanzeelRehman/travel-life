@@ -50,16 +50,16 @@ class LoginView extends StackedView<LoginViewModel> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        Container(
-                          height: 150.w,
-                          width: 150.w,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            boxShadow: AppColors.appNameBoxShadows,
-                            color: AppColors.appDarkBlue,
-                          ),
-                        ),
-                        VerticalSpacing(20.h),
+                        // Container(
+                        //   // height: 150.w,
+                        //   // width: 150.w,
+                        //   decoration: BoxDecoration(
+                        //     shape: BoxShape.circle,
+                        //     boxShadow: AppColors.appNameBoxShadows,
+                        //     color: AppColors.appDarkBlue,
+                        //   ),
+                        // ),
+                        // VerticalSpacing(20.h),
                         Text(
                           'Travel Manager',
                           style: TextStyling.regular,

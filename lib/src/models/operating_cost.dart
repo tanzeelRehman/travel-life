@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:starter_app/src/models/cost_category.dart';
 import 'package:starter_app/src/models/vehicle.dart';
 
@@ -9,9 +10,9 @@ class OperatingCost {
   final CostCategory? category; //fk
   final String? description;
   final DateTime? purchaseDate;
-  final double? purchasePrice;
-  final double? vat;
-  final double? total;
+  final dynamic purchasePrice;
+  final dynamic vat;
+  final dynamic total;
   final String? attachment;
   final String? height;
   final String? width;
@@ -48,9 +49,9 @@ class OperatingCost {
         purchaseDate: json['purchase_date'] != null
             ? DateTime.parse(json['purchase_date'] as String)
             : null,
-        purchasePrice: json['purchase_price'] as double?,
-        vat: json['vat'] as double?,
-        total: json['total'] as double?,
+        purchasePrice: json['purchase_price'],
+        vat: json['vat'],
+        total: json['total'],
         attachment: json['attachment'] as String?,
         height: json['height'] as String?,
         width: json['width'] as String?,
@@ -58,7 +59,7 @@ class OperatingCost {
 
   Map<String, dynamic> toMap() => {
         'id': id,
-        'created_at': createdAt?.toIso8601String(),
+        // 'created_at': createdAt?.toIso8601String(),
         'vehicle': vehicle?.id,
         'user': user,
         'category': category?.id,
@@ -123,5 +124,10 @@ class OperatingCost {
       height: height ?? this.height,
       width: width ?? this.width,
     );
+  }
+
+  @override
+  String toString() {
+    return 'OperatingCost(id: $id, createdAt: $createdAt, vehicle: $vehicle, user: $user, category: $category, description: $description, purchaseDate: $purchaseDate, purchasePrice: $purchasePrice, vat: $vat, total: $total, attachment: $attachment, height: $height, width: $width)';
   }
 }

@@ -13,6 +13,7 @@ import 'package:stacked_shared/stacked_shared.dart';
 
 import '../services/local/auth_service.dart';
 import '../services/local/connectivity_service.dart';
+import '../services/local/data_service.dart';
 import '../services/local/keyboard_service.dart';
 import '../services/remote/api_service.dart';
 import '../services/remote/database_service.dart';
@@ -38,4 +39,5 @@ Future<void> setupLocator({
   locator.registerLazySingleton(() => KeyboardService());
   locator.registerLazySingleton(() => ApiService());
   locator.registerLazySingleton(() => DatabaseService());
+  locator.registerLazySingleton(() => DataService());
 }

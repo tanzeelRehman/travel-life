@@ -32,10 +32,10 @@ class RegisterView extends StackedView<RegisterViewModel> {
               opacity: 0.5,
             ),
           ),
-          height: context.screenSize().height,
+          height: context.completeHeight(),
           child: ConstrainedBox(
             constraints: BoxConstraints(
-              maxHeight: context.screenSize().height,
+              maxHeight: context.completeHeight(),
             ),
             child: Column(
               children: [
@@ -45,7 +45,7 @@ class RegisterView extends StackedView<RegisterViewModel> {
                 Expanded(
                   child: SingleChildScrollView(
                     child: Container(
-                      height: context.screenSize().height * 0.95,
+                      height: context.completeHeight() * 1,
                       padding: EdgeInsets.symmetric(
                         horizontal: 24.w,
                         vertical: 16.h,
@@ -193,11 +193,14 @@ class RegisterView extends StackedView<RegisterViewModel> {
                               isLabelCenter: false,
                             ),
                             VerticalSpacing(32.h),
-                            MainButton(
-                              buttonText: 'Sign Up',
-                              buttonFontColor: AppColors.white,
-                              onPressed: model.onRegister,
-                              isLoading: model.isBusy,
+                            SizedBox(
+                              height: 50.h,
+                              child: MainButton(
+                                buttonText: 'Sign Up',
+                                buttonFontColor: AppColors.white,
+                                onPressed: model.onRegister,
+                                isLoading: model.isBusy,
+                              ),
                             ),
                             Spacer(
                               flex: 2,

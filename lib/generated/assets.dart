@@ -136,4 +136,7 @@ class AssetIcons {
   static const tfVin = 'assets/icons/tf_vin.svg';
   static const tfVat = 'assets/icons/tf_vat.svg';
   static const tfWarrentyPeriod = 'assets/icons/tf_warrenty_period.svg';
+
+  static const statusActive = 'assets/icons/status_active.svg';
+  static const statusInActive = 'assets/icons/status_inactive.svg';
 }

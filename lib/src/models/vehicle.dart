@@ -1,3 +1,5 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:starter_app/src/base/enums/vehicle_status.dart';
 import 'package:starter_app/src/models/manufacturor.dart';
 import 'package:starter_app/src/models/vehicle_model.dart';
 
@@ -12,7 +14,7 @@ class Vehicle {
   final bool? primaryVehicle;
   final bool? inUse;
   final DateTime? purchaseDate;
-  final double? price;
+  final dynamic price;
   final String? photoURL;
   final String? regNo;
   final String? vinNo;
@@ -23,7 +25,7 @@ class Vehicle {
   final String? tireFront;
   final String? tireRear;
   final int? odometer;
-  final String? status;
+  final VehicleStatus? status;
   final int? manufactureYear;
   final int? idCarMake;
   final String? horsepower;
@@ -84,7 +86,7 @@ class Vehicle {
         purchaseDate: json['purchase_date'] != null
             ? DateTime.parse(json['purchase_date'] as String)
             : null,
-        price: json['price'] as double?,
+        price: json['price'],
         photoURL: json['photoURL'] as String?,
         regNo: json['reg_no'] as String?,
         vinNo: json['vin_no'] as String?,
@@ -97,7 +99,9 @@ class Vehicle {
         tireFront: json['tire_front'] as String?,
         tireRear: json['tire_rear'] as String?,
         odometer: json['odometer'] as int?,
-        status: json['status'] as String?,
+        status: json['status'] != null
+            ? getVehicleStatusFromReadable(json['status'] as String)
+            : null,
         manufactureYear: json['manufacture_year'] as int?,
         idCarMake: json['id_car_make'] as int?,
         horsepower: json['horsepower'] as String?,
@@ -107,13 +111,13 @@ class Vehicle {
         warrantyExpiryDate: json['warranty_expiry_date'] != null
             ? DateTime.parse(json['warranty_expiry_date'] as String)
             : null,
-        // vehicleType: json['vehicle_type'] as int?,
+        vehicleType: json['vehicle_type'] as int?,
       );
 
   Map<String, dynamic> toMap() => {
         'id': id,
-        'created_at': createdAt?.toIso8601String(),
-        'number': number,
+        // 'created_at': createdAt?.toIso8601String(),
+        // 'reg_no': number,
         'user': user,
         'manufacturer': manufacturer?.id,
         'model': model?.id,
@@ -132,7 +136,7 @@ class Vehicle {
         'tire_front': tireFront,
         'tire_rear': tireRear,
         'odometer': odometer,
-        'status': status,
+        'status': status != null ? getReadableVehicleStatus(status!) : null,
         'manufacture_year': manufactureYear,
         'id_car_make': idCarMake,
         'horsepower': horsepower,
@@ -141,12 +145,13 @@ class Vehicle {
         'warranty_period': warrantyPeriod,
         'warranty_expiry_date': warrantyExpiryDate?.toIso8601String(),
         'vehicle_type': vehicleType,
+        // 'description': description,
       };
 
   Map<String, dynamic> insertToMap() => {
         // 'id': id,
         // 'created_at': createdAt?.toIso8601String(),
-        'number': number,
+        // 'number': number,
         'user': user,
         'manufacturer': manufacturer?.id,
         'model': model?.id,
@@ -154,7 +159,7 @@ class Vehicle {
         'primary_vehicle': primaryVehicle,
         'in_use': inUse,
         'purchase_date': purchaseDate?.toIso8601String(),
-        'price': price,
+        'price': price?.toDouble(),
         'photoURL': photoURL,
         'reg_no': regNo,
         'vin_no': vinNo,
@@ -165,7 +170,8 @@ class Vehicle {
         'tire_front': tireFront,
         'tire_rear': tireRear,
         'odometer': odometer,
-        'status': status,
+        // 'status': status,
+        'status': status != null ? getReadableVehicleStatus(status!) : null,
         'manufacture_year': manufactureYear,
         'id_car_make': idCarMake,
         'horsepower': horsepower,
@@ -200,7 +206,7 @@ class Vehicle {
     String? tireFront,
     String? tireRear,
     int? odometer,
-    String? status,
+    VehicleStatus? status,
     int? manufactureYear,
     int? idCarMake,
     String? horsepower,
@@ -244,5 +250,10 @@ class Vehicle {
       warrantyExpiryDate: warrantyExpiryDate ?? this.warrantyExpiryDate,
       vehicleType: vehicleType ?? this.vehicleType,
     );
+  }
+
+  @override
+  String toString() {
+    return 'Vehicle(id: $id, createdAt: $createdAt, number: $number, user: $user, manufacturer: $manufacturer, model: $model, description: $description, primaryVehicle: $primaryVehicle, inUse: $inUse, purchaseDate: $purchaseDate, price: $price, photoURL: $photoURL, regNo: $regNo, vinNo: $vinNo, tankCapacity: $tankCapacity, serviceInterval: $serviceInterval, lastService: $lastService, dailyDistance: $dailyDistance, tireFront: $tireFront, tireRear: $tireRear, odometer: $odometer, status: $status, manufactureYear: $manufactureYear, idCarMake: $idCarMake, horsepower: $horsepower, idCarModel: $idCarModel, consumption: $consumption, warrantyPeriod: $warrantyPeriod, warrantyExpiryDate: $warrantyExpiryDate, vehicleType: $vehicleType)';
   }
 }

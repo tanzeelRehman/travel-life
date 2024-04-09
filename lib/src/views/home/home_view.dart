@@ -24,7 +24,7 @@ class HomeView extends StackedView<HomeViewModel> {
         ),
         child: Container(
           width: context.screenSize().width,
-          height: context.screenSize().height,
+          height: context.completeHeight(),
           decoration: BoxDecoration(
             image: DecorationImage(
               image: Image.asset(AssetImages.mainBg).image,
@@ -33,9 +33,10 @@ class HomeView extends StackedView<HomeViewModel> {
             ),
           ),
           child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: 24.w,
-              vertical: 16.h,
+            padding: EdgeInsets.only(
+              left: 24.w,
+              right: 24.w,
+              top: 16.h,
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -77,83 +78,98 @@ class HomeView extends StackedView<HomeViewModel> {
                     ),
                   ],
                 ),
-                VerticalSpacing(30.h), //80.
-                Row(
-                  children: [
-                    Expanded(
-                      child: HomeActionButton(
-                        buttonText: 'Trip Planner',
-                        buttonTextColor: AppColors.tripPlannerColor,
-                        iconGradeint: AppColors.tripPlannerGradient,
-                        iconPath: AssetIcons.tripPlannerButtonIcon,
-                        bgPath: AssetIcons.tripPlannerButtonBg,
-                        onTap: model.onClickTripPlanner,
-                      ),
+                // VerticalSpacing(30.h), //80.
+
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.symmetric(vertical: 30.h),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: HomeActionButton(
+                                buttonText: 'Trip Planner',
+                                buttonTextColor: AppColors.tripPlannerColor,
+                                iconGradeint: AppColors.tripPlannerGradient,
+                                iconPath: AssetIcons.tripPlannerButtonIcon,
+                                bgPath: AssetIcons.tripPlannerButtonBg,
+                                onTap: model.onClickTripPlanner,
+                              ),
+                            ),
+                            HorizontalSpacing(24.w),
+                            Expanded(
+                              child: HomeActionButton(
+                                buttonText: 'Vehicle Registration',
+                                buttonTextColor:
+                                    AppColors.vehicleRegistrationColor,
+                                iconPath:
+                                    AssetIcons.vehicleRegistrationButtonIcon,
+                                iconGradeint:
+                                    AppColors.vehicleRegistrationGradient,
+                                bgPath: AssetIcons.vehicleRegistrationButtonBg,
+                                onTap: model.onClickVehicleRegistration,
+                              ),
+                            ),
+                          ],
+                        ),
+                        VerticalSpacing(24.h),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: HomeActionButton(
+                                buttonText: 'Groups',
+                                buttonTextColor: AppColors.groupsColor,
+                                iconGradeint: AppColors.groupsGradient,
+                                iconPath: AssetIcons.groupsButtonIcon,
+                                bgPath: AssetIcons.groupsButtonBg,
+                                onTap: model.onClickGroups,
+                              ),
+                            ),
+                            HorizontalSpacing(24.w),
+                            Expanded(
+                              child: HomeActionButton(
+                                buttonText: 'Money Manager',
+                                buttonTextColor: AppColors.moneyManagerColor,
+                                iconPath: AssetIcons.moneyManagerButtonIcon,
+                                iconGradeint: AppColors.moneyManagerGradient,
+                                bgPath: AssetIcons.moneyManagerButtonBg,
+                                onTap: model.onClickMoneyManager,
+                              ),
+                            ),
+                          ],
+                        ),
+                        VerticalSpacing(24.h),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: HomeActionButton(
+                                buttonText: 'Chats',
+                                buttonTextColor: AppColors.chatsColor,
+                                iconGradeint: AppColors.chatsGradient,
+                                iconPath: AssetIcons.chatsButtonIcon,
+                                bgPath: AssetIcons.chatsButtonBg,
+                                onTap: model.onClickChats,
+                              ),
+                            ),
+                            HorizontalSpacing(24.w),
+                            Expanded(
+                              child: HomeActionButton(
+                                buttonText: 'Event Money Manager',
+                                buttonTextColor:
+                                    AppColors.eventMoneyManagerColor,
+                                iconPath: AssetIcons.eventMoneyMngButtonIcon,
+                                iconGradeint:
+                                    AppColors.eventMoneyManagerGradient,
+                                bgPath: AssetIcons.eventMoneyMngButtonBg,
+                                onTap: model.onClickEventMoneyManager,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                    HorizontalSpacing(24.w),
-                    Expanded(
-                      child: HomeActionButton(
-                        buttonText: 'Vehicle Registration',
-                        buttonTextColor: AppColors.vehicleRegistrationColor,
-                        iconPath: AssetIcons.vehicleRegistrationButtonIcon,
-                        iconGradeint: AppColors.vehicleRegistrationGradient,
-                        bgPath: AssetIcons.vehicleRegistrationButtonBg,
-                        onTap: model.onClickVehicleRegistration,
-                      ),
-                    ),
-                  ],
-                ),
-                VerticalSpacing(24.h),
-                Row(
-                  children: [
-                    Expanded(
-                      child: HomeActionButton(
-                        buttonText: 'Groups',
-                        buttonTextColor: AppColors.groupsColor,
-                        iconGradeint: AppColors.groupsGradient,
-                        iconPath: AssetIcons.groupsButtonIcon,
-                        bgPath: AssetIcons.groupsButtonBg,
-                        onTap: model.onClickGroups,
-                      ),
-                    ),
-                    HorizontalSpacing(24.w),
-                    Expanded(
-                      child: HomeActionButton(
-                        buttonText: 'Money Manager',
-                        buttonTextColor: AppColors.moneyManagerColor,
-                        iconPath: AssetIcons.moneyManagerButtonIcon,
-                        iconGradeint: AppColors.moneyManagerGradient,
-                        bgPath: AssetIcons.moneyManagerButtonBg,
-                        onTap: model.onClickMoneyManager,
-                      ),
-                    ),
-                  ],
-                ),
-                VerticalSpacing(24.h),
-                Row(
-                  children: [
-                    Expanded(
-                      child: HomeActionButton(
-                        buttonText: 'Chats',
-                        buttonTextColor: AppColors.chatsColor,
-                        iconGradeint: AppColors.chatsGradient,
-                        iconPath: AssetIcons.chatsButtonIcon,
-                        bgPath: AssetIcons.chatsButtonBg,
-                        onTap: model.onClickChats,
-                      ),
-                    ),
-                    HorizontalSpacing(24.w),
-                    Expanded(
-                      child: HomeActionButton(
-                        buttonText: 'Event Money Manager',
-                        buttonTextColor: AppColors.eventMoneyManagerColor,
-                        iconPath: AssetIcons.eventMoneyMngButtonIcon,
-                        iconGradeint: AppColors.eventMoneyManagerGradient,
-                        bgPath: AssetIcons.eventMoneyMngButtonBg,
-                        onTap: model.onClickEventMoneyManager,
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ],
             ),

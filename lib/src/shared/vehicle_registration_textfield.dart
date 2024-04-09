@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:starter_app/src/shared/blur_container.dart';
@@ -14,6 +15,8 @@ class VehicleRegistrationTextField extends StatelessWidget {
     required this.svgIconPath,
     this.hintText,
     required this.labelText,
+    this.inputType,
+    this.textInputFormatters,
   }) : super(key: key);
 
   final TextEditingController? controller;
@@ -22,6 +25,9 @@ class VehicleRegistrationTextField extends StatelessWidget {
   final String svgIconPath;
   final String? hintText;
   final String labelText;
+
+  final TextInputType? inputType;
+  final List<TextInputFormatter>? textInputFormatters;
 
   @override
   Widget build(BuildContext context) {
@@ -60,6 +66,10 @@ class VehicleRegistrationTextField extends StatelessWidget {
                     padding: EdgeInsets.all(10),
                     height: multiline ? 100.h : null,
                     child: TextField(
+                      controller: controller,
+                      keyboardType: inputType,
+                      textInputAction: TextInputAction.next,
+                      inputFormatters: textInputFormatters,
                       decoration: null,
                       expands: multiline,
                       maxLines: multiline ? null : 1,

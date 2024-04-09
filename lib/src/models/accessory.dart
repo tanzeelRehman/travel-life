@@ -9,9 +9,9 @@ class Accessory {
   final AccessoryCategory? category; //fk
   final String? description;
   final DateTime? purchaseDate;
-  final double? purchasePrice;
-  final double? vat;
-  final double? total;
+  final dynamic purchasePrice;
+  final dynamic vat;
+  final dynamic total;
   final String? invoiceAttachment;
   final String? height;
   final String? width;
@@ -49,9 +49,9 @@ class Accessory {
         purchaseDate: json['purchase_date'] != null
             ? DateTime.parse(json['purchase_date'] as String)
             : null,
-        purchasePrice: json['purchase_price'] as double?,
-        vat: json['vat'] as double?,
-        total: json['total'] as double?,
+        purchasePrice: json['purchase_price'],
+        vat: json['vat'],
+        total: json['total'],
         invoiceAttachment: json['invoice_attachment'] as String?,
         height: json['height'] as String?,
         width: json['width'] as String?,
@@ -60,7 +60,7 @@ class Accessory {
 
   Map<String, dynamic> toMap() => {
         'id': id,
-        'created_at': createdAt?.toIso8601String(),
+        // 'created_at': createdAt?.toIso8601String(),
         'vehicle': vehicle?.id,
         'user': user,
         'category': category?.id,
@@ -69,10 +69,10 @@ class Accessory {
         'purchase_price': purchasePrice,
         'vat': vat,
         'total': total,
-        'invoice_attachment': invoiceAttachment,
+        // 'invoice_attachment': invoiceAttachment,
         'height': height,
         'width': width,
-        'accessoryimage_attachment': accessoryImageAttachment,
+        // 'accessoryimage_attachment': accessoryImageAttachment,
       };
 
   Map<String, dynamic> insertToMap() => {
@@ -86,11 +86,11 @@ class Accessory {
         'purchase_price': purchasePrice,
         'vat': vat,
         'total': total,
-        'invoice_attachment': invoiceAttachment,
+        // 'invoice_attachment': invoiceAttachment,
         'height': height,
         'width': width,
-        'accessoryimage_attachment':
-            accessoryImageAttachment, //might also remove this idk
+        // 'accessoryimage_attachment':
+        //     accessoryImageAttachment, //might also remove this idk
       };
 
   Accessory copyWith({
@@ -101,9 +101,9 @@ class Accessory {
     AccessoryCategory? category,
     String? description,
     DateTime? purchaseDate,
-    double? purchasePrice,
-    double? vat,
-    double? total,
+    dynamic purchasePrice,
+    dynamic vat,
+    dynamic total,
     String? invoiceAttachment,
     String? height,
     String? width,

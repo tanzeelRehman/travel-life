@@ -43,6 +43,7 @@ class CustomTab extends StatelessWidget {
               color: isSelected ? AppColors.white : AppColors.appDarkBlue,
               fontSize: fontSize ?? 12.sp,
             ),
+            overflow: TextOverflow.ellipsis,
           ),
         ),
       ),

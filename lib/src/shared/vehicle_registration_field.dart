@@ -9,14 +9,16 @@ import 'package:starter_app/src/styles/text_theme.dart';
 class VehicleRegistrationField extends StatelessWidget {
   const VehicleRegistrationField({
     Key? key,
-    required this.svgIconPath,
-    required this.labelText,
+    this.svgIconPath,
+    this.labelText,
     required this.child,
+    this.decoration,
   }) : super(key: key);
 
-  final String svgIconPath;
-  final String labelText;
+  final String? svgIconPath;
+  final String? labelText;
   final Widget child;
+  final BoxDecoration? decoration;
 
   @override
   Widget build(BuildContext context) {
@@ -30,28 +32,33 @@ class VehicleRegistrationField extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SvgPicture.asset(
-              svgIconPath,
-              height: 40.h,
-            ),
-            HorizontalSpacing(20.w),
+            if (svgIconPath != null) ...[
+              SvgPicture.asset(
+                svgIconPath!,
+                height: 30.h,
+              ),
+              HorizontalSpacing(20.w),
+            ],
             Expanded(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    labelText,
-                    style: TextStyling.regular.copyWith(
-                      fontSize: 15.sp,
+                  if (labelText != null) ...[
+                    Text(
+                      labelText!,
+                      style: TextStyling.regular.copyWith(
+                        fontSize: 15.sp,
+                      ),
                     ),
-                  ),
-                  VerticalSpacing(5.h),
+                    VerticalSpacing(5.h),
+                  ],
                   Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8.r),
-                      boxShadow: AppColors.vehicleRegTextFieldBoxShadows,
-                    ),
+                    decoration: decoration ??
+                        BoxDecoration(
+                          borderRadius: BorderRadius.circular(8.r),
+                          boxShadow: AppColors.vehicleRegTextFieldBoxShadows,
+                        ),
                     // padding: EdgeInsets.all(10),
                     // height: multiline ? 100.h : null,
                     child: child,

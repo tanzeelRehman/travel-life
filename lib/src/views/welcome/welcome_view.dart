@@ -6,7 +6,6 @@ import 'package:starter_app/src/base/utils/utils.dart';
 import 'package:starter_app/src/shared/main_button.dart';
 import 'package:starter_app/src/shared/spacing.dart';
 import 'package:starter_app/src/styles/app_colors.dart';
-import 'package:starter_app/src/styles/text_theme.dart';
 import 'package:starter_app/src/views/welcome/welcome_view_model.dart';
 
 class WelcomeView extends StackedView<WelcomeViewModel> {

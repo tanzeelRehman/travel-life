@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -5,6 +6,13 @@ extension UIExt on BuildContext {
   double topSpace() => MediaQuery.of(this).padding.top;
   double appBarHeight() => AppBar().preferredSize.height;
   Size screenSize() => MediaQuery.of(this).size;
+  double completeHeight() =>
+      MediaQuery.of(this).size.height +
+      MediaQuery.of(this).padding.top +
+      MediaQuery.of(this).padding.bottom +
+      MediaQuery.of(this).viewPadding.top +
+      MediaQuery.of(this).viewPadding.bottom;
+
   ThemeData appTheme() => Theme.of(this);
   TextTheme appTextTheme() => Theme.of(this).textTheme;
 
@@ -92,5 +100,31 @@ class UtilFunctions {
       age--;
     }
     return age;
+  }
+
+  static Future<bool> isResourceFound(String url) async {
+    try {
+      final Dio dio = Dio();
+      final response = await dio.head(url);
+      print(response.statusCode);
+      if (response.statusCode == 200 || response.statusCode == 304) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
+  }
+
+  static Future<bool> isPDF(String fileUrl) async {
+    try {
+      final Dio dio = Dio();
+      final response = await dio.head(fileUrl);
+      print(response.headers);
+      return response.headers.value('content-type') == 'application/pdf';
+    } catch (e) {
+      return false;
+    }
   }
 }

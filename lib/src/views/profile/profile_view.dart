@@ -71,6 +71,13 @@ class ProfileView extends StackedView<ProfileViewModel> {
                 EditableProfileAvatar(
                   avatarUrl: model.supabaseAuthService.user?.avatar,
                   onClickCamera: model.onClickAddImage,
+                  selectedImageFile: model.selectedImage,
+                  onClickApprove: () {
+                    model.onApproveSelectedImage();
+                  },
+                  onClickDecline: () {
+                    model.onRemoveSelectedImage();
+                  },
                 ),
                 VerticalSpacing(15.h),
                 TabSwitcherWidget(
