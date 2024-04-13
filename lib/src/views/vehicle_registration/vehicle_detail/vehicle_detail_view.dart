@@ -170,18 +170,6 @@ class VehicleDetailView extends StackedView<VehicleDetailViewModel> {
                             controller: model.descriptionController,
                           ),
                           VerticalSpacing(20.h),
-                          VehicleRegistrationTextField(
-                            svgIconPath: AssetIcons.tfPrice,
-                            labelText: 'Price',
-                            controller: model.priceController,
-                            inputType: TextInputType.number,
-                            textInputFormatters: [
-                              FilteringTextInputFormatter.allow(
-                                RegExp(r'^(\d+)?\.?\d{0,5}'),
-                              )
-                            ],
-                          ),
-                          VerticalSpacing(20.h),
                           VehicleRegistrationField(
                             svgIconPath: AssetIcons.tfManufacturor,
                             labelText: 'Manufacturer',
@@ -260,7 +248,7 @@ class VehicleDetailView extends StackedView<VehicleDetailViewModel> {
                                               'Primary Vehicle',
                                               style:
                                                   TextStyling.medium.copyWith(
-                                                fontSize: 15.sp,
+                                                fontSize: 12.sp,
                                               ),
                                             ),
                                           ],
@@ -304,7 +292,7 @@ class VehicleDetailView extends StackedView<VehicleDetailViewModel> {
                                               'In Use',
                                               style:
                                                   TextStyling.medium.copyWith(
-                                                fontSize: 15.sp,
+                                                fontSize: 12.sp,
                                               ),
                                             ),
                                           ],
@@ -349,6 +337,18 @@ class VehicleDetailView extends StackedView<VehicleDetailViewModel> {
                                       .format(model.purchaseDate!)
                                   : null,
                             ),
+                          ),
+                          VerticalSpacing(20.h),
+                          VehicleRegistrationTextField(
+                            svgIconPath: AssetIcons.tfPrice,
+                            labelText: 'Price',
+                            controller: model.priceController,
+                            inputType: TextInputType.number,
+                            textInputFormatters: [
+                              FilteringTextInputFormatter.allow(
+                                RegExp(r'^(\d+)?\.?\d{0,5}'),
+                              )
+                            ],
                           ),
                           VerticalSpacing(20.h),
                           VehicleRegistrationTextField(
@@ -401,16 +401,6 @@ class VehicleDetailView extends StackedView<VehicleDetailViewModel> {
                                       .format(model.lastServiceDate!)
                                   : null,
                             ),
-                          ),
-                          VerticalSpacing(20.h),
-                          VehicleRegistrationTextField(
-                            svgIconPath: AssetIcons.tfDailyDistance,
-                            labelText: 'Daily Distance (Average) in KM',
-                            controller: model.dailyDistanceController,
-                            inputType: TextInputType.number,
-                            textInputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly,
-                            ],
                           ),
                           VerticalSpacing(20.h),
                           VehicleRegistrationTextField(
@@ -532,6 +522,16 @@ class VehicleDetailView extends StackedView<VehicleDetailViewModel> {
                                       .format(model.warrentyExpiryDate!)
                                   : null,
                             ),
+                          ),
+                          VerticalSpacing(20.h),
+                          VehicleRegistrationTextField(
+                            svgIconPath: AssetIcons.tfDailyDistance,
+                            labelText: 'Daily Distance (Average) in KM',
+                            controller: model.dailyDistanceController,
+                            inputType: TextInputType.number,
+                            textInputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly,
+                            ],
                           ),
                         ],
                       ),

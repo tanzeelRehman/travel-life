@@ -124,8 +124,10 @@ class VehicleDetailViewModel extends ReactiveViewModel
   DateTime? manufactureYear;
   DateTime? warrentyExpiryDate;
 
-  VehicleStatus? status;
-  VehicleStatus? selectedStatus; //temporarilySelected for dialog
+  //! By Default both set to active
+  VehicleStatus? status = VehicleStatus.active;
+  VehicleStatus? selectedStatus =
+      VehicleStatus.active; //temporarilySelected for dialog
 
   toggleStatus(VehicleStatus v) {
     selectedStatus = v;
