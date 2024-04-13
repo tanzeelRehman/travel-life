@@ -227,4 +227,19 @@ class OperationalCostDetailViewModel extends ReactiveViewModel
 
     return price + vatValue;
   }
+
+  //! Functions Added by Tanzeel
+  calculateTotalPrice(String value) {
+    priceController.text = value;
+    notifyListeners();
+  }
+
+  calculateTax(String taxRate) {
+    double taxAmount = double.parse(purchasePriceController.text) *
+        (double.parse(taxRate) / 100);
+    double totalPriceAfterTax =
+        double.parse(purchasePriceController.text) + taxAmount;
+    priceController.text = totalPriceAfterTax.toStringAsFixed(3);
+    notifyListeners();
+  }
 }

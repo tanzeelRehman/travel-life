@@ -27,7 +27,7 @@ class VehicleCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlurContainer(
-      height: 384.h,
+      height: MediaQuery.of(context).size.height * 0.41,
       child: Stack(
         children: [
           Padding(
@@ -159,7 +159,8 @@ class VehicleCard extends StatelessWidget {
                   ),
                 ),
                 VerticalSpacing(20.h),
-                Expanded(
+                SizedBox(
+                  height: 55.h,
                   child: MainButton(
                     buttonText: 'Edit Details',
                     onPressed: onEdit,

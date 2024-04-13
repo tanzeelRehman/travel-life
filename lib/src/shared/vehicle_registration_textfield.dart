@@ -17,6 +17,7 @@ class VehicleRegistrationTextField extends StatelessWidget {
     required this.labelText,
     this.inputType,
     this.textInputFormatters,
+    this.onchangeAction,
   }) : super(key: key);
 
   final TextEditingController? controller;
@@ -28,6 +29,7 @@ class VehicleRegistrationTextField extends StatelessWidget {
 
   final TextInputType? inputType;
   final List<TextInputFormatter>? textInputFormatters;
+  final Function(String)? onchangeAction;
 
   @override
   Widget build(BuildContext context) {
@@ -66,6 +68,7 @@ class VehicleRegistrationTextField extends StatelessWidget {
                     padding: EdgeInsets.all(10),
                     height: multiline ? 100.h : null,
                     child: TextField(
+                      onChanged: onchangeAction,
                       controller: controller,
                       keyboardType: inputType,
                       textInputAction: TextInputAction.next,

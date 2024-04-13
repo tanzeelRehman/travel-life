@@ -48,7 +48,7 @@ class VehicleRegistrationField extends StatelessWidget {
                     Text(
                       labelText!,
                       style: TextStyling.regular.copyWith(
-                        fontSize: 15.sp,
+                        fontSize: 12.sp,
                       ),
                     ),
                     VerticalSpacing(5.h),

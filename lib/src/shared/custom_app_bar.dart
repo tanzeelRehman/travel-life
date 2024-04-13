@@ -26,7 +26,8 @@ class CustomAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: padding ?? EdgeInsets.only(top: 50.h, left: 27.w, right: 27.w),
+      padding: padding ??
+          EdgeInsets.only(top: 60.h, left: 27.w, right: 27.w, bottom: 10.h),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -40,7 +41,7 @@ class CustomAppBar extends StatelessWidget {
                   gradient: AppColors.mainButtonGradient,
                   borderRadius: BorderRadius.circular(5.r),
                 ),
-                height: 25.w,
+                height: 25.h,
                 width: 25.w,
                 child: Center(
                   child: Icon(
