@@ -8,6 +8,7 @@ import 'package:starter_app/src/base/enums/vehicle_registration_action.dart';
 import 'package:starter_app/src/base/utils/utils.dart';
 import 'package:starter_app/src/models/accessory.dart';
 import 'package:starter_app/src/models/accessory_category.dart';
+import 'package:starter_app/src/models/vehicle.dart';
 import 'package:starter_app/src/shared/custom_app_bar.dart';
 import 'package:starter_app/src/shared/custom_datepicker_dialog.dart';
 import 'package:starter_app/src/shared/main_button.dart';
@@ -17,6 +18,7 @@ import 'package:starter_app/src/shared/vehicle_registration_select_widget.dart';
 import 'package:starter_app/src/shared/vehicle_registration_textfield.dart';
 import 'package:starter_app/src/styles/app_colors.dart';
 import 'package:starter_app/src/styles/text_theme.dart';
+import 'package:starter_app/src/views/bottomsheets/vehicle_bottomsheet/vehicle_bottomsheet_view.dart';
 import 'package:starter_app/src/views/dialogs/accessory_category_dialog/accessory_category_dialog_view.dart';
 import 'package:starter_app/src/views/vehicle_registration/accessory_detail/accessory_detail_view_model.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -164,6 +166,27 @@ class AccessoryDetailView extends StackedView<AccessoryDetailViewModel> {
                           model.onChangeCategory(v);
                         },
                         value: model.category?.name,
+                      ),
+                    ),
+                    VerticalSpacing(20.h),
+                    VehicleRegistrationField(
+                      svgIconPath: AssetIcons.tfModel,
+                      labelText: 'Vehicle',
+                      child: VehicleRegistrationSelectWidget(
+                        hintText: 'Vehicle',
+                        isLoading: false,
+                        onTap: () async {
+                          final Vehicle? v = await showModalBottomSheet(
+                            constraints: BoxConstraints(
+                              minHeight: context.screenSize().height * 0.8,
+                            ),
+                            context: context,
+                            builder: (context) => VehicleBottomSheetView(),
+                          );
+                          print(v?.model?.model);
+                          model.onChangeVehicle(v);
+                        },
+                        value: model.selectedVehicle?.model?.model,
                       ),
                     ),
                     VerticalSpacing(20.h),

@@ -17,12 +17,14 @@ class VehicleCard extends StatelessWidget {
     required this.vehicle,
     required this.onEdit,
     required this.onDelete,
+    required this.defaultImageUrl,
   }) : super(key: key);
 
   final Vehicle vehicle;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
   final String dummyText = '---';
+  final String defaultImageUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +48,7 @@ class VehicleCard extends StatelessWidget {
                   child: Image.network(
                     // imageUrl: vehicle.photoURL ?? FlavorService.dummyImageUrl,
                     // 'vehicle.photoURL ?? FlavorService.dummyImageUrl',
-                    vehicle.photoURL ?? FlavorService.dummyImageUrl,
+                    vehicle.photoURL ?? defaultImageUrl,
                     height: 173.h,
 
                     width: double.infinity,
@@ -159,13 +161,18 @@ class VehicleCard extends StatelessWidget {
                   ),
                 ),
                 VerticalSpacing(20.h),
-                SizedBox(
-                  height: 55.h,
+                Container(
+                  constraints: BoxConstraints(
+                    maxHeight: 55.h,
+                    minHeight: 40.h,
+                  ),
+                  height: 45.h,
                   child: MainButton(
                     buttonText: 'Edit Details',
                     onPressed: onEdit,
                     isLoading: false,
                     height: double.infinity,
+                    fontSize: 16.sp,
                   ),
                 ),
               ],

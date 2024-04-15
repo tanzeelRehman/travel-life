@@ -246,7 +246,7 @@ class VehiclesView extends StatelessWidget {
                 color: AppColors.appSkyBlue,
               ),
             )
-          : model.allVehicles.isEmpty
+          : model.dataService.vehicles.isEmpty
               ? EmptyStateWidget(
                   text: 'No vehicles added yet',
                   color: AppColors.appSkyBlue,
@@ -258,7 +258,7 @@ class VehiclesView extends StatelessWidget {
                   ),
                   separatorBuilder: (context, index) => VerticalSpacing(20.h),
                   itemBuilder: (context, index) {
-                    final vehicle = model.allVehicles[index];
+                    final vehicle = model.dataService.vehicles[index];
                     return VehicleCard(
                       vehicle: vehicle,
                       onEdit: () {
@@ -267,10 +267,12 @@ class VehiclesView extends StatelessWidget {
                       onDelete: () {
                         // model.onDeleteVehicle(vehicle);
                       },
+                      defaultImageUrl: model
+                          .getVehicleDefaultImageUrl(vehicle.manufacturer!.id!),
                     );
                   },
                   shrinkWrap: true,
-                  itemCount: model.allVehicles.length,
+                  itemCount: model.dataService.vehicles.length,
                 ),
     );
   }
@@ -290,100 +292,160 @@ class AccessoriesView extends StatelessWidget {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(
-              height: 45.h + 40.h,
-              child: ListView.separated(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 27.w,
-                  vertical: 16.h,
-                ),
-                separatorBuilder: (context, index) => HorizontalSpacing(20.w),
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      model.onChangeSelectedAccessoryCategory(index);
-                    },
-                    child: Container(
-                      height: 45.h,
-                      padding: EdgeInsets.symmetric(horizontal: 20.w),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10.r),
-                        color: model.selectedAccessoryCategory == index
-                            ? AppColors.appDarkBlue
-                            : AppColors.white,
-                        border: Border.all(
-                          color: model.selectedAccessoryCategory == index
-                              ? AppColors.lightGrey.withOpacity(0.2)
-                              : AppColors.grey.withOpacity(0.3),
-                          width: 2,
-                        ),
-                      ),
-                      child: Center(
-                        child: Text(
-                          model.accessoryCategories[index],
-                          style: TextStyling.semiBold.copyWith(
-                            fontSize: 12.sp,
-                            color: model.selectedAccessoryCategory == index
-                                ? AppColors.white
-                                : AppColors.appDarkBlue,
+            if (!model.vehiclesLoading)
+              SizedBox(
+                height: 45.h + 40.h,
+                child: ListView.separated(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 27.w,
+                    vertical: 16.h,
+                  ),
+                  separatorBuilder: (context, index) => HorizontalSpacing(20.w),
+                  itemBuilder: (context, index) {
+                    if (index == 0) {
+                      // Display the "All" option
+                      return GestureDetector(
+                        onTap: () {
+                          model.onChangeSelectedVehicleForFilterInAccessories(
+                              null); // Set selectedVehicleForFilter to null
+                        },
+                        child: Container(
+                          height: 45.h,
+                          padding: EdgeInsets.symmetric(horizontal: 20.w),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.r),
+                            color:
+                                model.selectedVehicleForFilterInAccessories ==
+                                        null
+                                    ? AppColors.appDarkBlue
+                                    : AppColors.white,
+                            border: Border.all(
+                              color:
+                                  model.selectedVehicleForFilterInAccessories ==
+                                          null
+                                      ? AppColors.lightGrey.withOpacity(0.2)
+                                      : AppColors.grey.withOpacity(0.3),
+                              width: 2,
+                            ),
+                          ),
+                          child: Center(
+                            child: Text(
+                              'All', // Display "All" as the first option
+                              style: TextStyling.semiBold.copyWith(
+                                fontSize: 12.sp,
+                                color:
+                                    model.selectedVehicleForFilterInAccessories ==
+                                            null
+                                        ? AppColors.white
+                                        : AppColors.appDarkBlue,
+                              ),
+                            ),
                           ),
                         ),
+                      );
+                    } else {
+                      // Display individual vehicles
+                      final vehicle = model.dataService.vehicles[index -
+                          1]; // Subtract 1 to account for the "All" option
+                      return GestureDetector(
+                        onTap: () {
+                          model.onChangeSelectedVehicleForFilterInAccessories(
+                              vehicle);
+                        },
+                        child: Container(
+                          height: 45.h,
+                          padding: EdgeInsets.symmetric(horizontal: 20.w),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.r),
+                            color:
+                                model.selectedVehicleForFilterInAccessories ==
+                                        vehicle
+                                    ? AppColors.appDarkBlue
+                                    : AppColors.white,
+                            border: Border.all(
+                              color:
+                                  model.selectedVehicleForFilterInAccessories ==
+                                          vehicle
+                                      ? AppColors.lightGrey.withOpacity(0.2)
+                                      : AppColors.grey.withOpacity(0.3),
+                              width: 2,
+                            ),
+                          ),
+                          child: Center(
+                            child: Text(
+                              vehicle.model?.model ?? '',
+                              style: TextStyling.semiBold.copyWith(
+                                fontSize: 12.sp,
+                                color:
+                                    model.selectedVehicleForFilterInAccessories ==
+                                            vehicle
+                                        ? AppColors.white
+                                        : AppColors.appDarkBlue,
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+                  },
+                  itemCount: model.dataService.vehicles.length +
+                      1, // Add 1 for the "All" option
+                  scrollDirection: Axis.horizontal,
+                  shrinkWrap: true,
+                ),
+              ),
+            // AccessoryCategoryHeader(
+            //   categoryName: 'front',
+            // ),
+            SizedBox(
+              height: 32.h + 360.h,
+              child: model.allAccessories.isNotEmpty
+                  ? ListView.separated(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 27.w,
+                        vertical: 16.h,
                       ),
+                      separatorBuilder: (context, index) =>
+                          HorizontalSpacing(20.h),
+                      itemBuilder: (context, index) {
+                        final accessory = model.allAccessories[index];
+                        return AccessoryCard(
+                            accessory: accessory,
+                            onClickEdit: () {
+                              model.onEditAccessory(accessory);
+                            });
+                      },
+                      shrinkWrap: false,
+                      itemCount: model.allAccessories.length,
+                      scrollDirection: Axis.horizontal,
+                    )
+                  : EmptyStateWidget(
+                      text: 'No Accessories Found',
+                      color: AppColors.appSkyBlue,
                     ),
-                  );
-                },
-                itemCount: model.accessoryCategories.length,
-                scrollDirection: Axis.horizontal,
-                shrinkWrap: true,
-              ),
             ),
-            AccessoryCategoryHeader(
-              categoryName: 'front',
-            ),
-            SizedBox(
-              height: 32.h + 360.h,
-              child: ListView.separated(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 27.w,
-                  vertical: 16.h,
-                ),
-                separatorBuilder: (context, index) => HorizontalSpacing(20.h),
-                itemBuilder: (context, index) {
-                  final accessory = model.allAccessories[index];
-                  return AccessoryCard(
-                      accessory: accessory,
-                      onClickEdit: () {
-                        model.onEditAccessory(accessory);
-                      });
-                },
-                shrinkWrap: false,
-                itemCount: model.allAccessories.length,
-                scrollDirection: Axis.horizontal,
-              ),
-            ),
-            AccessoryCategoryHeader(categoryName: ''),
-            SizedBox(
-              height: 32.h + 360.h,
-              child: ListView.separated(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 27.w,
-                  vertical: 16.h,
-                ),
-                separatorBuilder: (context, index) => HorizontalSpacing(20.h),
-                itemBuilder: (context, index) {
-                  final accessory = model.allAccessories[index];
-                  return AccessoryCard(
-                    accessory: accessory,
-                    onClickEdit: () {
-                      model.onEditAccessory(accessory);
-                    },
-                  );
-                },
-                shrinkWrap: false,
-                itemCount: model.allAccessories.length,
-                scrollDirection: Axis.horizontal,
-              ),
-            ),
+            // AccessoryCategoryHeader(categoryName: ''),
+            // SizedBox(
+            //   height: 32.h + 360.h,
+            //   child: ListView.separated(
+            //     padding: EdgeInsets.symmetric(
+            //       horizontal: 27.w,
+            //       vertical: 16.h,
+            //     ),
+            //     separatorBuilder: (context, index) => HorizontalSpacing(20.h),
+            //     itemBuilder: (context, index) {
+            //       final accessory = model.allAccessories[index];
+            //       return AccessoryCard(
+            //           accessory: accessory,
+            //           onClickEdit: () {
+            //             model.onEditAccessory(accessory);
+            //           });
+            //     },
+            //     shrinkWrap: false,
+            //     itemCount: model.allAccessories.length,
+            //     scrollDirection: Axis.horizontal,
+            //   ),
+            // ),
           ],
         ),
       ),
@@ -446,54 +508,108 @@ class OperationalCostView extends StatelessWidget {
     return Expanded(
       child: Column(
         children: [
-          //TODO: this below listview is only for vehicles (user's vehicles)
-          SizedBox(
-            height: 45.h + 40.h,
-            child: ListView.separated(
-              padding: EdgeInsets.symmetric(
-                horizontal: 27.w,
-                vertical: 16.h,
-              ),
-              separatorBuilder: (context, index) => HorizontalSpacing(20.w),
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () {
-                    model.onChangeSelectedAccessoryCategory(index);
-                  },
-                  child: Container(
-                    height: 45.h,
-                    padding: EdgeInsets.symmetric(horizontal: 20.w),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.r),
-                      color: model.selectedAccessoryCategory == index
-                          ? AppColors.appDarkBlue
-                          : AppColors.white,
-                      border: Border.all(
-                        color: model.selectedAccessoryCategory == index
-                            ? AppColors.lightGrey.withOpacity(0.2)
-                            : AppColors.grey.withOpacity(0.3),
-                        width: 2,
-                      ),
-                    ),
-                    child: Center(
-                      child: Text(
-                        model.accessoryCategories[index],
-                        style: TextStyling.semiBold.copyWith(
-                          fontSize: 12.sp,
-                          color: model.selectedAccessoryCategory == index
-                              ? AppColors.white
-                              : AppColors.appDarkBlue,
+          if (!model.vehiclesLoading)
+            SizedBox(
+              height: 45.h + 40.h,
+              child: ListView.separated(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 27.w,
+                  vertical: 16.h,
+                ),
+                separatorBuilder: (context, index) => HorizontalSpacing(20.w),
+                itemBuilder: (context, index) {
+                  if (index == 0) {
+                    // Display the "All" option
+                    return GestureDetector(
+                      onTap: () {
+                        model.onChangeSelectedVehicleForFilterInOperatingCosts(
+                            null); // Set selectedVehicleForFilter to null
+                      },
+                      child: Container(
+                        height: 45.h,
+                        padding: EdgeInsets.symmetric(horizontal: 20.w),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.r),
+                          color:
+                              model.selectedVehicleForFilterInOperatingCosts ==
+                                      null
+                                  ? AppColors.appDarkBlue
+                                  : AppColors.white,
+                          border: Border.all(
+                            color:
+                                model.selectedVehicleForFilterInOperatingCosts ==
+                                        null
+                                    ? AppColors.lightGrey.withOpacity(0.2)
+                                    : AppColors.grey.withOpacity(0.3),
+                            width: 2,
+                          ),
+                        ),
+                        child: Center(
+                          child: Text(
+                            'All', // Display "All" as the first option
+                            style: TextStyling.semiBold.copyWith(
+                              fontSize: 12.sp,
+                              color:
+                                  model.selectedVehicleForFilterInOperatingCosts ==
+                                          null
+                                      ? AppColors.white
+                                      : AppColors.appDarkBlue,
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                );
-              },
-              itemCount: model.accessoryCategories.length,
-              scrollDirection: Axis.horizontal,
-              shrinkWrap: true,
+                    );
+                  } else {
+                    // Display individual vehicles
+                    final vehicle = model.dataService.vehicles[index -
+                        1]; // Subtract 1 to account for the "All" option
+                    return GestureDetector(
+                      onTap: () {
+                        model.onChangeSelectedVehicleForFilterInOperatingCosts(
+                            vehicle);
+                      },
+                      child: Container(
+                        height: 45.h,
+                        padding: EdgeInsets.symmetric(horizontal: 20.w),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.r),
+                          color:
+                              model.selectedVehicleForFilterInOperatingCosts ==
+                                      vehicle
+                                  ? AppColors.appDarkBlue
+                                  : AppColors.white,
+                          border: Border.all(
+                            color:
+                                model.selectedVehicleForFilterInOperatingCosts ==
+                                        vehicle
+                                    ? AppColors.lightGrey.withOpacity(0.2)
+                                    : AppColors.grey.withOpacity(0.3),
+                            width: 2,
+                          ),
+                        ),
+                        child: Center(
+                          child: Text(
+                            vehicle.model?.model ?? '',
+                            style: TextStyling.semiBold.copyWith(
+                              fontSize: 12.sp,
+                              color:
+                                  model.selectedVehicleForFilterInOperatingCosts ==
+                                          vehicle
+                                      ? AppColors.white
+                                      : AppColors.appDarkBlue,
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                },
+                itemCount: model.dataService.vehicles.length +
+                    1, // Add 1 for the "All" option
+                scrollDirection: Axis.horizontal,
+                shrinkWrap: true,
+              ),
             ),
-          ),
           Expanded(
             child: model.operationsCostsLoading
                 ? Center(

@@ -126,7 +126,7 @@ class Vehicle {
         'in_use': inUse,
         'purchase_date': purchaseDate?.toIso8601String(),
         'price': price,
-        'photoURL': photoURL,
+        if (photoURL != null && photoURL != '') 'photoURL': photoURL,
         'reg_no': regNo,
         'vin_no': vinNo,
         'tank_capacity': tankCapacity,

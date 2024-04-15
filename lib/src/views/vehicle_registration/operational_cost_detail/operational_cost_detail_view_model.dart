@@ -6,6 +6,7 @@ import 'package:starter_app/src/base/enums/vehicle_registration_action.dart';
 import 'package:starter_app/src/base/utils/constants.dart';
 import 'package:starter_app/src/models/cost_category.dart';
 import 'package:starter_app/src/models/operating_cost.dart';
+import 'package:starter_app/src/models/vehicle.dart';
 import 'package:starter_app/src/services/local/base/data_view_model.dart';
 import 'package:starter_app/src/services/local/navigation_service.dart';
 import 'package:starter_app/src/services/remote/base/database_view_model.dart';
@@ -23,6 +24,14 @@ class OperationalCostDetailViewModel extends ReactiveViewModel
   }
 
   CostCategory? category;
+  Vehicle? selectedVehicle;
+
+  onChangeVehicle(Vehicle? v) {
+    if (v != null) {
+      selectedVehicle = v;
+      notifyListeners();
+    }
+  }
 
   onChangeCategory(CostCategory? v) {
     if (v != null) {
@@ -87,6 +96,7 @@ class OperationalCostDetailViewModel extends ReactiveViewModel
     priceController.text = accessory.total != null
         ? accessory.total.toString()
         : calculatePrice(accessory.purchasePrice, accessory.vat).toString();
+    selectedVehicle = accessory.vehicle;
     notifyListeners();
   }
 
@@ -104,6 +114,7 @@ class OperationalCostDetailViewModel extends ReactiveViewModel
       purchasePrice: double.tryParse(purchasePriceController.text),
       vat: double.tryParse(vatController.text),
       total: calculatePrice(purchasePriceController.text, vatController.text),
+      vehicle: selectedVehicle,
     );
   }
 
@@ -198,6 +209,7 @@ class OperationalCostDetailViewModel extends ReactiveViewModel
       }
 
       if (success) {
+        getAllOperationalCosts();
         NavService.back();
         Constants.customSuccessSnack(
             'Cost ${editAccessoryID == null ? 'added' : 'updated'} successfully');
@@ -210,6 +222,11 @@ class OperationalCostDetailViewModel extends ReactiveViewModel
     } finally {
       setBusy(false);
     }
+  }
+
+  getAllOperationalCosts() async {
+    dataService.operatingCosts =
+        await databaseService.getAllOperationalCosts() ?? [];
   }
 
   @override

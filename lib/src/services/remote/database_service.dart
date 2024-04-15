@@ -583,6 +583,12 @@ class DatabaseService with ListenableServiceMixin {
     }
     return _connectivityService.isInternetConnected;
   }
+
+  String getDefaultVehicleImage(int manufacturerID) {
+    return _supabase.storage
+        .from(SupabaseBuckets.avatarsBucket)
+        .getPublicUrl('BikeLogos/Logo$manufacturerID.png');
+  }
 }
 
 //TODO: find a better way to do it.

@@ -5,12 +5,13 @@ import 'package:starter_app/src/base/enums/vehicle_registration_action.dart';
 import 'package:starter_app/src/models/accessory.dart';
 import 'package:starter_app/src/models/operating_cost.dart';
 import 'package:starter_app/src/models/vehicle.dart';
+import 'package:starter_app/src/services/local/base/data_view_model.dart';
 import 'package:starter_app/src/services/local/navigation_service.dart';
 import 'package:starter_app/src/services/remote/base/database_view_model.dart';
 import 'package:starter_app/src/services/remote/base/supabase_auth_view_model.dart';
 
 class VehicleRegistrationViewModel extends ReactiveViewModel
-    with SupabaseAuthViewModel, DatabaseViewModel {
+    with SupabaseAuthViewModel, DatabaseViewModel, DataViewModel {
   int selectedTab = 0;
 
   ValueNotifier<bool> isFabOpen = ValueNotifier(false);
@@ -79,7 +80,8 @@ class VehicleRegistrationViewModel extends ReactiveViewModel
 
   getAllVehicles() async {
     setVehiclesLoading(true);
-    allVehicles = await databaseService.getAllVehicles() ?? [];
+    // allVehicles = await databaseService.getAllVehicles() ?? [];
+    dataService.vehicles = await databaseService.getAllVehicles() ?? [];
     setVehiclesLoading(false);
     notifyListeners();
   }
@@ -93,6 +95,9 @@ class VehicleRegistrationViewModel extends ReactiveViewModel
     NavService.navigateToVehicleDetail(action: VehicleRegistrationAction.add);
   }
 
+  getVehicleDefaultImageUrl(int manufacturerID) {
+    return databaseService.getDefaultVehicleImage(manufacturerID);
+  }
 //////////////////////////// ACCESSORY VIEW ///////////////////////////////////////
 
   bool accessoriesLoading = false;
@@ -104,7 +109,9 @@ class VehicleRegistrationViewModel extends ReactiveViewModel
 
   getAllAccessories() async {
     setAccessoriesLoading(true);
-    allAccessories = await databaseService.getAllAccessories() ?? [];
+    // allAccessories = await databaseService.getAllAccessories() ?? [];
+    dataService.accessories = await databaseService.getAllAccessories() ?? [];
+    allAccessories = dataService.accessories;
     notifyListeners();
     setAccessoriesLoading(false);
   }
@@ -122,20 +129,53 @@ class VehicleRegistrationViewModel extends ReactiveViewModel
     );
   }
 
-  int selectedAccessoryCategory = 0;
-  List<String> accessoryCategories = [
-    'BMW Cabiro',
-    'Harley Davidson',
-    'Kawasaki',
-    'Royal Enfeild',
-    'Yamaha R15',
-  ];
+  Vehicle? selectedVehicleForFilterInAccessories;
 
-  onChangeSelectedAccessoryCategory(int v) {
-    selectedAccessoryCategory = v;
+  onChangeSelectedVehicleForFilterInAccessories(Vehicle? v) {
+    selectedVehicleForFilterInAccessories = v;
+    filterAccessories();
     notifyListeners();
   }
 
+  void filterAccessories() {
+    if (selectedVehicleForFilterInAccessories != null) {
+      allAccessories = dataService.accessories
+          .where(
+            (element) =>
+                element.vehicle?.id ==
+                selectedVehicleForFilterInAccessories?.id,
+          )
+          .toList();
+      notifyListeners();
+    } else {
+      allAccessories = dataService.accessories;
+      notifyListeners();
+    }
+  }
+
+  Vehicle? selectedVehicleForFilterInOperatingCosts;
+
+  onChangeSelectedVehicleForFilterInOperatingCosts(Vehicle? v) {
+    selectedVehicleForFilterInOperatingCosts = v;
+    filterOperatingCosts();
+    notifyListeners();
+  }
+
+  void filterOperatingCosts() {
+    if (selectedVehicleForFilterInOperatingCosts != null) {
+      allOperationalCosts = dataService.operatingCosts
+          .where(
+            (element) =>
+                element.vehicle?.id ==
+                selectedVehicleForFilterInOperatingCosts?.id,
+          )
+          .toList();
+      notifyListeners();
+    } else {
+      allOperationalCosts = dataService.operatingCosts;
+      notifyListeners();
+    }
+  }
 //////////////////////////// OPERATING COST VIEW ///////////////////////////////////////
 
   bool operationsCostsLoading = false;
@@ -147,7 +187,10 @@ class VehicleRegistrationViewModel extends ReactiveViewModel
 
   getAllOperationalCosts() async {
     setOperationsCostsLoading(true);
-    allOperationalCosts = await databaseService.getAllOperationalCosts() ?? [];
+    // allOperationalCosts = await databaseService.getAllOperationalCosts() ?? [];
+    dataService.operatingCosts =
+        await databaseService.getAllOperationalCosts() ?? [];
+    allOperationalCosts = dataService.operatingCosts;
     setOperationsCostsLoading(false);
   }
 

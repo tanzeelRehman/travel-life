@@ -8,6 +8,7 @@ import 'package:starter_app/src/base/enums/vehicle_registration_action.dart';
 import 'package:starter_app/src/base/utils/constants.dart';
 import 'package:starter_app/src/models/accessory.dart';
 import 'package:starter_app/src/models/accessory_category.dart';
+import 'package:starter_app/src/models/vehicle.dart';
 import 'package:starter_app/src/services/local/base/data_view_model.dart';
 import 'package:starter_app/src/services/local/bottom_sheet_service.dart';
 import 'package:starter_app/src/services/local/navigation_service.dart';
@@ -26,6 +27,14 @@ class AccessoryDetailViewModel extends ReactiveViewModel
   }
 
   AccessoryCategory? category;
+  Vehicle? selectedVehicle;
+
+  onChangeVehicle(Vehicle? v) {
+    if (v != null) {
+      selectedVehicle = v;
+      notifyListeners();
+    }
+  }
 
   onChangeCategory(AccessoryCategory? v) {
     if (v != null) {
@@ -90,6 +99,7 @@ class AccessoryDetailViewModel extends ReactiveViewModel
     priceController.text = accessory.total != null
         ? accessory.total.toString()
         : calculatePrice(accessory.purchasePrice, accessory.vat).toString();
+    selectedVehicle = accessory.vehicle;
     notifyListeners();
   }
 
@@ -107,6 +117,7 @@ class AccessoryDetailViewModel extends ReactiveViewModel
       purchasePrice: double.tryParse(purchasePriceController.text),
       vat: double.tryParse(vatController.text),
       total: calculatePrice(purchasePriceController.text, vatController.text),
+      vehicle: selectedVehicle,
     );
   }
 
@@ -325,6 +336,7 @@ class AccessoryDetailViewModel extends ReactiveViewModel
       }
 
       if (success) {
+        getAllAccessories();
         NavService.back();
         Constants.customSuccessSnack(
             'Accessory ${editAccessoryID == null ? 'added' : 'updated'} successfully');
@@ -337,6 +349,11 @@ class AccessoryDetailViewModel extends ReactiveViewModel
     } finally {
       setBusy(false);
     }
+  }
+
+  getAllAccessories() async {
+    dataService.accessories = await databaseService.getAllAccessories() ?? [];
+    notifyListeners();
   }
 
 //! Functions Added by Tanzeel

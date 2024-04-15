@@ -293,6 +293,7 @@ class VehicleDetailViewModel extends ReactiveViewModel
         setBusy(false);
 
         if (updatedUserWithProfile != null) {
+          getAllVehicles();
           NavService.back();
           Constants.customSuccessSnack('Vehicle added successfully');
         }
@@ -301,6 +302,7 @@ class VehicleDetailViewModel extends ReactiveViewModel
       setBusy(false);
 
       if (inserted != null) {
+        getAllVehicles();
         NavService.back();
         Constants.customSuccessSnack('Vehicle added successfully');
       }
@@ -317,6 +319,7 @@ class VehicleDetailViewModel extends ReactiveViewModel
         setBusy(false);
 
         if (updatedUserWithProfile != null) {
+          getAllVehicles();
           NavService.back();
           Constants.customSuccessSnack('Vehicle updated successfully');
         }
@@ -326,10 +329,16 @@ class VehicleDetailViewModel extends ReactiveViewModel
       setBusy(false);
 
       if (inserted != null) {
+        getAllVehicles();
         NavService.back();
         Constants.customSuccessSnack('Vehicle updated successfully');
       }
     }
+  }
+
+  getAllVehicles() async {
+    dataService.vehicles = await databaseService.getAllVehicles() ?? [];
+    notifyListeners();
   }
 
   bool isManufacturersLoading = false;
