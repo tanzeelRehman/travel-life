@@ -16,6 +16,7 @@ class OperatingCost {
   final String? attachment;
   final String? height;
   final String? width;
+  final List<dynamic>? attachments;
 
   OperatingCost({
     this.id,
@@ -31,6 +32,7 @@ class OperatingCost {
     this.attachment,
     this.height,
     this.width,
+    this.attachments,
   });
 
   factory OperatingCost.fromMap(Map<String, dynamic> json) => OperatingCost(
@@ -55,6 +57,7 @@ class OperatingCost {
         attachment: json['attachment'] as String?,
         height: json['height'] as String?,
         width: json['width'] as String?,
+        attachments: json['attachments'],
       );
 
   Map<String, dynamic> toMap() => {
@@ -71,6 +74,7 @@ class OperatingCost {
         'attachment': attachment,
         'height': height,
         'width': width,
+        'attachments': attachments,
       };
 
   Map<String, dynamic> insertToMap() => {
@@ -87,6 +91,7 @@ class OperatingCost {
         'attachment': attachment,
         'height': height,
         'width': width,
+        'attachments': attachments,
       };
 
   static List<OperatingCost>? fromJsonList(
@@ -108,6 +113,7 @@ class OperatingCost {
     String? attachment,
     String? height,
     String? width,
+    List<dynamic>? attachments,
   }) {
     return OperatingCost(
       id: id ?? this.id,
@@ -123,6 +129,7 @@ class OperatingCost {
       attachment: attachment ?? this.attachment,
       height: height ?? this.height,
       width: width ?? this.width,
+      attachments: attachments ?? this.attachments,
     );
   }
 

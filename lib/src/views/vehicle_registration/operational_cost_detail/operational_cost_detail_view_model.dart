@@ -120,6 +120,8 @@ class OperationalCostDetailViewModel extends ReactiveViewModel
 
   File? attachment;
 
+  List<File>? localAttachments = [];
+
   onClickRemoveAttachment() {
     attachment = null;
     notifyListeners();
@@ -164,9 +166,57 @@ class OperationalCostDetailViewModel extends ReactiveViewModel
     }
   }
 
+  onClickRemoveAttachmentFromLocalAttachment(int i) {
+    localAttachments?.removeAt(i);
+    notifyListeners();
+  }
+
+  onClickAddAttachments() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      allowMultiple: true,
+      allowCompression: true,
+      allowedExtensions: [
+        'pdf',
+        'doc',
+        'docx',
+        'jpg',
+        'jpeg',
+        'png',
+        //TODO: add more
+
+        // for iphone
+      ], // optional
+      type: FileType.custom,
+
+      dialogTitle: 'Select Attachment',
+      compressionQuality: 40,
+    );
+
+    if (result != null) {
+      for (int i = 0; i < result.files.length; i++) {
+        final file = File(result.files[i].path!);
+        final fileSize = await file.length();
+
+        if (fileSize <= 5 * 1024 * 1024) {
+          attachment = file;
+          localAttachments?.add(file);
+        } else {
+          // Handle case where attachment size exceeds 5 MB
+          Constants.customWarningSnack(
+              'Attachment size exceeds 5 MB, Please choose a attachment under 5 mb');
+          print('Attachment size exceeds 5 MB');
+        }
+
+        notifyListeners();
+      }
+    }
+  }
+
   updateOrInsertAccesssory() async {
     bool success = false;
-    bool hasAttachment = attachment != null;
+    // bool hasAttachment = attachment != null;
+    bool hasAttachment =
+        localAttachments != null && localAttachments!.isNotEmpty;
 
     try {
       setBusy(true);
@@ -182,12 +232,16 @@ class OperationalCostDetailViewModel extends ReactiveViewModel
 
         if (insertedAccessory != null) {
           if (hasAttachment) {
-            final updatedAccessoryWithAttachment =
-                await databaseService.insertOrUpdateOperatingCostAttachment(
-              insertedAccessory.id!,
-              attachment!,
-            );
-            success = updatedAccessoryWithAttachment != null;
+            // final updatedAccessoryWithAttachment =
+            //     await databaseService.insertOrUpdateOperatingCostAttachment(
+            //   insertedAccessory.id!,
+            //   attachment!,
+            // );
+
+            final updatedOperationalCostWithAttachment =
+                await databaseService.addOperatingCostAttachments(
+                    insertedAccessory.id!, localAttachments!);
+            success = updatedOperationalCostWithAttachment != null;
           }
         }
       } else {
@@ -198,12 +252,17 @@ class OperationalCostDetailViewModel extends ReactiveViewModel
 
         if (updatedAccessory != null) {
           if (hasAttachment) {
-            final updatedAccessoryWithAttachment =
-                await databaseService.insertOrUpdateOperatingCostAttachment(
-              updatedAccessory.id!,
-              attachment!,
-            );
-            success = updatedAccessoryWithAttachment != null;
+            // final updatedAccessoryWithAttachment =
+            //     await databaseService.insertOrUpdateOperatingCostAttachment(
+            //   updatedAccessory.id!,
+            //   attachment!,
+            // );
+
+            final updatedOperationalCostWithAttachment =
+                await databaseService.addOperatingCostAttachments(
+                    updatedAccessory.id!, localAttachments!);
+            success = updatedOperationalCostWithAttachment != null;
+            // success = updatedAccessoryWithAttachment != null;
           }
         }
       }

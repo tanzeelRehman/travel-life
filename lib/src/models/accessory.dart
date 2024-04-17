@@ -16,6 +16,7 @@ class Accessory {
   final String? height;
   final String? width;
   final String? accessoryImageAttachment;
+  final List<dynamic>? attachments;
 
   Accessory({
     this.id,
@@ -32,6 +33,7 @@ class Accessory {
     this.height,
     this.width,
     this.accessoryImageAttachment,
+    this.attachments,
   });
 
   factory Accessory.fromMap(Map<String, dynamic> json) => Accessory(
@@ -56,6 +58,7 @@ class Accessory {
         height: json['height'] as String?,
         width: json['width'] as String?,
         accessoryImageAttachment: json['accessoryimage_attachment'] as String?,
+        attachments: json['attachments'],
       );
 
   Map<String, dynamic> toMap() => {
@@ -73,6 +76,7 @@ class Accessory {
         'height': height,
         'width': width,
         // 'accessoryimage_attachment': accessoryImageAttachment,
+        'attachments': attachments
       };
 
   Map<String, dynamic> insertToMap() => {
@@ -89,6 +93,7 @@ class Accessory {
         // 'invoice_attachment': invoiceAttachment,
         'height': height,
         'width': width,
+        'attachments': attachments
         // 'accessoryimage_attachment':
         //     accessoryImageAttachment, //might also remove this idk
       };
@@ -108,6 +113,7 @@ class Accessory {
     String? height,
     String? width,
     String? accessoryImageAttachment,
+    List<dynamic>? attachments,
   }) {
     return Accessory(
       id: id ?? this.id,
@@ -125,6 +131,7 @@ class Accessory {
       width: width ?? this.width,
       accessoryImageAttachment:
           accessoryImageAttachment ?? this.accessoryImageAttachment,
+      attachments: attachments ?? this.attachments,
     );
   }
 

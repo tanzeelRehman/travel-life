@@ -16,6 +16,7 @@ import 'package:starter_app/src/models/vehicle_model.dart';
 import 'package:starter_app/src/services/local/connectivity_service.dart';
 import 'package:starter_app/src/services/remote/supabase_auth_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:uuid/uuid.dart';
 
 class DatabaseService with ListenableServiceMixin {
   static final SupabaseAuthService _authService =
@@ -575,6 +576,133 @@ class DatabaseService with ListenableServiceMixin {
       Constants.customErrorSnack(e.toString());
       return null;
     }
+  }
+
+  //ADD OPERATING COST ATTACHMENTS (Insert)
+  Future<OperatingCost?> addOperatingCostAttachments(
+    int operatingCostID,
+    List<File> attachments,
+  ) async {
+    try {
+      print('total attachments: ${attachments.length}');
+
+      if (!_isConnected()) {
+        return null;
+      }
+
+      List uploadedAttachmentPaths = [];
+
+      for (File attachment in attachments) {
+        final String randomIdentifier = Uuid().v4();
+
+        final attachmentName =
+            '${_authService.user?.id}/$operatingCostID/$randomIdentifier';
+
+        final res = await _supabase.storage
+            .from(SupabaseBuckets.operationalCostAttachmentsBucket)
+            .upload(attachmentName, attachment);
+        print('upload res: $res');
+
+        uploadedAttachmentPaths.add(attachmentName);
+      }
+
+      final pehleVaaliAttachments =
+          await getOperationalCostAttachments(operatingCostID);
+
+      print('pehleVaaliAttachments: ${pehleVaaliAttachments}');
+
+      final updatedUser = await _supabase
+          .from(SupabaseTables.operatingCosts)
+          .update({
+            'attachments': [
+              ...pehleVaaliAttachments,
+              ...uploadedAttachmentPaths
+            ]
+          })
+          .eq('id', operatingCostID)
+          .select(operationalCostQuery)
+          .single();
+
+      return OperatingCost.fromMap(updatedUser);
+    } catch (e) {
+      print(e);
+      Constants.customErrorSnack(e.toString());
+      return null;
+    }
+  }
+
+  //ADD OPERATING COST ATTACHMENT (Insert)
+  Future<OperatingCost?> removeOperatingCostAttachment(
+    int operatingCostID,
+    String attachmentPath,
+  ) async {
+    try {
+      print('attachment: $attachmentPath');
+
+      if (!_isConnected()) {
+        return null;
+      }
+
+      List updatedAttachmentPaths = [];
+
+      final res = await _supabase.storage
+          .from(SupabaseBuckets.operationalCostAttachmentsBucket)
+          .remove([attachmentPath]);
+
+      print('deleted attachement: ${res.first}');
+
+      final pehleVaaliAttachments =
+          await getOperationalCostAttachments(operatingCostID);
+
+      updatedAttachmentPaths = pehleVaaliAttachments
+          .where((element) => element != attachmentPath)
+          .toList();
+
+      final updatedUser = await _supabase
+          .from(SupabaseTables.operatingCosts)
+          .update({'attachments': updatedAttachmentPaths})
+          .eq('id', operatingCostID)
+          .select(operationalCostQuery)
+          .single();
+
+      return OperatingCost.fromMap(updatedUser);
+    } catch (e) {
+      print(e);
+      Constants.customErrorSnack(e.toString());
+      return null;
+    }
+  }
+
+  Future<List<dynamic>> getOperationalCostAttachments(
+      int operatingCostID) async {
+    try {
+      final res = await _supabase
+          .from(SupabaseTables.operatingCosts)
+          .select('*')
+          .eq('id', operatingCostID)
+          .single();
+
+      print('attachments in getOperationalCostAttachments : ${res}');
+
+      if (res['attachments'] == null) {
+        return [];
+      }
+      // else{
+
+      // }
+
+      return res['attachments'];
+    } catch (e) {
+      print(e);
+      Constants.customErrorSnack(e.toString());
+      return [];
+    }
+  }
+
+  String getOperatingCostAttachmentUrl(String attachmentPath) {
+    return _supabase.storage
+        .from(SupabaseBuckets.operationalCostAttachmentsBucket)
+        .getPublicUrl(attachmentPath);
   }
 
   bool _isConnected() {

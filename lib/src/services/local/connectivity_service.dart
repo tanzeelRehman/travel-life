@@ -5,6 +5,9 @@ class ConnectivityService with ListenableServiceMixin {
   ReactiveValue<bool> _isInternetConnected = ReactiveValue<bool>(true);
   bool get isInternetConnected => _isInternetConnected.value;
 
+  Stream<ConnectivityResult> get onConnectivityChanged =>
+      Connectivity().onConnectivityChanged;
+
   ConnectivityService() {
     listenToReactiveValues([_isInternetConnected]);
     updateStatus();

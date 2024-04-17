@@ -89,142 +89,397 @@ class OperationalCostDetailView
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           // crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            if (operatingCost?.attachment != null &&
-                                model.attachment == null) ...[
-                              GestureDetector(
-                                onTap: () async {
-                                  final isPdf = await UtilFunctions.isPDF(
-                                      operatingCost!.attachment!);
+                            // if (operatingCost?.attachment != null &&
+                            //     model.attachment == null) ...[
+                            //   GestureDetector(
+                            //     onTap: () async {
+                            //       final isPdf = await UtilFunctions.isPDF(
+                            //           operatingCost!.attachment!);
 
-                                  print(isPdf);
+                            //       print(isPdf);
 
-                                  if (isPdf) {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => AttachmentViewer(
-                                          attachmentUrl:
-                                              'https://docs.google.com/viewer?url=' +
-                                                  operatingCost!.attachment!,
-                                        ),
-                                      ),
-                                    );
-                                  } else {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => AttachmentViewer(
-                                          attachmentUrl:
-                                              operatingCost!.attachment!,
-                                        ),
-                                      ),
-                                    );
-                                  }
-                                },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5.r),
-                                    border: Border.all(
-                                      color: AppColors.appSkyBlue,
-                                    ),
-                                    color: AppColors.white.withOpacity(0.2),
-                                  ),
-                                  padding: EdgeInsets.all(3.h),
-                                  child: Row(
+                            //       if (isPdf) {
+                            //         Navigator.push(
+                            //           context,
+                            //           MaterialPageRoute(
+                            //             builder: (context) => AttachmentViewer(
+                            //               attachmentUrl:
+                            //                   'https://docs.google.com/viewer?url=' +
+                            //                       operatingCost!.attachment!,
+                            //             ),
+                            //           ),
+                            //         );
+                            //       } else {
+                            //         Navigator.push(
+                            //           context,
+                            //           MaterialPageRoute(
+                            //             builder: (context) => AttachmentViewer(
+                            //               attachmentUrl:
+                            //                   operatingCost!.attachment!,
+                            //             ),
+                            //           ),
+                            //         );
+                            //       }
+                            //     },
+                            //     child: Container(
+                            //       decoration: BoxDecoration(
+                            //         borderRadius: BorderRadius.circular(5.r),
+                            //         border: Border.all(
+                            //           color: AppColors.appSkyBlue,
+                            //         ),
+                            //         color: AppColors.white.withOpacity(0.2),
+                            //       ),
+                            //       padding: EdgeInsets.all(3.h),
+                            //       child: Row(
+                            //         children: [
+                            //           Expanded(
+                            //             child: Text(
+                            //               operatingCost?.attachment ?? '',
+                            //               style: TextStyling.medium.copyWith(
+                            //                 color: AppColors.appSkyBlue,
+                            //                 fontSize: 12.sp,
+                            //               ),
+                            //               overflow: TextOverflow.ellipsis,
+                            //             ),
+                            //           ),
+                            //           HorizontalSpacing(5.w),
+                            //           Container(
+                            //             decoration: BoxDecoration(
+                            //               gradient:
+                            //                   AppColors.mainButtonGradient,
+                            //               borderRadius:
+                            //                   BorderRadius.circular(5.r),
+                            //             ),
+                            //             height: 20.w,
+                            //             width: 20.w,
+                            //             child: Center(
+                            //               child: Icon(
+                            //                 Icons.remove_red_eye,
+                            //                 color: AppColors.white,
+                            //                 size: 15.sp,
+                            //               ),
+                            //             ),
+                            //           ),
+                            //         ],
+                            //       ),
+                            //     ),
+                            //   ),
+                            //   VerticalSpacing(20.h),
+                            // ],
+                            if (operatingCost?.attachments != null &&
+                                operatingCost!.attachments!.isNotEmpty) ...[
+                              // GestureDetector(
+                              //   onTap: () async {
+                              //     final isPdf = await UtilFunctions.isPDF(
+                              //         operatingCost!.attachment!);
+
+                              //     print(isPdf);
+
+                              //     if (isPdf) {
+                              //       Navigator.push(
+                              //         context,
+                              //         MaterialPageRoute(
+                              //           builder: (context) => AttachmentViewer(
+                              //             attachmentUrl:
+                              //                 'https://docs.google.com/viewer?url=' +
+                              //                     operatingCost!.attachment!,
+                              //           ),
+                              //         ),
+                              //       );
+                              //     } else {
+                              //       Navigator.push(
+                              //         context,
+                              //         MaterialPageRoute(
+                              //           builder: (context) => AttachmentViewer(
+                              //             attachmentUrl:
+                              //                 operatingCost!.attachment!,
+                              //           ),
+                              //         ),
+                              //       );
+                              //     }
+                              //   },
+                              //   child: Container(
+                              //     decoration: BoxDecoration(
+                              //       borderRadius: BorderRadius.circular(5.r),
+                              //       border: Border.all(
+                              //         color: AppColors.appSkyBlue,
+                              //       ),
+                              //       color: AppColors.white.withOpacity(0.2),
+                              //     ),
+                              //     padding: EdgeInsets.all(3.h),
+                              //     child: Row(
+                              //       children: [
+                              //         Expanded(
+                              //           child: Text(
+                              //             operatingCost?.attachment ?? '',
+                              //             style: TextStyling.medium.copyWith(
+                              //               color: AppColors.appSkyBlue,
+                              //               fontSize: 12.sp,
+                              //             ),
+                              //             overflow: TextOverflow.ellipsis,
+                              //           ),
+                              //         ),
+                              //         HorizontalSpacing(5.w),
+                              //         Container(
+                              //           decoration: BoxDecoration(
+                              //             gradient:
+                              //                 AppColors.mainButtonGradient,
+                              //             borderRadius:
+                              //                 BorderRadius.circular(5.r),
+                              //           ),
+                              //           height: 20.w,
+                              //           width: 20.w,
+                              //           child: Center(
+                              //             child: Icon(
+                              //               Icons.remove_red_eye,
+                              //               color: AppColors.white,
+                              //               size: 15.sp,
+                              //             ),
+                              //           ),
+                              //         ),
+                              //       ],
+                              //     ),
+                              //   ),
+                              // ),
+                              // VerticalSpacing(20.h),
+
+                              Column(
+                                children: List.generate(
+                                    operatingCost?.attachments?.length ?? 0,
+                                    (index) {
+                                  final attachment =
+                                      operatingCost!.attachments![index];
+
+                                  final attachementUrl = model.databaseService
+                                      .getOperatingCostAttachmentUrl(
+                                          attachment);
+                                  return Column(
                                     children: [
-                                      Expanded(
-                                        child: Text(
-                                          operatingCost?.attachment ?? '',
-                                          style: TextStyling.medium.copyWith(
-                                            color: AppColors.appSkyBlue,
-                                            fontSize: 12.sp,
+                                      GestureDetector(
+                                        onTap: () async {
+                                          final isPdf =
+                                              await UtilFunctions.isPDF(
+                                                  attachementUrl);
+
+                                          print(isPdf);
+
+                                          if (isPdf) {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    AttachmentViewer(
+                                                  attachmentUrl:
+                                                      'https://docs.google.com/viewer?url=' +
+                                                          attachementUrl,
+                                                ),
+                                              ),
+                                            );
+                                          } else {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    AttachmentViewer(
+                                                  attachmentUrl: attachementUrl,
+                                                ),
+                                              ),
+                                            );
+                                          }
+                                        },
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(5.r),
+                                            border: Border.all(
+                                              color: AppColors.appSkyBlue,
+                                            ),
+                                            color: AppColors.white
+                                                .withOpacity(0.2),
                                           ),
-                                          overflow: TextOverflow.ellipsis,
+                                          padding: EdgeInsets.all(3.h),
+                                          child: Row(
+                                            children: [
+                                              Expanded(
+                                                child: Text(
+                                                  attachementUrl,
+                                                  style: TextStyling.medium
+                                                      .copyWith(
+                                                    color: AppColors.appSkyBlue,
+                                                    fontSize: 12.sp,
+                                                  ),
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                              HorizontalSpacing(5.w),
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                  gradient: AppColors
+                                                      .mainButtonGradient,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          5.r),
+                                                ),
+                                                height: 20.w,
+                                                width: 20.w,
+                                                child: Center(
+                                                  child: Icon(
+                                                    Icons.remove_red_eye,
+                                                    color: AppColors.white,
+                                                    size: 15.sp,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
-                                      HorizontalSpacing(5.w),
+                                      // if (index !=
+                                      //     operatingCost!.attachments!.length -
+                                      //         1)
+                                      VerticalSpacing(20.h),
+                                    ],
+                                  );
+                                }),
+                              )
+                            ],
+                            if (model.localAttachments != null) ...[
+                              // Container(
+                              //   decoration: BoxDecoration(
+                              //     borderRadius: BorderRadius.circular(5.r),
+                              //     border: Border.all(
+                              //       color: AppColors.appSkyBlue,
+                              //     ),
+                              //     color: AppColors.white.withOpacity(0.2),
+                              //   ),
+                              //   padding: EdgeInsets.all(3.h),
+                              //   child: Row(
+                              //     children: [
+                              //       Expanded(
+                              //         child: Text(
+                              //           model.attachment!.path.split('/').last,
+                              //           style: TextStyling.medium.copyWith(
+                              //             color: AppColors.appSkyBlue,
+                              //             fontSize: 12.sp,
+                              //           ),
+                              //           overflow: TextOverflow.ellipsis,
+                              //         ),
+                              //       ),
+                              //       HorizontalSpacing(5.w),
+                              //       GestureDetector(
+                              //         onTap: model.onClickRemoveAttachment,
+                              //         child: Container(
+                              //           decoration: BoxDecoration(
+                              //             gradient:
+                              //                 AppColors.logoutButtonGradient,
+                              //             borderRadius:
+                              //                 BorderRadius.circular(5.r),
+                              //           ),
+                              //           height: 20.w,
+                              //           width: 20.w,
+                              //           child: Center(
+                              //             // child: SvgPicture.asset(
+                              //             //   AssetIcons.rem,
+                              //             // ),
+                              //             child: Icon(
+                              //               Icons.close,
+                              //               color: AppColors.red,
+                              //               size: 15.sp,
+                              //             ),
+                              //           ),
+                              //         ),
+                              //       ),
+                              //     ],
+                              //   ),
+                              // ),
+                              // VerticalSpacing(20.h),
+
+                              Column(
+                                children: List.generate(
+                                    model.localAttachments?.length ?? 0,
+                                    (index) {
+                                  final localFile =
+                                      model.localAttachments![index];
+
+                                  return Column(
+                                    children: [
                                       Container(
                                         decoration: BoxDecoration(
-                                          gradient:
-                                              AppColors.mainButtonGradient,
                                           borderRadius:
                                               BorderRadius.circular(5.r),
-                                        ),
-                                        height: 20.w,
-                                        width: 20.w,
-                                        child: Center(
-                                          child: Icon(
-                                            Icons.remove_red_eye,
-                                            color: AppColors.white,
-                                            size: 15.sp,
+                                          border: Border.all(
+                                            color: AppColors.appSkyBlue,
                                           ),
+                                          color:
+                                              AppColors.white.withOpacity(0.2),
+                                        ),
+                                        padding: EdgeInsets.all(3.h),
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                              child: Text(
+                                                localFile.path.split('/').last,
+                                                style:
+                                                    TextStyling.medium.copyWith(
+                                                  color: AppColors.appSkyBlue,
+                                                  fontSize: 12.sp,
+                                                ),
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                            HorizontalSpacing(5.w),
+                                            GestureDetector(
+                                              // onTap: model
+                                              //     .onClickRemoveAttachmentFromLocalAttachment(
+                                              //         index),
+                                              onTap: () {
+                                                model
+                                                    .onClickRemoveAttachmentFromLocalAttachment(
+                                                        index);
+                                              },
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                  gradient: AppColors
+                                                      .logoutButtonGradient,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          5.r),
+                                                ),
+                                                height: 20.w,
+                                                width: 20.w,
+                                                child: Center(
+                                                  // child: SvgPicture.asset(
+                                                  //   AssetIcons.rem,
+                                                  // ),
+                                                  child: Icon(
+                                                    Icons.close,
+                                                    color: AppColors.red,
+                                                    size: 15.sp,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
+                                      VerticalSpacing(20.h),
                                     ],
-                                  ),
-                                ),
-                              ),
-                              VerticalSpacing(20.h),
+                                  );
+                                }),
+                              )
                             ],
-                            if (model.attachment != null) ...[
-                              Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5.r),
-                                  border: Border.all(
-                                    color: AppColors.appSkyBlue,
-                                  ),
-                                  color: AppColors.white.withOpacity(0.2),
-                                ),
-                                padding: EdgeInsets.all(3.h),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: Text(
-                                        model.attachment!.path.split('/').last,
-                                        style: TextStyling.medium.copyWith(
-                                          color: AppColors.appSkyBlue,
-                                          fontSize: 12.sp,
-                                        ),
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ),
-                                    HorizontalSpacing(5.w),
-                                    GestureDetector(
-                                      onTap: model.onClickRemoveAttachment,
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          gradient:
-                                              AppColors.logoutButtonGradient,
-                                          borderRadius:
-                                              BorderRadius.circular(5.r),
-                                        ),
-                                        height: 20.w,
-                                        width: 20.w,
-                                        child: Center(
-                                          // child: SvgPicture.asset(
-                                          //   AssetIcons.rem,
-                                          // ),
-                                          child: Icon(
-                                            Icons.close,
-                                            color: AppColors.red,
-                                            size: 15.sp,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              VerticalSpacing(20.h),
-                            ],
-                            if (model.attachment == null) ...[
+                            if ((model.localAttachments == null ||
+                                    model.localAttachments!.isEmpty) &&
+                                (operatingCost?.attachments == null ||
+                                    operatingCost!.attachments!.isEmpty)) ...[
                               Icon(
                                 Icons.file_copy,
                                 color: AppColors.appSkyBlue,
                               ),
                               VerticalSpacing(10.h),
                               Text(
-                                'Upload an attachment here',
+                                'Upload attachments here',
                                 style: TextStyling.regular.copyWith(
                                   fontSize: 12.sp,
                                 ),
@@ -233,10 +488,10 @@ class OperationalCostDetailView
                               VerticalSpacing(10.h),
                             ],
                             MainButton(
-                              buttonText: 'Browse File',
+                              buttonText: 'Browse Files',
                               onPressed: () {
                                 //TODO: open file picker with restriction options
-                                model.onClickAddAttachment();
+                                model.onClickAddAttachments();
                               },
                               isLoading: false,
                               height: 30.sp,
