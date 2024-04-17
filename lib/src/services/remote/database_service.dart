@@ -678,7 +678,7 @@ class DatabaseService with ListenableServiceMixin {
     try {
       final res = await _supabase
           .from(SupabaseTables.operatingCosts)
-          .select('*')
+          .select('attachments')
           .eq('id', operatingCostID)
           .single();
 
