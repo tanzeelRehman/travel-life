@@ -16,7 +16,7 @@ import 'package:starter_app/src/models/operating_cost.dart' as _i17;
 import 'package:starter_app/src/models/vehicle.dart' as _i16;
 import 'package:starter_app/src/views/email_confirmation/email_confirmation_view.dart'
     as _i8;
-import 'package:starter_app/src/views/groups/groups_main_screen.dart' as _i13;
+import 'package:starter_app/src/views/groups/groups_main_view.dart' as _i13;
 import 'package:starter_app/src/views/home/home_view.dart' as _i6;
 import 'package:starter_app/src/views/login/login_view.dart' as _i5;
 import 'package:starter_app/src/views/profile/profile_view.dart' as _i7;

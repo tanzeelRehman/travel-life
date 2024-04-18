@@ -89,6 +89,10 @@ class NavService {
       _navigationService!
           .navigateTo(Routes.groupsMainView, arguments: arguments);
 
+  // static Future<dynamic>? navigateToGroupsListsScreen({String groupType}) =>
+  //     _navigationService!
+  //         .navigateTo(Routes.g, arguments: arguments);
+
   //TO GO BACK
   static bool back({dynamic arguments}) => _navigationService!.back();
 }

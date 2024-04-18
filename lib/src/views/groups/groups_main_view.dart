@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 import 'package:intl/intl.dart';
 import 'package:stacked/stacked.dart';
@@ -10,10 +11,14 @@ import 'package:stacked/stacked.dart';
 import 'package:starter_app/generated/assets.dart';
 import 'package:starter_app/src/base/utils/utils.dart';
 import 'package:starter_app/src/shared/custom_app_bar.dart';
+import 'package:starter_app/src/shared/main_button.dart';
+import 'package:starter_app/src/shared/select_widget.dart';
 import 'package:starter_app/src/styles/app_colors.dart';
 import 'package:starter_app/src/styles/text_theme.dart';
 import 'package:starter_app/src/views/groups/models/groups_main_view_model.dart';
 import 'package:starter_app/src/views/groups/widgets/group_tile_widget.dart';
+import 'package:starter_app/src/views/groups/widgets/groups_card.dart';
+import 'package:starter_app/src/views/groups/widgets/groups_invite_tile_widget.dart';
 
 class GroupsMainView extends StackedView<GroupsMainViewModel> {
   @override
@@ -67,23 +72,42 @@ class GroupsMainView extends StackedView<GroupsMainViewModel> {
                     SizedBox(
                       height: 10.h,
                     ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.55,
-                      child: ListView.builder(
-                        itemCount: 8,
-                        itemBuilder: (context, index) {
-                          return GroupsTile(
-                            adminName: "Tanzeel",
-                            createdate: DateTime.now(),
-                            groupName: "Scouts",
-                            imagepath: AssetImages.sampleGroupImage,
-                            onAddIconTap: () {},
-                            onArrowIconTap: () {},
-                            onMoreIconTap: () {},
-                          );
-                        },
-                      ),
-                    )
+                    // SizedBox(
+                    //   height: MediaQuery.of(context).size.height * 0.55,
+                    //   child: ListView.builder(
+                    //     itemCount: 8,
+                    //     itemBuilder: (context, index) {
+                    //     return GroupsTile(
+                    //       adminName: "Tanzeel",
+                    //       createdate: DateTime.now(),
+                    //       groupName: "Scouts",
+                    //       imagepath: AssetImages.sampleGroupImage,
+                    //       onAddIconTap: () {},
+                    //       onArrowIconTap: () {},
+                    //       onMoreIconTap: () {},
+                    //     );
+                    //   },
+                    // ),
+                    // )
+                    // Groupscard(
+                    //   adminName: 'Tanzeel',
+                    //   dateCreated: DateTime.now(),
+                    //   groupName: 'Scouts',
+                    //   imagepath: AssetImages.sampleGroupImage,
+                    //   onDelete: () {},
+                    //   onEditDetailstap: () {},
+                    //   onMoreIconTap: () {},
+                    //   onSeeAllMembersTap: () {},
+
+                    GroupsInviteTile(
+                      adminName: "Tanzeel",
+                      createdate: DateTime.now(),
+                      groupName: "Scouts",
+                      imagepath: AssetImages.sampleGroupImage,
+                      onAddIconTap: () {},
+                      onArrowIconTap: () {},
+                      onMoreIconTap: () {},
+                    ),
                   ],
                 ),
               )

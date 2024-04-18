@@ -8,7 +8,9 @@ import 'package:starter_app/src/services/remote/api_service.dart';
 import 'package:starter_app/src/services/remote/database_service.dart';
 import 'package:starter_app/src/services/remote/supabase_auth_service.dart';
 import 'package:starter_app/src/views/email_confirmation/email_confirmation_view.dart';
-import 'package:starter_app/src/views/groups/groups_main_screen.dart';
+import 'package:starter_app/src/views/groups/groups_lists_view.dart';
+import 'package:starter_app/src/views/groups/groups_main_view.dart';
+import 'package:starter_app/src/views/groups/my_groups_view.dart';
 import 'package:starter_app/src/views/home/home_view.dart';
 import 'package:starter_app/src/views/login/login_view.dart';
 import 'package:starter_app/src/views/profile/profile_view.dart';
@@ -22,7 +24,7 @@ import 'package:starter_app/src/views/welcome/welcome_view.dart';
 
 @StackedApp(
   routes: [
-    MaterialRoute(page: SplashView),
+    MaterialRoute(page: SplashView, initial: true),
     MaterialRoute(page: WelcomeView),
     MaterialRoute(page: RegisterView),
     MaterialRoute(page: LoginView),
@@ -35,7 +37,9 @@ import 'package:starter_app/src/views/welcome/welcome_view.dart';
     MaterialRoute(page: OperationalCostDetailView),
     MaterialRoute(page: AccessoryDetailView),
     //! Groups Pages
-    MaterialRoute(page: GroupsMainView, initial: true),
+    MaterialRoute(page: GroupsMainView),
+    MaterialRoute(page: GroupsListsView),
+    MaterialRoute(page: MyGroupsView),
   ],
   dependencies: [
     // Lazy singletons
