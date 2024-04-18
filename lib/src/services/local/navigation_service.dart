@@ -84,6 +84,10 @@ class NavService {
           operatingCost: operatingCost,
         ),
       );
+  //Groups Navigations:
+  static Future<dynamic>? navigateToGroupsMainScreen({dynamic arguments}) =>
+      _navigationService!
+          .navigateTo(Routes.groupsMainView, arguments: arguments);
 
   //TO GO BACK
   static bool back({dynamic arguments}) => _navigationService!.back();

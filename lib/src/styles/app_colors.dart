@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 import 'package:hexcolor/hexcolor.dart';
 
 class AppColors {
@@ -171,4 +173,18 @@ class AppColors {
       blurStyle: BlurStyle.inner,
     ),
   ];
+  //! Groups
+  static BoxDecoration groupCardsDecoration = BoxDecoration(
+      borderRadius: BorderRadius.circular(15.r),
+      gradient: LinearGradient(colors: [
+        Color(0xff363E51),
+        Color(0xff4C5770),
+      ]),
+      border: GradientBoxBorder(
+        gradient: LinearGradient(colors: [
+          Color(0xffFFFFFF).withOpacity(.4),
+          Color(0xff000000).withOpacity(.4)
+        ]),
+        width: .5,
+      ));
 }

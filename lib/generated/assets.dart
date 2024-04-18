@@ -47,6 +47,12 @@ class AssetImages {
   static const opcVehicleService = 'assets/images/opc_vehicle_service.png';
   static const opcInsurance = 'assets/images/opc_insurance.png';
   static const opcOthers = 'assets/images/opc_others.png';
+
+  //grpups images
+  static const publicGroups = 'assets/images/public_groups.png';
+  static const privateGroups = 'assets/images/private_groups.png';
+  static const myGroups = 'assets/images/my_groups.png';
+  static const sampleGroupImage = 'assets/images/sample_group_image.png';
 }
 
 class AssetIcons {
