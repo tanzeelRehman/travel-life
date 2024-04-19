@@ -8,27 +8,29 @@ import 'package:intl/intl.dart';
 import 'package:stacked/stacked.dart';
 
 import 'package:starter_app/generated/assets.dart';
+import 'package:starter_app/src/base/enums/group_type.dart';
 import 'package:starter_app/src/base/utils/utils.dart';
 import 'package:starter_app/src/shared/custom_app_bar.dart';
 import 'package:starter_app/src/styles/app_colors.dart';
 import 'package:starter_app/src/styles/text_theme.dart';
+import 'package:starter_app/src/views/groups/models/groups_lists_view_model.dart';
 import 'package:starter_app/src/views/groups/models/groups_main_view_model.dart';
 import 'package:starter_app/src/views/groups/widgets/group_tile_widget.dart';
 
-class GroupsListsView extends StackedView<GroupsMainViewModel> {
-  final String groupType;
+class GroupsListsView extends StackedView<GroupsListsViewModel> {
+  final GroupType groupType;
 
   GroupsListsView(this.groupType);
   @override
   Widget builder(
-      BuildContext context, GroupsMainViewModel model, Widget? child) {
+      BuildContext context, GroupsListsViewModel model, Widget? child) {
     return Scaffold(
       body: Container(
         width: context.screenSize().width,
         height: context.completeHeight(),
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: Image.asset(AssetImages.squaresBg).image,
+            image: Image.asset(AssetImages.vehicleRegistrationBg).image,
             fit: BoxFit.cover,
             opacity: 0.5,
           ),
@@ -40,7 +42,7 @@ class GroupsListsView extends StackedView<GroupsMainViewModel> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               CustomAppBar(
-                titleText: '$groupType Groups',
+                titleText: '${getReadableGroupType(groupType)} Groups',
               ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 27.w, vertical: 15.h),
@@ -50,9 +52,9 @@ class GroupsListsView extends StackedView<GroupsMainViewModel> {
                     SizedBox(
                       height: 20.h,
                     ),
-                    if (groupType == 'Public')
+                    if (groupType == GroupType.public)
                       SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.8,
+                        height: MediaQuery.of(context).size.height * 0.81,
                         child: ListView.builder(
                           itemCount: 8,
                           itemBuilder: (context, index) {
@@ -68,9 +70,9 @@ class GroupsListsView extends StackedView<GroupsMainViewModel> {
                           },
                         ),
                       ),
-                    if (groupType == 'Private')
+                    if (groupType == GroupType.private)
                       SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.8,
+                        height: MediaQuery.of(context).size.height * 0.81,
                         child: ListView.builder(
                           itemCount: 8,
                           itemBuilder: (context, index) {
@@ -97,10 +99,9 @@ class GroupsListsView extends StackedView<GroupsMainViewModel> {
   }
 
   @override
-  GroupsMainViewModel viewModelBuilder(BuildContext context) =>
-      GroupsMainViewModel();
+  GroupsListsViewModel viewModelBuilder(BuildContext context) =>
+      GroupsListsViewModel();
 
   @override
-  void onViewModelReady(GroupsMainViewModel model) =>
-      model.initGroupsList(groupType);
+  void onViewModelReady(GroupsListsViewModel model) => model.init(groupType);
 }

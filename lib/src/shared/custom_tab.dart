@@ -49,7 +49,15 @@ class CustomTab extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 )
               : Badge(
-                  label: Text(count.toString()),
+                  backgroundColor:
+                      isSelected ? AppColors.white : AppColors.appDarkBlue,
+                  offset: Offset(16, -6),
+                  label: Text(
+                    count.toString(),
+                    style: TextStyle(
+                        color:
+                            isSelected ? AppColors.appDarkBlue : Colors.white),
+                  ),
                   child: Text(
                     title,
                     style: TextStyling.semiBold.copyWith(

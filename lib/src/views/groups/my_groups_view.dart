@@ -17,6 +17,8 @@ import 'package:starter_app/src/styles/text_theme.dart';
 import 'package:starter_app/src/views/groups/models/groups_main_view_model.dart';
 import 'package:starter_app/src/views/groups/models/my_groups_view_model.dart';
 import 'package:starter_app/src/views/groups/widgets/group_tile_widget.dart';
+import 'package:starter_app/src/views/groups/widgets/groups_card.dart';
+import 'package:starter_app/src/views/groups/widgets/groups_invite_tile_widget.dart';
 
 class MyGroupsView extends StackedView<MyGroupsViewModel> {
   @override
@@ -27,13 +29,13 @@ class MyGroupsView extends StackedView<MyGroupsViewModel> {
         height: context.completeHeight(),
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: Image.asset(AssetImages.squaresBg).image,
+            image: Image.asset(AssetImages.vehicleRegistrationBg).image,
             fit: BoxFit.cover,
             opacity: 0.5,
           ),
         ),
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 0.w, vertical: 12.h),
+          padding: EdgeInsets.only(top: 15.h),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -49,6 +51,7 @@ class MyGroupsView extends StackedView<MyGroupsViewModel> {
                 outerPadding: EdgeInsets.symmetric(horizontal: 20.w),
                 tabs: [
                   CustomTab(
+                    count: 2,
                     title: 'My Groups',
                     onTap: () {
                       model.onChangeTab(0);
@@ -56,6 +59,7 @@ class MyGroupsView extends StackedView<MyGroupsViewModel> {
                     isSelected: model.selectedTab == 0,
                   ),
                   CustomTab(
+                    count: 5,
                     title: 'Joined Groups',
                     onTap: () {
                       model.onChangeTab(1);
@@ -63,6 +67,7 @@ class MyGroupsView extends StackedView<MyGroupsViewModel> {
                     isSelected: model.selectedTab == 1,
                   ),
                   CustomTab(
+                    count: 20,
                     title: 'Invites',
                     onTap: () {
                       model.onChangeTab(2);
@@ -71,6 +76,76 @@ class MyGroupsView extends StackedView<MyGroupsViewModel> {
                   ),
                 ],
               ),
+              SizedBox(
+                height: 15.h,
+              ),
+              //! My Groups List
+              if (model.selectedTab == 0)
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.w),
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.77,
+                    child: ListView.builder(
+                      itemBuilder: (context, index) {
+                        return Groupscard(
+                          adminName: 'Tanzeel',
+                          dateCreated: DateTime.now(),
+                          groupName: 'Scouts',
+                          imagepath: AssetImages.sampleGroupImage,
+                          onDelete: () {},
+                          onEditDetailstap: () {},
+                          onMoreIconTap: () {},
+                          onSeeAllMembersTap: () {},
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              //! Joined Groups List
+              if (model.selectedTab == 1)
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.w),
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.77,
+                    child: ListView.builder(
+                      itemBuilder: (context, index) {
+                        return GroupsTile(
+                          adminName: "Tanzeel",
+                          createdate: DateTime.now(),
+                          groupName: "Scouts",
+                          imagepath: AssetImages.sampleGroupImage,
+                          onAddIconTap: () {},
+                          onArrowIconTap: () {},
+                          onMoreIconTap: () {},
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              //! Invites Groups List
+              if (model.selectedTab == 2)
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.w),
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.77,
+                    child: ListView.builder(
+                      itemBuilder: (context, index) {
+                        return GroupsInviteTile(
+                          adminName: "Tanzeel",
+                          createdate: DateTime.now(),
+                          groupName: "Scouts",
+                          imagepath: AssetImages.sampleGroupImage,
+                          onAddIconTap: () {},
+                          onArrowIconTap: () {},
+                          onMoreIconTap: () {},
+                          invitedBy: 'Muazzam',
+                          onAccept: () {},
+                          onReject: () {},
+                        );
+                      },
+                    ),
+                  ),
+                )
             ],
           ),
         ),

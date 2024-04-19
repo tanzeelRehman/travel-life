@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:starter_app/src/base/enums/group_join.dart';
+import 'package:starter_app/src/base/enums/group_type.dart';
 import 'package:starter_app/src/base/enums/vehicle_registration_action.dart';
 import 'package:starter_app/src/configs/app_setup.locator.dart';
 import 'package:starter_app/src/configs/app_setup.router.dart';
@@ -89,9 +91,19 @@ class NavService {
       _navigationService!
           .navigateTo(Routes.groupsMainView, arguments: arguments);
 
-  // static Future<dynamic>? navigateToGroupsListsScreen({String groupType}) =>
-  //     _navigationService!
-  //         .navigateTo(Routes.g, arguments: arguments);
+  static Future<dynamic>? navigateToGroupsListsScreen(
+          {required GroupType groupType}) =>
+      _navigationService!.navigateTo(Routes.groupsListsView,
+          arguments: GroupsListsViewArguments(groupType: groupType));
+
+  static Future<dynamic>? navigateToMyGroupsScreen({dynamic arguments}) =>
+      _navigationService!.navigateTo(Routes.myGroupsView, arguments: arguments);
+
+  static Future<dynamic>? navigateToGroupJoinScreen(
+          {required GroupJoin groupJoin, required String groupName}) =>
+      _navigationService!.navigateTo(Routes.groupJoinView,
+          arguments: GroupJoinViewArguments(
+              groupJoin: groupJoin, groupName: groupName));
 
   //TO GO BACK
   static bool back({dynamic arguments}) => _navigationService!.back();

@@ -12,16 +12,20 @@ class VehicleRegistrationTextField extends StatelessWidget {
     Key? key,
     this.controller,
     this.multiline = false,
+    this.height = 100,
     required this.svgIconPath,
     this.hintText,
     required this.labelText,
     this.inputType,
     this.textInputFormatters,
     this.onchangeAction,
+    this.readOnly = false,
   }) : super(key: key);
 
   final TextEditingController? controller;
+  final double height;
   final bool multiline;
+  final bool readOnly;
 
   final String svgIconPath;
   final String? hintText;
@@ -66,8 +70,9 @@ class VehicleRegistrationTextField extends StatelessWidget {
                       boxShadow: AppColors.vehicleRegTextFieldBoxShadows,
                     ),
                     padding: EdgeInsets.all(10),
-                    height: multiline ? 100.h : null,
+                    height: multiline ? height.h : null,
                     child: TextField(
+                      readOnly: readOnly,
                       onChanged: onchangeAction,
                       controller: controller,
                       keyboardType: inputType,

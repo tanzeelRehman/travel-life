@@ -201,4 +201,12 @@ class AppColors {
         ]),
         width: .5,
       ));
+  static GradientBoxBorder gradientBordersDecoration = GradientBoxBorder(
+    gradient: LinearGradient(colors: [
+      Color(0xffFFFFFF).withOpacity(.4),
+      Color(0xff5A5A5A).withOpacity(.4),
+      Color(0xffA8A8A8).withOpacity(.4)
+    ]),
+    width: 5,
+  );
 }

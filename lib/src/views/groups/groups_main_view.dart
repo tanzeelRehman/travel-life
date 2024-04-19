@@ -9,6 +9,8 @@ import 'package:intl/intl.dart';
 import 'package:stacked/stacked.dart';
 
 import 'package:starter_app/generated/assets.dart';
+import 'package:starter_app/src/base/enums/group_join.dart';
+import 'package:starter_app/src/base/enums/group_type.dart';
 import 'package:starter_app/src/base/utils/utils.dart';
 import 'package:starter_app/src/shared/custom_app_bar.dart';
 import 'package:starter_app/src/shared/main_button.dart';
@@ -30,13 +32,13 @@ class GroupsMainView extends StackedView<GroupsMainViewModel> {
         height: context.completeHeight(),
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: Image.asset(AssetImages.squaresBg).image,
+            image: Image.asset(AssetImages.vehicleRegistrationBg).image,
             fit: BoxFit.cover,
             opacity: 0.5,
           ),
         ),
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 0.w, vertical: 12.h),
+          padding: EdgeInsets.only(top: 12.h),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,11 +57,15 @@ class GroupsMainView extends StackedView<GroupsMainViewModel> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        groupCard(
-                            () {}, 'Public Groups', AssetImages.publicGroups),
-                        groupCard(
-                            () {}, 'Private Groups', AssetImages.privateGroups),
-                        groupCard(() {}, 'My Groups', AssetImages.myGroups),
+                        groupCard(() {
+                          model.navigateToGroupLists(GroupType.public);
+                        }, 'Public Groups', AssetImages.publicGroups),
+                        groupCard(() {
+                          model.navigateToGroupLists(GroupType.private);
+                        }, 'Private Groups', AssetImages.privateGroups),
+                        groupCard(() {
+                          model.navigateToMyGroups();
+                        }, 'My Groups', AssetImages.myGroups),
                       ],
                     ),
                     SizedBox(
@@ -72,42 +78,26 @@ class GroupsMainView extends StackedView<GroupsMainViewModel> {
                     SizedBox(
                       height: 10.h,
                     ),
-                    // SizedBox(
-                    //   height: MediaQuery.of(context).size.height * 0.55,
-                    //   child: ListView.builder(
-                    //     itemCount: 8,
-                    //     itemBuilder: (context, index) {
-                    //     return GroupsTile(
-                    //       adminName: "Tanzeel",
-                    //       createdate: DateTime.now(),
-                    //       groupName: "Scouts",
-                    //       imagepath: AssetImages.sampleGroupImage,
-                    //       onAddIconTap: () {},
-                    //       onArrowIconTap: () {},
-                    //       onMoreIconTap: () {},
-                    //     );
-                    //   },
-                    // ),
-                    // )
-                    // Groupscard(
-                    //   adminName: 'Tanzeel',
-                    //   dateCreated: DateTime.now(),
-                    //   groupName: 'Scouts',
-                    //   imagepath: AssetImages.sampleGroupImage,
-                    //   onDelete: () {},
-                    //   onEditDetailstap: () {},
-                    //   onMoreIconTap: () {},
-                    //   onSeeAllMembersTap: () {},
-
-                    GroupsInviteTile(
-                      adminName: "Tanzeel",
-                      createdate: DateTime.now(),
-                      groupName: "Scouts",
-                      imagepath: AssetImages.sampleGroupImage,
-                      onAddIconTap: () {},
-                      onArrowIconTap: () {},
-                      onMoreIconTap: () {},
-                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.56,
+                      child: ListView.builder(
+                        itemCount: 8,
+                        itemBuilder: (context, index) {
+                          return GroupsTile(
+                            adminName: "Tanzeel",
+                            createdate: DateTime.now(),
+                            groupName: "Scouts",
+                            imagepath: AssetImages.sampleGroupImage,
+                            onAddIconTap: () {},
+                            onArrowIconTap: () {
+                              model.navigateToGroupJoin(
+                                  GroupJoin.join, 'Scouts');
+                            },
+                            onMoreIconTap: () {},
+                          );
+                        },
+                      ),
+                    )
                   ],
                 ),
               )
