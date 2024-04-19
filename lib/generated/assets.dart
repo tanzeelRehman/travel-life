@@ -33,6 +33,7 @@ class AssetImages {
 
   //default user image
   static const String defaultUser = 'assets/images/default_user_image.jpg';
+  static const String sampleUser = 'assets/images/sample_user_image.png';
 
   //vehicle card icons
   static const vehicleCardBuildyear = 'assets/images/build_year.png';

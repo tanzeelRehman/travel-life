@@ -8,6 +8,7 @@ import 'package:starter_app/src/services/remote/api_service.dart';
 import 'package:starter_app/src/services/remote/database_service.dart';
 import 'package:starter_app/src/services/remote/supabase_auth_service.dart';
 import 'package:starter_app/src/views/email_confirmation/email_confirmation_view.dart';
+import 'package:starter_app/src/views/groups/group_join_requests_view.dart';
 import 'package:starter_app/src/views/groups/group_join_view.dart';
 import 'package:starter_app/src/views/groups/groups_lists_view.dart';
 import 'package:starter_app/src/views/groups/groups_main_view.dart';
@@ -44,6 +45,7 @@ import 'package:starter_app/src/views/welcome/welcome_view.dart';
     ),
     MaterialRoute(page: MyGroupsView),
     MaterialRoute(page: GroupJoinView),
+    MaterialRoute(page: GroupJoinRequestsView),
   ],
   dependencies: [
     // Lazy singletons

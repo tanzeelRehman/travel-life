@@ -134,6 +134,9 @@ class GroupJoinView extends StackedView<GroupJoinViewModel> {
                       readOnly: true,
                       controller: model.groupDescription,
                     ),
+                    SizedBox(
+                      height: 20.h,
+                    ),
                     if (groupJoin == GroupJoin.join ||
                         groupJoin == GroupJoin.requestJoin)
                       Container(
@@ -143,6 +146,20 @@ class GroupJoinView extends StackedView<GroupJoinViewModel> {
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12.r),
                             gradient: AppColors.mainButtonGradient),
+                        child: Text(
+                          getReadableGroupJoinType(groupJoin),
+                          style: TextStyling.semiBold,
+                        ),
+                      ),
+                    if (groupJoin == GroupJoin.leave)
+                      Container(
+                        height: 55.h,
+                        alignment: Alignment.center,
+                        width: MediaQuery.of(context).size.width,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12.r),
+                            color: Colors.red,
+                            border: AppColors.gradientBordersDecoration),
                         child: Text(
                           getReadableGroupJoinType(groupJoin),
                           style: TextStyling.semiBold,

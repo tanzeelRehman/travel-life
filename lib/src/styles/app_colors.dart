@@ -207,6 +207,6 @@ class AppColors {
       Color(0xff5A5A5A).withOpacity(.4),
       Color(0xffA8A8A8).withOpacity(.4)
     ]),
-    width: 5,
+    width: 2,
   );
 }

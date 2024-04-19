@@ -105,6 +105,11 @@ class NavService {
           arguments: GroupJoinViewArguments(
               groupJoin: groupJoin, groupName: groupName));
 
+  static Future<dynamic>? navigateToGroupJoinRequestsScreen(
+          {dynamic arguments}) =>
+      _navigationService!
+          .navigateTo(Routes.groupJoinRequestsView, arguments: arguments);
+
   //TO GO BACK
   static bool back({dynamic arguments}) => _navigationService!.back();
 }

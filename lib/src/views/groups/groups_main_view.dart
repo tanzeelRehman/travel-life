@@ -12,6 +12,7 @@ import 'package:starter_app/generated/assets.dart';
 import 'package:starter_app/src/base/enums/group_join.dart';
 import 'package:starter_app/src/base/enums/group_type.dart';
 import 'package:starter_app/src/base/utils/utils.dart';
+import 'package:starter_app/src/services/local/navigation_service.dart';
 import 'package:starter_app/src/shared/custom_app_bar.dart';
 import 'package:starter_app/src/shared/main_button.dart';
 import 'package:starter_app/src/shared/select_widget.dart';
@@ -90,8 +91,9 @@ class GroupsMainView extends StackedView<GroupsMainViewModel> {
                             imagepath: AssetImages.sampleGroupImage,
                             onAddIconTap: () {},
                             onArrowIconTap: () {
-                              model.navigateToGroupJoin(
-                                  GroupJoin.join, 'Scouts');
+                              NavService.navigateToGroupJoinRequestsScreen();
+                              // model.navigateToGroupJoin(
+                              //     GroupJoin.leave, 'Scouts');
                             },
                             onMoreIconTap: () {},
                           );
