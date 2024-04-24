@@ -25,4 +25,8 @@ class GroupsMainViewModel extends ReactiveViewModel {
     NavService.navigateToGroupJoinScreen(
         groupJoin: groupJoin, groupName: groupName);
   }
+
+  navigateToGroupHome(String groupName) {
+    NavService.navigateToGroupHomeScreen(groupName: groupName);
+  }
 }

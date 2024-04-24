@@ -46,9 +46,9 @@ class ProfileTextField extends StatelessWidget {
               suffixIcon: suffixIcon,
               hintText: title,
               hintStyle: TextStyling.thin.copyWith(
-                fontSize: 10.sp,
+                fontSize: 13.sp,
                 // color: AppColors.darkGrey.withOpacity(1),
-                color: AppColors.appTextfieldBorderColor,
+                color: Colors.white.withOpacity(.3),
               ),
               contentPadding: EdgeInsets.symmetric(
                 vertical: 8.h,

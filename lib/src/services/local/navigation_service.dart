@@ -110,6 +110,17 @@ class NavService {
       _navigationService!
           .navigateTo(Routes.groupJoinRequestsView, arguments: arguments);
 
+  static Future<dynamic>? navigateToGroupHomeScreen({
+    required String groupName,
+  }) =>
+      _navigationService!.navigateTo(Routes.groupHomeView,
+          arguments: GroupHomeViewArguments(groupName: groupName));
+
+  static Future<dynamic>? navigateToGroupMembersProfileScreen(
+          {dynamic arguments}) =>
+      _navigationService!
+          .navigateTo(Routes.groupMemberProfileView, arguments: arguments);
+
   //TO GO BACK
   static bool back({dynamic arguments}) => _navigationService!.back();
 }

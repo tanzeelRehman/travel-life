@@ -35,6 +35,9 @@ class AppColors {
 
   static HexColor vehicleRegTextFieldBgColor = HexColor("#242C3B");
 
+  static Color blueGrayShade = Color(0xff444E65);
+  static Color appSkyBlueLight = Color(0xff34C8E8);
+
   static Gradient mainButtonGradient = LinearGradient(
     colors: [
       HexColor("#34C8E8"),
