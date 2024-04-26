@@ -154,4 +154,11 @@ class AssetIcons {
 
   static const statusActive = 'assets/icons/status_active.svg';
   static const statusInActive = 'assets/icons/status_inactive.svg';
+
+  //! Groups
+  static const groupAdminIcon = 'assets/icons/group_admin_icon.svg';
+  static const groupCreatedByIcon = 'assets/icons/group_created_by_icon.svg';
+  static const groupCreatedIcon = 'assets/icons/group_created_icon.svg';
+  static const groupLimitIcon = 'assets/icons/group_limit_icon.svg';
+  static const groupNameIcon = 'assets/icons/group_name_icon.svg';
 }

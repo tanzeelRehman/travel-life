@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:stacked/stacked.dart';
 
 import 'package:starter_app/generated/assets.dart';
+import 'package:starter_app/src/base/enums/group_action.dart';
 import 'package:starter_app/src/base/enums/group_join.dart';
 import 'package:starter_app/src/base/enums/group_type.dart';
 import 'package:starter_app/src/base/utils/utils.dart';
@@ -91,7 +92,8 @@ class GroupsMainView extends StackedView<GroupsMainViewModel> {
                             imagepath: AssetImages.sampleGroupImage,
                             onAddIconTap: () {},
                             onArrowIconTap: () {
-                              NavService.navigateToGroupMembersProfileScreen();
+                              NavService.navigateToGroupCreateScreen(
+                                  groupAction: GroupAction.add);
                               //  model.navigateToGroupHome('Scouts');
                             },
                             onMoreIconTap: () {},

@@ -115,7 +115,7 @@ class GroupHomeView extends StackedView<GroupHomeViewModel> {
           child: Container(
             height: 110.h,
             width: 110.w,
-            decoration: AppColors.groupCardsDecoration2,
+            decoration: AppColors.groupCardsDecoration2MoreTransparent,
             padding: EdgeInsets.all(25.sp),
             child: Image.asset(imagePath),
           ),

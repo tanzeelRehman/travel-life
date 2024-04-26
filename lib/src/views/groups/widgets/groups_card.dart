@@ -30,7 +30,7 @@ class Groupscard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(bottom: 20.h),
-      decoration: AppColors.groupCardsDecoration2,
+      decoration: AppColors.groupCardsDecoration2MoreTransparent,
       height: MediaQuery.of(context).size.height * 0.35,
       width: MediaQuery.of(context).size.width,
       child: Column(
