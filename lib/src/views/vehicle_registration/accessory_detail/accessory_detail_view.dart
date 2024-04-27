@@ -26,8 +26,13 @@ import 'package:webview_flutter/webview_flutter.dart';
 class AccessoryDetailView extends StackedView<AccessoryDetailViewModel> {
   final VehicleRegistrationAction action;
   final Accessory? accessory;
+  final Vehicle? vehicle;
 
-  AccessoryDetailView({required this.action, this.accessory});
+  AccessoryDetailView({
+    required this.action,
+    this.accessory,
+    this.vehicle,
+  });
 
   @override
   Widget builder(
@@ -175,17 +180,21 @@ class AccessoryDetailView extends StackedView<AccessoryDetailViewModel> {
                       child: VehicleRegistrationSelectWidget(
                         hintText: 'Vehicle',
                         isLoading: false,
-                        onTap: () async {
-                          final Vehicle? v = await showModalBottomSheet(
-                            constraints: BoxConstraints(
-                              minHeight: context.screenSize().height * 0.8,
-                            ),
-                            context: context,
-                            builder: (context) => VehicleBottomSheetView(),
-                          );
-                          print(v?.model?.model);
-                          model.onChangeVehicle(v);
-                        },
+                        onTap: action == VehicleRegistrationAction.edit
+                            ? () async {
+                                final Vehicle? v = await showModalBottomSheet(
+                                  constraints: BoxConstraints(
+                                    minHeight:
+                                        context.screenSize().height * 0.8,
+                                  ),
+                                  context: context,
+                                  builder: (context) =>
+                                      VehicleBottomSheetView(),
+                                );
+                                print(v?.model?.model);
+                                model.onChangeVehicle(v);
+                              }
+                            : () {},
                         value: model.selectedVehicle?.model?.model,
                       ),
                     ),
@@ -225,7 +234,7 @@ class AccessoryDetailView extends StackedView<AccessoryDetailViewModel> {
                       labelText: 'Purchas Price',
                       controller: model.purchasePriceController,
                       onchangeAction: (p0) {
-                        model.calculateTotalPrice(p0);
+                        model.calculateTax(model.vatController.text);
                       },
                       inputType: TextInputType.number,
                       textInputFormatters: [
@@ -248,6 +257,7 @@ class AccessoryDetailView extends StackedView<AccessoryDetailViewModel> {
                           RegExp(r'^(\d+)?\.?\d{0,5}'),
                         )
                       ],
+                      readOnly: true,
                     ),
                     VerticalSpacing(20.h),
                     VehicleRegistrationTextField(
@@ -260,6 +270,7 @@ class AccessoryDetailView extends StackedView<AccessoryDetailViewModel> {
                           RegExp(r'^(\d+)?\.?\d{0,5}'),
                         )
                       ],
+                      readOnly: true,
                     ),
                     VerticalSpacing(20.h),
                     // VehicleRegistrationTextField(
@@ -452,7 +463,7 @@ class AccessoryDetailView extends StackedView<AccessoryDetailViewModel> {
 
   @override
   void onViewModelReady(AccessoryDetailViewModel model) =>
-      model.init(action, accessory);
+      model.init(action, accessory, vehicle);
 }
 
 class AttachmentViewer extends StatefulWidget {

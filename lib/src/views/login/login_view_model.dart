@@ -51,7 +51,7 @@ class LoginViewModel extends ReactiveViewModel
       } on AuthExcepection catch (e) {
         setBusy(false);
         print(e);
-        // Constants.customErrorSnack(e.message);
+        Constants.customErrorSnack(e.message);
       } on CustomNoInternetException catch (e) {
         print(e.message);
         Constants.customErrorSnack(e.message);

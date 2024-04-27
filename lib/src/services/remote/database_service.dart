@@ -143,6 +143,31 @@ class DatabaseService with ListenableServiceMixin {
     }
   }
 
+  //DISABLE VEHICLE
+  Future<bool> disableVehicle(int vehicleId, bool isEnabled) async {
+    try {
+      if (!_isConnected()) {
+        return false;
+      }
+
+      final res = await _supabase
+          .from(SupabaseTables.vehicles)
+          .update({'is_enabled': isEnabled})
+          .eq('id', vehicleId)
+          .select(vehicleQuery)
+          .single();
+
+      print(res);
+
+      // return Vehicle.fromMap(res);
+      return true;
+    } catch (e) {
+      print(e);
+      Constants.customErrorSnack(e.toString());
+      return false;
+    }
+  }
+
   //DELETE VEHICLE
   Future<Vehicle?> deleteVehicle(int vehicleID) async {
     try {
@@ -225,6 +250,31 @@ class DatabaseService with ListenableServiceMixin {
       print(res);
 
       return AccessoryCategory.fromJsonList(res);
+    } catch (e) {
+      print(e);
+      Constants.customErrorSnack(e.toString());
+      return null;
+    }
+  }
+
+  //GET ALL ACCESSORIES OF A VEHICLE
+  Future<List<Accessory>?> getAllAccessoriesOfVehicle(int vehicleID) async {
+    try {
+      if (!_isConnected()) {
+        return null;
+      }
+      print('---------- check vehicle id: $vehicleID');
+
+      final res = await _supabase
+          .from(SupabaseTables.accessories)
+          .select(
+            accessoryQuery,
+          )
+          .eq('vehicle', vehicleID);
+
+      print(res);
+
+      return Accessory.fromJsonList(res);
     } catch (e) {
       print(e);
       Constants.customErrorSnack(e.toString());
@@ -430,6 +480,30 @@ class DatabaseService with ListenableServiceMixin {
       print(res);
 
       return CostCategory.fromJsonList(res);
+    } catch (e) {
+      print(e);
+      Constants.customErrorSnack(e.toString());
+      return null;
+    }
+  }
+
+  //GET ALL OPERATING COSTS OF A VEHICLE
+  Future<List<OperatingCost>?> getAllOperationalCostsOfVehicle(
+      int vehicleID) async {
+    try {
+      if (!_isConnected()) {
+        return null;
+      }
+      print('---------- check vehicle id: $vehicleID');
+
+      final res = await _supabase
+          .from(SupabaseTables.operatingCosts)
+          .select(operationalCostQuery)
+          .eq('vehicle', vehicleID);
+
+      print(res);
+
+      return OperatingCost.fromJsonList(res);
     } catch (e) {
       print(e);
       Constants.customErrorSnack(e.toString());

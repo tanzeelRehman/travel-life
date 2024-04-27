@@ -26,6 +26,8 @@ class AccessoryDetailViewModel extends ReactiveViewModel
     }
   }
 
+  Vehicle? _addVehicle;
+
   AccessoryCategory? category;
   Vehicle? selectedVehicle;
 
@@ -67,20 +69,26 @@ class AccessoryDetailViewModel extends ReactiveViewModel
 
   final TextEditingController purchasePriceController = TextEditingController();
 
-  final TextEditingController vatController = TextEditingController();
+  final TextEditingController vatController = TextEditingController(text: '15');
 
   final TextEditingController priceController = TextEditingController();
 
   int? editAccessoryID;
+  int? insertVehicleID;
   VehicleRegistrationAction? registrationAction;
 
-  init(VehicleRegistrationAction action, Accessory? accessory) {
+  init(VehicleRegistrationAction action, Accessory? accessory,
+      Vehicle? insertVehicle) {
     registrationAction = action;
 
     if (action == VehicleRegistrationAction.edit) {
       editAccessoryID = accessory?.id;
 
       _setFields(accessory!);
+    } else {
+      selectedVehicle = insertVehicle;
+      _addVehicle = insertVehicle;
+      notifyListeners();
     }
     _getAccessoryCategories();
   }
@@ -100,6 +108,8 @@ class AccessoryDetailViewModel extends ReactiveViewModel
         ? accessory.total.toString()
         : calculatePrice(accessory.purchasePrice, accessory.vat).toString();
     selectedVehicle = accessory.vehicle;
+    _addVehicle = accessory
+        .vehicle; //in order to fetch the updated accessories of that vehicle
     notifyListeners();
   }
 
@@ -275,7 +285,45 @@ class AccessoryDetailViewModel extends ReactiveViewModel
   //   }
   // }
 
+  bool validateInput() {
+    bool isValid = true;
+    StringBuffer message = StringBuffer('Please fill all required fields: ');
+
+    if (selectedVehicle == null) {
+      message.write('Vehicle, ');
+      isValid = false;
+    }
+    if (category == null) {
+      message.write('Category, ');
+      isValid = false;
+    }
+    if (purchasePriceController.text.isEmpty) {
+      message.write('Purchase Price, ');
+      isValid = false;
+    }
+    if (priceController.text.isEmpty) {
+      message.write('Total Price');
+      isValid = false;
+    }
+
+    // Remove the last comma and space if present
+    if (!isValid) {
+      final errorMsg = message.toString();
+      if (errorMsg.endsWith(', ')) {
+        message.clear();
+        message.write(errorMsg.substring(0, errorMsg.length - 2));
+      }
+      Constants.customWarningSnack(message.toString());
+    }
+
+    return isValid;
+  }
+
   updateOrInsertAccesssory() async {
+    if (!validateInput()) {
+      return;
+    }
+
     bool success = false;
     bool hasImage = selectedImage != null;
     bool hasAttachment = attachment != null;
@@ -352,7 +400,9 @@ class AccessoryDetailViewModel extends ReactiveViewModel
   }
 
   getAllAccessories() async {
-    dataService.accessories = await databaseService.getAllAccessories() ?? [];
+    dataService.accessories =
+        await databaseService.getAllAccessoriesOfVehicle(_addVehicle!.id!) ??
+            [];
     notifyListeners();
   }
 
@@ -363,10 +413,13 @@ class AccessoryDetailViewModel extends ReactiveViewModel
   }
 
   calculateTax(String taxRate) {
-    double taxAmount = double.parse(purchasePriceController.text) *
-        (double.parse(taxRate) / 100);
-    double totalPriceAfterTax =
-        double.parse(purchasePriceController.text) + taxAmount;
+    double purchasePrice = purchasePriceController.text.isEmpty
+        ? 0
+        : double.parse(purchasePriceController.text);
+    double rate = taxRate.isEmpty ? 0 : double.parse(taxRate);
+
+    double taxAmount = purchasePrice * (rate / 100);
+    double totalPriceAfterTax = purchasePrice + taxAmount;
     priceController.text = totalPriceAfterTax.toStringAsFixed(3);
     notifyListeners();
   }

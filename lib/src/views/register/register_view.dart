@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:stacked/stacked.dart';
 import 'package:starter_app/generated/assets.dart';
 import 'package:starter_app/src/base/utils/utils.dart';
+import 'package:starter_app/src/services/local/navigation_service.dart';
 import 'package:starter_app/src/shared/custom_app_bar.dart';
 import 'package:starter_app/src/shared/custom_form_field.dart';
 import 'package:starter_app/src/shared/main_button.dart';
@@ -31,6 +32,7 @@ class RegisterView extends StackedView<RegisterViewModel> {
             children: [
               CustomAppBar(
                 titleText: '',
+                // showBackButton: false,
               ),
               Expanded(
                 child: SingleChildScrollView(
@@ -215,7 +217,9 @@ class RegisterView extends StackedView<RegisterViewModel> {
                                           AppColors.white.withOpacity(0.1)),
                                     ),
                                     // onPressed: model.onClickRegister,
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      NavService.login();
+                                    },
                                     child: Text(
                                       'Sign in',
                                       style: TextStyling.extraBold.copyWith(
