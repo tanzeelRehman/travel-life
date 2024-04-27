@@ -34,6 +34,7 @@ class Vehicle {
   final int? warrantyPeriod;
   final DateTime? warrantyExpiryDate;
   final int? vehicleType;
+  final bool? isEnabled;
 
   Vehicle({
     this.id,
@@ -66,6 +67,7 @@ class Vehicle {
     this.warrantyPeriod,
     this.warrantyExpiryDate,
     this.vehicleType,
+    this.isEnabled,
   });
 
   factory Vehicle.fromMap(Map<String, dynamic> json) => Vehicle(
@@ -112,6 +114,7 @@ class Vehicle {
             ? DateTime.parse(json['warranty_expiry_date'] as String)
             : null,
         vehicleType: json['vehicle_type'] as int?,
+        isEnabled: json['is_enabled'] as bool?,
       );
 
   Map<String, dynamic> toMap() => {
@@ -217,6 +220,7 @@ class Vehicle {
     int? vehicleType,
     Manufacturor? manufacturer,
     VehicleModel? model,
+    bool? isEnabled,
   }) {
     return Vehicle(
       id: id ?? this.id,
@@ -249,6 +253,7 @@ class Vehicle {
       warrantyPeriod: warrantyPeriod ?? this.warrantyPeriod,
       warrantyExpiryDate: warrantyExpiryDate ?? this.warrantyExpiryDate,
       vehicleType: vehicleType ?? this.vehicleType,
+      isEnabled: isEnabled ?? this.isEnabled,
     );
   }
 

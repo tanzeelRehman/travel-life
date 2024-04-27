@@ -27,8 +27,13 @@ class OperationalCostDetailView
     extends StackedView<OperationalCostDetailViewModel> {
   final VehicleRegistrationAction action;
   final OperatingCost? operatingCost;
+  final Vehicle? vehicle;
 
-  OperationalCostDetailView({required this.action, this.operatingCost});
+  OperationalCostDetailView({
+    required this.action,
+    this.operatingCost,
+    this.vehicle,
+  });
 
   @override
   Widget builder(
@@ -532,17 +537,21 @@ class OperationalCostDetailView
                       child: VehicleRegistrationSelectWidget(
                         hintText: 'Vehicle',
                         isLoading: false,
-                        onTap: () async {
-                          final Vehicle? v = await showModalBottomSheet(
-                            constraints: BoxConstraints(
-                              minHeight: context.screenSize().height * 0.8,
-                            ),
-                            context: context,
-                            builder: (context) => VehicleBottomSheetView(),
-                          );
-                          print(v?.model?.model);
-                          model.onChangeVehicle(v);
-                        },
+                        onTap: action == VehicleRegistrationAction.edit
+                            ? () async {
+                                final Vehicle? v = await showModalBottomSheet(
+                                  constraints: BoxConstraints(
+                                    minHeight:
+                                        context.screenSize().height * 0.8,
+                                  ),
+                                  context: context,
+                                  builder: (context) =>
+                                      VehicleBottomSheetView(),
+                                );
+                                print(v?.model?.model);
+                                model.onChangeVehicle(v);
+                              }
+                            : () {},
                         value: model.selectedVehicle?.model?.model,
                       ),
                     ),
@@ -582,7 +591,7 @@ class OperationalCostDetailView
                       labelText: 'Purchase Price',
                       controller: model.purchasePriceController,
                       onchangeAction: (p0) {
-                        model.calculateTotalPrice(p0);
+                        model.calculateTax(model.vatController.text);
                       },
                       inputType: TextInputType.number,
                       textInputFormatters: [
@@ -605,6 +614,7 @@ class OperationalCostDetailView
                           RegExp(r'^(\d+)?\.?\d{0,5}'),
                         )
                       ],
+                      readOnly: true,
                     ),
                     VerticalSpacing(20.h),
                     VehicleRegistrationTextField(
@@ -617,6 +627,7 @@ class OperationalCostDetailView
                           RegExp(r'^(\d+)?\.?\d{0,5}'),
                         )
                       ],
+                      readOnly: true,
                     ),
                   ],
                 ),
@@ -634,7 +645,7 @@ class OperationalCostDetailView
 
   @override
   void onViewModelReady(OperationalCostDetailViewModel model) =>
-      model.init(action, operatingCost);
+      model.init(action, operatingCost, vehicle);
 }
 
 class AttachmentViewer extends StatefulWidget {

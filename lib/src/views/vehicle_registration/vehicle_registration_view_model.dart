@@ -95,6 +95,15 @@ class VehicleRegistrationViewModel extends ReactiveViewModel
     NavService.navigateToVehicleDetail(action: VehicleRegistrationAction.add);
   }
 
+  onDisableVehicle(int vehicleID, bool isEnabled) async {
+    final shouldLoad =
+        await databaseService.disableVehicle(vehicleID, isEnabled);
+
+    if (shouldLoad) {
+      getAllVehicles();
+    }
+  }
+
   getVehicleDefaultImageUrl(int manufacturerID) {
     return databaseService.getDefaultVehicleImage(manufacturerID);
   }
