@@ -21,6 +21,7 @@ import 'package:starter_app/src/shared/custom_tab.dart';
 import 'package:starter_app/src/shared/empty_state_widget.dart';
 import 'package:starter_app/src/shared/loading_indicator.dart';
 import 'package:starter_app/src/shared/main_button.dart';
+import 'package:starter_app/src/shared/main_outlined_button.dart';
 import 'package:starter_app/src/shared/operational_cost_card.dart';
 import 'package:starter_app/src/shared/spacing.dart';
 import 'package:starter_app/src/shared/tab_switcher_widget.dart';
@@ -199,24 +200,20 @@ Widget getActionButton(int selectedTab, VehicleRegistrationAction action,
         isLoading: model.isBusy,
       );
     case 1:
-      return SizedBox(
+      return MainOutlinedButton(
+        onPressed: () {
+          model.onInsertAccessory(vehicle);
+        },
+        buttonText: 'Add Accessory',
         height: 60.h,
-        child: MainOutlinedButton(
-          onTap: () {
-            model.onInsertAccessory(vehicle);
-          },
-          buttonText: 'Add Accessory',
-        ),
       );
     case 2:
-      return SizedBox(
+      return MainOutlinedButton(
+        onPressed: () {
+          model.onInsertOperatingCost(vehicle);
+        },
+        buttonText: 'Add Cost',
         height: 60.h,
-        child: MainOutlinedButton(
-          onTap: () {
-            model.onInsertOperatingCost(vehicle);
-          },
-          buttonText: 'Add Cost',
-        ),
       );
     default:
       return SizedBox.shrink();
@@ -1516,42 +1513,42 @@ class _VehicleStatusDialogState extends State<VehicleStatusDialog> {
   }
 }
 
-class MainOutlinedButton extends StatelessWidget {
-  const MainOutlinedButton({
-    Key? key,
-    required this.onTap,
-    required this.buttonText,
-  }) : super(key: key);
+// class MainOutlinedButton extends StatelessWidget {
+//   const MainOutlinedButton({
+//     Key? key,
+//     required this.onTap,
+//     required this.buttonText,
+//   }) : super(key: key);
 
-  final VoidCallback onTap;
-  final String buttonText;
+//   final VoidCallback onTap;
+//   final String buttonText;
 
-  @override
-  Widget build(BuildContext context) {
-    return OutlinedButton(
-      style: ButtonStyle(
-        elevation: MaterialStateProperty.all(0),
-        shape: MaterialStateProperty.all(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.r),
-          ),
-        ),
-        padding: MaterialStatePropertyAll(
-          EdgeInsets.symmetric(vertical: 10.h, horizontal: 24.w),
-        ),
-        side: MaterialStateProperty.all(
-          BorderSide(
-            color: AppColors.appSkyBlue,
-          ),
-        ),
-      ),
-      onPressed: onTap,
-      child: Text(
-        buttonText,
-        style: TextStyling.medium.copyWith(
-          fontSize: 18.sp,
-        ),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return OutlinedButton(
+//       style: ButtonStyle(
+//         elevation: MaterialStateProperty.all(0),
+//         shape: MaterialStateProperty.all(
+//           RoundedRectangleBorder(
+//             borderRadius: BorderRadius.circular(10.r),
+//           ),
+//         ),
+//         padding: MaterialStatePropertyAll(
+//           EdgeInsets.symmetric(vertical: 10.h, horizontal: 24.w),
+//         ),
+//         side: MaterialStateProperty.all(
+//           BorderSide(
+//             color: AppColors.appSkyBlue,
+//           ),
+//         ),
+//       ),
+//       onPressed: onTap,
+//       child: Text(
+//         buttonText,
+//         style: TextStyling.medium.copyWith(
+//           fontSize: 18.sp,
+//         ),
+//       ),
+//     );
+//   }
+// }

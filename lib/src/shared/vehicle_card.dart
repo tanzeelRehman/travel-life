@@ -4,7 +4,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:starter_app/generated/assets.dart';
 import 'package:starter_app/src/models/vehicle.dart';
 import 'package:starter_app/src/shared/blur_container.dart';
-import 'package:starter_app/src/shared/main_button.dart';
 import 'package:starter_app/src/shared/spacing.dart';
 import 'package:starter_app/src/styles/app_colors.dart';
 import 'package:starter_app/src/styles/text_theme.dart';
@@ -48,11 +47,8 @@ class VehicleCard extends StatelessWidget {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(10.r),
                       child: Image.network(
-                        // imageUrl: vehicle.photoURL ?? FlavorService.dummyImageUrl,
-                        // 'vehicle.photoURL ?? FlavorService.dummyImageUrl',
                         vehicle.photoURL ?? defaultImageUrl,
                         height: 173.h,
-
                         width: double.infinity,
                         fit: BoxFit.cover,
                       ),
@@ -162,21 +158,6 @@ class VehicleCard extends StatelessWidget {
                         ],
                       ),
                     ),
-                    // VerticalSpacing(20.h),
-                    // Container(
-                    //   constraints: BoxConstraints(
-                    //     maxHeight: 55.h,
-                    //     minHeight: 40.h,
-                    //   ),
-                    //   height: 45.h,
-                    //   child: MainButton(
-                    //     buttonText: 'Edit Details',
-                    //     onPressed: onEdit,
-                    //     isLoading: false,
-                    //     height: double.infinity,
-                    //     fontSize: 16.sp,
-                    //   ),
-                    // ),
                   ],
                 ),
               ),
