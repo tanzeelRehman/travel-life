@@ -1,8 +1,6 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:stacked/stacked.dart';
 import 'package:starter_app/generated/assets.dart';
@@ -11,7 +9,6 @@ import 'package:starter_app/src/base/enums/vehicle_status.dart';
 import 'package:starter_app/src/base/utils/constants.dart';
 import 'package:starter_app/src/base/utils/utils.dart';
 import 'package:starter_app/src/models/manufacturor.dart';
-import 'package:starter_app/src/models/ui_models/vehicle_status_button_model.dart';
 import 'package:starter_app/src/models/vehicle.dart';
 import 'package:starter_app/src/models/vehicle_model.dart';
 import 'package:starter_app/src/shared/accessory_card.dart';
@@ -32,8 +29,11 @@ import 'package:starter_app/src/styles/app_colors.dart';
 import 'package:starter_app/src/styles/text_theme.dart';
 import 'package:starter_app/src/views/bottomsheets/manufacturer_bottomsheet/manufacturer_bottomsheet_view.dart';
 import 'package:starter_app/src/views/bottomsheets/vehicle_model_bottomsheet/vehicle_model_bottomsheet_view.dart';
+import 'package:starter_app/src/views/dialogs/vehicle_status_dialog.dart';
 import 'package:starter_app/src/views/vehicle_registration/vehicle_detail/vehicle_detail_view_model.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+
+//TODO: DIVIDE THIS FILE INTO SUB VIEWS (i.e more files)
 
 class VehicleDetailView extends StackedView<VehicleDetailViewModel> {
   final VehicleRegistrationAction action;
@@ -112,6 +112,7 @@ class VehicleDetailView extends StackedView<VehicleDetailViewModel> {
       model.init(action, vehicle);
 }
 
+//////////////////////////////////////////// EDIT VIEW ////////////////////////////////
 class EditView extends StatelessWidget {
   const EditView({
     Key? key,
@@ -170,7 +171,6 @@ class EditView extends StatelessWidget {
 
 Widget getTab(int selectedTab, VehicleRegistrationAction action,
     Vehicle? vehicle, VehicleDetailViewModel model) {
-  print('selectedTab in getTab: $selectedTab');
   switch (selectedTab) {
     case 0:
       return DetailsTab(action: action, vehicle: vehicle, model: model);
@@ -191,7 +191,6 @@ Widget getTab(int selectedTab, VehicleRegistrationAction action,
 
 Widget getActionButton(int selectedTab, VehicleRegistrationAction action,
     Vehicle? vehicle, VehicleDetailViewModel model) {
-  print('selectedTab in getACtionButton: $selectedTab');
   switch (selectedTab) {
     case 0:
       return MainButton(
@@ -220,6 +219,7 @@ Widget getActionButton(int selectedTab, VehicleRegistrationAction action,
   }
 }
 
+///////////////// OPERATIONAL COST TAB ////////////////////
 class OperationalCostTab extends StatelessWidget {
   const OperationalCostTab({
     Key? key,
@@ -234,35 +234,6 @@ class OperationalCostTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // VerticalSpacing(10.h),
-        // Padding(
-        //   padding: EdgeInsets.symmetric(horizontal: 27.w),
-        //   child: Row(
-        //     mainAxisAlignment: MainAxisAlignment.end,
-        //     children: [
-        //       GestureDetector(
-        //         // onTap: model.onInsertOperatingCost,
-        //         onTap: () {
-        //           model.onInsertOperatingCost(v);
-        //         },
-        //         child: Container(
-        //           height: 35.w,
-        //           width: 35.w,
-        //           decoration: BoxDecoration(
-        //             gradient: AppColors.mainButtonGradient,
-        //             shape: BoxShape.circle,
-        //           ),
-        //           child: Icon(
-        //             Icons.add,
-        //             size: 26.w,
-        //             color: AppColors.white,
-        //           ),
-        //         ),
-        //       ),
-        //     ],
-        //   ),
-        // ),
-        // VerticalSpacing(10.h),
         Expanded(
           child: model.operationsCostsLoading
               ? Center(
@@ -306,6 +277,8 @@ class OperationalCostTab extends StatelessWidget {
   }
 }
 
+/////////////// ACCESSORIES TAB ///////////////
+
 class AccessoriesTab extends StatelessWidget {
   const AccessoriesTab({
     Key? key,
@@ -320,36 +293,6 @@ class AccessoriesTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // VerticalSpacing(10.h),
-        // Padding(
-        //   padding: EdgeInsets.symmetric(horizontal: 27.w),
-        //   child: Row(
-        //     mainAxisAlignment: MainAxisAlignment.end,
-        //     children: [
-        //       GestureDetector(
-        //         // onTap: model.onInsertAccessory,
-        //         onTap: () {
-        //           model.onInsertAccessory(v);
-        //         },
-        //         child: Container(
-        //           height: 35.w,
-        //           width: 35.w,
-        //           decoration: BoxDecoration(
-        //             gradient: AppColors.mainButtonGradient,
-        //             shape: BoxShape.circle,
-        //           ),
-        //           child: Icon(
-        //             Icons.add,
-        //             size: 26.w,
-        //             color: AppColors.white,
-        //           ),
-        //         ),
-        //       ),
-        //     ],
-        //   ),
-        // ),
-        // VerticalSpacing(10.h),
-
         model.accessoriesLoading
             ? Expanded(
                 child: Center(
@@ -453,6 +396,8 @@ class AccessoryCategoryHeader extends StatelessWidget {
     );
   }
 }
+
+////////////////////////// DETAILS TAB //////////////////////////
 
 class DetailsTab extends StatelessWidget {
   const DetailsTab({
@@ -922,6 +867,7 @@ class DetailsTab extends StatelessWidget {
   }
 }
 
+////////////////////////// ADD VIEW ////////////////////////
 class AddView extends StatelessWidget {
   const AddView({
     Key? key,
@@ -1403,152 +1349,3 @@ class AddView extends StatelessWidget {
     );
   }
 }
-
-class VehicleStatusDialog extends StatefulWidget {
-  final String title;
-  final VoidCallback onCancel;
-  final VoidCallback onConfirm;
-
-  final VehicleDetailViewModel model;
-
-  VehicleStatusDialog(
-      {required this.title,
-      required this.onCancel,
-      required this.onConfirm,
-      required this.model});
-
-  @override
-  State<VehicleStatusDialog> createState() => _VehicleStatusDialogState();
-}
-
-class _VehicleStatusDialogState extends State<VehicleStatusDialog> {
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        // Background blur effect
-        BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
-          child: Container(
-            decoration: BoxDecoration(
-                // gradient: AppColors.homeButtonGradient,
-                // color: Colors.black.withOpacity(0.5),
-                ),
-            constraints: BoxConstraints.expand(),
-          ),
-        ),
-        // Dialog content
-        AlertDialog(
-          backgroundColor: AppColors.grey.withOpacity(0.7),
-          title: Text(widget.title),
-          titleTextStyle: TextStyling.bold.copyWith(fontSize: 18.sp),
-          content: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: vehicleStatusButtons.map((e) {
-              return GestureDetector(
-                onTap: () {
-                  widget.model.toggleStatus(e.status);
-                  setState(() {});
-                },
-                child: Container(
-                  height: 100,
-                  // width: 90.w,
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 25.w,
-                    vertical: 15.w,
-                  ),
-
-                  decoration: BoxDecoration(
-                    color: widget.model.selectedStatus != null &&
-                            widget.model.selectedStatus == e.status
-                        ? AppColors.appFaddedBlue
-                        : null,
-                    borderRadius: BorderRadius.circular(15.r),
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SvgPicture.asset(
-                        e.iconPath,
-                        height: 30.h,
-                      ),
-                      Text(
-                        getReadableVehicleStatus(e.status),
-                        style: TextStyling.regular.copyWith(
-                          fontSize: 14.sp,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            }).toList(),
-          ),
-          actions: [
-            TextButton(
-              onPressed: widget.onCancel,
-              child: Text(
-                'Cancel',
-                style: TextStyling.semiBold.copyWith(
-                  color: AppColors.appDarkBlue,
-                  fontSize: 14.sp,
-                ),
-              ),
-            ),
-            TextButton(
-              onPressed: widget.onConfirm,
-              child: Text(
-                'Confirm',
-                style: TextStyling.semiBold.copyWith(
-                  color: AppColors.appSkyBlue,
-                  fontSize: 14.sp,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-}
-
-// class MainOutlinedButton extends StatelessWidget {
-//   const MainOutlinedButton({
-//     Key? key,
-//     required this.onTap,
-//     required this.buttonText,
-//   }) : super(key: key);
-
-//   final VoidCallback onTap;
-//   final String buttonText;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return OutlinedButton(
-//       style: ButtonStyle(
-//         elevation: MaterialStateProperty.all(0),
-//         shape: MaterialStateProperty.all(
-//           RoundedRectangleBorder(
-//             borderRadius: BorderRadius.circular(10.r),
-//           ),
-//         ),
-//         padding: MaterialStatePropertyAll(
-//           EdgeInsets.symmetric(vertical: 10.h, horizontal: 24.w),
-//         ),
-//         side: MaterialStateProperty.all(
-//           BorderSide(
-//             color: AppColors.appSkyBlue,
-//           ),
-//         ),
-//       ),
-//       onPressed: onTap,
-//       child: Text(
-//         buttonText,
-//         style: TextStyling.medium.copyWith(
-//           fontSize: 18.sp,
-//         ),
-//       ),
-//     );
-//   }
-// }

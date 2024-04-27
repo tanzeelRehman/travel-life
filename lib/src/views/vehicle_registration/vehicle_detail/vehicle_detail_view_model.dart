@@ -20,17 +20,6 @@ import 'package:starter_app/src/services/remote/base/supabase_auth_view_model.da
 
 class VehicleDetailViewModel extends ReactiveViewModel
     with DatabaseViewModel, SupabaseAuthViewModel, DataViewModel {
-  //for edit view//////////
-
-  int selectedTab = 0;
-
-  onChangeTab(int v) {
-    selectedTab = v;
-    notifyListeners();
-  }
-
-  /////////////////////////
-
   final TextEditingController descriptionController = TextEditingController();
 
   final TextEditingController priceController = TextEditingController();
@@ -49,11 +38,6 @@ class VehicleDetailViewModel extends ReactiveViewModel
       selectedManufacturer = v;
       selectedVehicleModel = null;
       _getAllVehicleModels();
-      // NOT NECESSORY, will not do anything
-      // if (descriptionController.text.isEmpty && selectedVehicleModel != null) {
-      //   descriptionController.text =
-      //       "${selectedManufacturer?.name} ${selectedVehicleModel?.model}";
-      // }
       notifyListeners();
     }
   }
@@ -72,7 +56,6 @@ class VehicleDetailViewModel extends ReactiveViewModel
   }
 
   int? editVehicleID;
-  // VehicleRegistrationAction? registrationAction;
 
   String? manufacturer;
   String? model;
@@ -232,9 +215,6 @@ class VehicleDetailViewModel extends ReactiveViewModel
         vehicle.dailyDistance == null ? '' : vehicle.dailyDistance.toString();
     odometerReadingController.text =
         vehicle.odometer == null ? '' : vehicle.odometer.toString();
-    // status = vehicle.status == null
-    //     ? null
-    //     : getVehicleStatusFromReadable(vehicle.status!);
     status = vehicle.status;
     horsePowerController.text = vehicle.horsepower ?? '';
     fuelConsumptionController.text =
@@ -253,7 +233,6 @@ class VehicleDetailViewModel extends ReactiveViewModel
     Vehicle v = Vehicle();
     if (_registrationAction == VehicleRegistrationAction.add) {
       v = Vehicle(
-        // id: editVehicleID,
         consumption: int.tryParse(fuelConsumptionController.text),
         dailyDistance: int.tryParse(dailyDistanceController.text),
         description: descriptionController.text,
@@ -262,14 +241,12 @@ class VehicleDetailViewModel extends ReactiveViewModel
         manufactureYear: manufactureYear?.year,
         manufacturer: selectedManufacturer,
         model: selectedVehicleModel,
-        // number: registrationNumberController.text,
         odometer: int.tryParse(odometerReadingController.text),
         price: double.tryParse(priceController.text),
         primaryVehicle: isPrimaryVehicle,
         purchaseDate: purchaseDate,
         regNo: registrationNumberController.text,
         serviceInterval: int.tryParse(serviceController.text),
-        // status: status == null ? null : getReadableVehicleStatus(status!),
         status: status,
         tankCapacity: tankCapacityController.text,
         vinNo: vinController.text,
@@ -291,14 +268,12 @@ class VehicleDetailViewModel extends ReactiveViewModel
         manufactureYear: manufactureYear?.year,
         manufacturer: selectedManufacturer,
         model: selectedVehicleModel,
-        // number: registrationNumberController.text,
         odometer: int.tryParse(odometerReadingController.text),
         price: double.tryParse(priceController.text),
         primaryVehicle: isPrimaryVehicle,
         purchaseDate: purchaseDate,
         regNo: registrationNumberController.text,
         serviceInterval: int.tryParse(serviceController.text),
-        // status: status == null ? null : getReadableVehicleStatus(status!),
         status: status,
         tankCapacity: tankCapacityController.text,
         vinNo: vinController.text,
@@ -511,9 +486,18 @@ class VehicleDetailViewModel extends ReactiveViewModel
     tireRearController.dispose();
   }
 
+  //////////////////////////////////// EDIT VIEW ////////////////////////////////////////
+
+  //for edit view//////////
+
+  int selectedTab = 0;
+
+  onChangeTab(int v) {
+    selectedTab = v;
+    notifyListeners();
+  }
+
   //////////////////////////// ACCESSORY VIEW ///////////////////////////////////////
-  ///
-  // List<Accessory> allAccessories = [];
 
   _getAccessoryCategories() async {
     final res = await databaseService.getAccessoryCategories();
@@ -533,10 +517,8 @@ class VehicleDetailViewModel extends ReactiveViewModel
 
   getAllAccessories(int vehicleID) async {
     setAccessoriesLoading(true);
-    // allAccessories = await databaseService.getAllAccessories() ?? [];
     dataService.accessories =
         await databaseService.getAllAccessoriesOfVehicle(vehicleID) ?? [];
-    // allAccessories = dataService.accessories;
     notifyListeners();
     setAccessoriesLoading(false);
   }
@@ -557,8 +539,6 @@ class VehicleDetailViewModel extends ReactiveViewModel
 
   //////////////////////////// OPERATING COST VIEW ///////////////////////////////////////
 
-  // List<OperatingCost> allOperationalCosts = [];
-
   bool operationsCostsLoading = false;
 
   setOperationsCostsLoading(bool v) {
@@ -568,10 +548,8 @@ class VehicleDetailViewModel extends ReactiveViewModel
 
   getAllOperationalCosts(int vehicleID) async {
     setOperationsCostsLoading(true);
-    // allOperationalCosts = await databaseService.getAllOperationalCosts() ?? [];
     dataService.operatingCosts =
         await databaseService.getAllOperationalCostsOfVehicle(vehicleID) ?? [];
-    // allOperationalCosts = dataService.operatingCosts;
     setOperationsCostsLoading(false);
   }
 
@@ -588,18 +566,4 @@ class VehicleDetailViewModel extends ReactiveViewModel
       vehicle: vehicle,
     );
   }
-
-  // getAllManufacturers() async {
-  //   print('hello im called');
-  //   final res = await databaseService.getAllManufacturers();
-  //   print('res: $res');
-  // }
-
-  // getAllVehicleModels() async {
-  //   print('hello im called');
-  //   final res = await databaseService.getAllVehicleModels(1);
-  //   print('res: $res');
-  // }
-
-////////////////////////////////////////////////////////////////////////////////
 }
