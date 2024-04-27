@@ -18,6 +18,7 @@ class VehicleRegistrationTextField extends StatelessWidget {
     this.inputType,
     this.textInputFormatters,
     this.onchangeAction,
+    this.readOnly = false,
   }) : super(key: key);
 
   final TextEditingController? controller;
@@ -30,6 +31,8 @@ class VehicleRegistrationTextField extends StatelessWidget {
   final TextInputType? inputType;
   final List<TextInputFormatter>? textInputFormatters;
   final Function(String)? onchangeAction;
+
+  final bool readOnly;
 
   @override
   Widget build(BuildContext context) {
@@ -76,6 +79,7 @@ class VehicleRegistrationTextField extends StatelessWidget {
                       decoration: null,
                       expands: multiline,
                       maxLines: multiline ? null : 1,
+                      readOnly: readOnly,
                       style: TextStyling.thin.copyWith(
                         fontSize: 13.sp,
                         color: AppColors.white.withOpacity(0.7),

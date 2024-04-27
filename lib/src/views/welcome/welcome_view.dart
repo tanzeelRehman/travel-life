@@ -55,18 +55,19 @@ class WelcomeView extends StackedView<WelcomeViewModel> {
             ),
             VerticalSpacing(40.h),
             MainButton(
-              buttonText: 'Sign up',
-              buttonFontColor: AppColors.white,
-              onPressed: model.onClickRegister,
-              isLoading: model.isBusy,
-            ),
-            VerticalSpacing(24.h),
-            MainButton(
               buttonText: 'Sign in',
               buttonFontColor: AppColors.white,
               onPressed: model.onClickLogin,
               isLoading: model.isBusy,
               gradient: AppColors.secondaryButtonGradient,
+            ),
+
+            VerticalSpacing(24.h),
+            MainButton(
+              buttonText: 'Sign up',
+              buttonFontColor: AppColors.white,
+              onPressed: model.onClickRegister,
+              isLoading: model.isBusy,
             ),
             Spacer(),
           ],

@@ -65,23 +65,28 @@ class NavService {
       );
 
   static Future<dynamic>? navigateToAccessoryDetail(
-          {required VehicleRegistrationAction action, Accessory? accessory}) =>
+          {required VehicleRegistrationAction action,
+          Accessory? accessory,
+          Vehicle? vehicle}) =>
       _navigationService!.navigateTo(
         Routes.accessoryDetailView,
         arguments: AccessoryDetailViewArguments(
           action: action,
           accessory: accessory,
+          vehicle: vehicle,
         ),
       );
 
   static Future<dynamic>? navigateToOperationalCostDetail(
           {required VehicleRegistrationAction action,
-          OperatingCost? operatingCost}) =>
+          OperatingCost? operatingCost,
+          Vehicle? vehicle}) =>
       _navigationService!.navigateTo(
         Routes.operationalCostDetailView,
         arguments: OperationalCostDetailViewArguments(
           action: action,
           operatingCost: operatingCost,
+          vehicle: vehicle,
         ),
       );
 

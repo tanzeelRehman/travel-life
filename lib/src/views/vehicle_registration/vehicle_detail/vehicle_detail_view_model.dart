@@ -7,7 +7,9 @@ import 'package:stacked/stacked.dart';
 import 'package:starter_app/src/base/enums/vehicle_registration_action.dart';
 import 'package:starter_app/src/base/enums/vehicle_status.dart';
 import 'package:starter_app/src/base/utils/constants.dart';
+import 'package:starter_app/src/models/accessory.dart';
 import 'package:starter_app/src/models/manufacturor.dart';
+import 'package:starter_app/src/models/operating_cost.dart';
 import 'package:starter_app/src/models/vehicle.dart';
 import 'package:starter_app/src/models/vehicle_model.dart';
 import 'package:starter_app/src/services/local/base/data_view_model.dart';
@@ -18,6 +20,17 @@ import 'package:starter_app/src/services/remote/base/supabase_auth_view_model.da
 
 class VehicleDetailViewModel extends ReactiveViewModel
     with DatabaseViewModel, SupabaseAuthViewModel, DataViewModel {
+  //for edit view//////////
+
+  int selectedTab = 0;
+
+  onChangeTab(int v) {
+    selectedTab = v;
+    notifyListeners();
+  }
+
+  /////////////////////////
+
   final TextEditingController descriptionController = TextEditingController();
 
   final TextEditingController priceController = TextEditingController();
@@ -36,6 +49,11 @@ class VehicleDetailViewModel extends ReactiveViewModel
       selectedManufacturer = v;
       selectedVehicleModel = null;
       _getAllVehicleModels();
+      // NOT NECESSORY, will not do anything
+      // if (descriptionController.text.isEmpty && selectedVehicleModel != null) {
+      //   descriptionController.text =
+      //       "${selectedManufacturer?.name} ${selectedVehicleModel?.model}";
+      // }
       notifyListeners();
     }
   }
@@ -45,6 +63,10 @@ class VehicleDetailViewModel extends ReactiveViewModel
   onChangeVehicleModel(VehicleModel? v) {
     if (v != null) {
       selectedVehicleModel = v;
+      if (descriptionController.text.isEmpty) {
+        descriptionController.text =
+            "${selectedManufacturer?.name} ${selectedVehicleModel?.model}";
+      }
       notifyListeners();
     }
   }
@@ -167,14 +189,21 @@ class VehicleDetailViewModel extends ReactiveViewModel
   final TextEditingController warentyPeriodController =
       TextEditingController(); //will only accept double
 
+  final TextEditingController tireFrontController = TextEditingController();
+
+  final TextEditingController tireRearController = TextEditingController();
+
   init(VehicleRegistrationAction action, Vehicle? vehicle) async {
     _registrationAction = action;
     if (action == VehicleRegistrationAction.edit && vehicle != null) {
       //TODO: set fields with the data
       _setFieldsForEditing(vehicle);
+      _getAccessoryCategories();
       if (selectedManufacturer != null) {
         _getAllVehicleModels();
       }
+      getAllAccessories(vehicle.id!);
+      getAllOperationalCosts(vehicle.id!);
     }
     await _getAllVehicleManufacturer();
   }
@@ -216,6 +245,8 @@ class VehicleDetailViewModel extends ReactiveViewModel
     manufactureYear = vehicle.manufactureYear != null
         ? DateTime(vehicle.manufactureYear!)
         : null;
+    tireFrontController.text = vehicle.tireFront ?? '';
+    tireRearController.text = vehicle.tireRear ?? '';
   }
 
   Vehicle _createVehicle() {
@@ -246,6 +277,8 @@ class VehicleDetailViewModel extends ReactiveViewModel
         warrantyPeriod: int.tryParse(warentyPeriodController.text),
         horsepower: horsePowerController.text,
         user: supabaseAuthService.user?.id,
+        tireFront: tireFrontController.text,
+        tireRear: tireRearController.text,
       );
     } else {
       v = Vehicle(
@@ -273,12 +306,47 @@ class VehicleDetailViewModel extends ReactiveViewModel
         warrantyPeriod: int.tryParse(warentyPeriodController.text),
         horsepower: horsePowerController.text,
         user: supabaseAuthService.user?.id,
+        tireFront: tireFrontController.text,
+        tireRear: tireRearController.text,
       );
     }
     return v;
   }
 
+  bool validateInput() {
+    bool isValid = true;
+    StringBuffer message = StringBuffer('Please fill all required fields: ');
+
+    if (selectedManufacturer == null) {
+      message.write('Manufacturer, ');
+      isValid = false;
+    }
+    if (selectedVehicleModel == null) {
+      message.write('Model, ');
+      isValid = false;
+    }
+    if (priceController.text.isEmpty) {
+      message.write('Price');
+      isValid = false;
+    }
+
+    // Remove the last comma and space if present
+    if (!isValid) {
+      final errorMsg = message.toString();
+      if (errorMsg.endsWith(', ')) {
+        message.clear();
+        message.write(errorMsg.substring(0, errorMsg.length - 2));
+      }
+      Constants.customWarningSnack(message.toString());
+    }
+
+    return isValid;
+  }
+
   updateOrInsertVehicle() async {
+    if (!validateInput()) {
+      return;
+    }
     if (editVehicleID == null &&
         _registrationAction == VehicleRegistrationAction.add) {
       setBusy(true);
@@ -439,5 +507,99 @@ class VehicleDetailViewModel extends ReactiveViewModel
     horsePowerController.dispose();
     fuelConsumptionController.dispose();
     warentyPeriodController.dispose();
+    tireFrontController.dispose();
+    tireRearController.dispose();
   }
+
+  //////////////////////////// ACCESSORY VIEW ///////////////////////////////////////
+  ///
+  // List<Accessory> allAccessories = [];
+
+  _getAccessoryCategories() async {
+    final res = await databaseService.getAccessoryCategories();
+
+    if (res != null) {
+      dataService.accessoryCategories = res;
+      notifyListeners();
+    }
+  }
+
+  bool accessoriesLoading = false;
+
+  setAccessoriesLoading(bool v) {
+    accessoriesLoading = v;
+    notifyListeners();
+  }
+
+  getAllAccessories(int vehicleID) async {
+    setAccessoriesLoading(true);
+    // allAccessories = await databaseService.getAllAccessories() ?? [];
+    dataService.accessories =
+        await databaseService.getAllAccessoriesOfVehicle(vehicleID) ?? [];
+    // allAccessories = dataService.accessories;
+    notifyListeners();
+    setAccessoriesLoading(false);
+  }
+
+  onEditAccessory(Accessory v) {
+    NavService.navigateToAccessoryDetail(
+      action: VehicleRegistrationAction.edit,
+      accessory: v,
+    );
+  }
+
+  onInsertAccessory(Vehicle? vehicle) {
+    NavService.navigateToAccessoryDetail(
+      action: VehicleRegistrationAction.add,
+      vehicle: vehicle,
+    );
+  }
+
+  //////////////////////////// OPERATING COST VIEW ///////////////////////////////////////
+
+  // List<OperatingCost> allOperationalCosts = [];
+
+  bool operationsCostsLoading = false;
+
+  setOperationsCostsLoading(bool v) {
+    operationsCostsLoading = v;
+    notifyListeners();
+  }
+
+  getAllOperationalCosts(int vehicleID) async {
+    setOperationsCostsLoading(true);
+    // allOperationalCosts = await databaseService.getAllOperationalCosts() ?? [];
+    dataService.operatingCosts =
+        await databaseService.getAllOperationalCostsOfVehicle(vehicleID) ?? [];
+    // allOperationalCosts = dataService.operatingCosts;
+    setOperationsCostsLoading(false);
+  }
+
+  onEditOperatingCost(OperatingCost v) {
+    NavService.navigateToOperationalCostDetail(
+      action: VehicleRegistrationAction.edit,
+      operatingCost: v,
+    );
+  }
+
+  onInsertOperatingCost(Vehicle? vehicle) {
+    NavService.navigateToOperationalCostDetail(
+      action: VehicleRegistrationAction.add,
+      vehicle: vehicle,
+    );
+  }
+
+  // getAllManufacturers() async {
+  //   print('hello im called');
+  //   final res = await databaseService.getAllManufacturers();
+  //   print('res: $res');
+  // }
+
+  // getAllVehicleModels() async {
+  //   print('hello im called');
+  //   final res = await databaseService.getAllVehicleModels(1);
+  //   print('res: $res');
+  // }
+
+////////////////////////////////////////////////////////////////////////////////
 }

@@ -16,6 +16,7 @@ import 'package:starter_app/src/shared/tab_switcher_widget.dart';
 import 'package:starter_app/src/shared/vehicle_card.dart';
 import 'package:starter_app/src/styles/app_colors.dart';
 import 'package:starter_app/src/styles/text_theme.dart';
+import 'package:starter_app/src/views/email_confirmation/email_confirmation_view.dart';
 import 'package:starter_app/src/views/vehicle_registration/vehicle_registration_view_model.dart';
 
 class VehicleRegistrationView
@@ -182,37 +183,38 @@ class VehicleRegistrationView
                 CustomAppBar(
                   titleText: model.getAppBarTitle(),
                 ),
-                VerticalSpacing(context.screenSize().height * 0.18),
-                TabSwitcherWidget(
-                  horizontalSpacing: 0,
-                  outerPadding: EdgeInsets.symmetric(horizontal: 20.w),
-                  tabs: [
-                    CustomTab(
-                      title: 'Vehicles',
-                      onTap: () {
-                        model.onChangeTab(0);
-                      },
-                      isSelected: model.selectedTab == 0,
-                    ),
-                    CustomTab(
-                      title: 'Accessories',
-                      onTap: () {
-                        model.onChangeTab(1);
-                      },
-                      isSelected: model.selectedTab == 1,
-                    ),
-                    CustomTab(
-                      title: 'Operational Cost',
-                      onTap: () {
-                        model.onChangeTab(2);
-                      },
-                      isSelected: model.selectedTab == 2,
-                    ),
-                  ],
-                ),
-                if (model.selectedTab == 0) VehiclesView(model: model),
-                if (model.selectedTab == 1) AccessoriesView(model: model),
-                if (model.selectedTab == 2) OperationalCostView(model: model),
+                VerticalSpacing(context.screenSize().height * 0.125),
+                // TabSwitcherWidget(
+                //   horizontalSpacing: 0,
+                //   outerPadding: EdgeInsets.symmetric(horizontal: 20.w),
+                //   tabs: [
+                //     CustomTab(
+                //       title: 'Vehicles',
+                //       onTap: () {
+                //         model.onChangeTab(0);
+                //       },
+                //       isSelected: model.selectedTab == 0,
+                //     ),
+                //     CustomTab(
+                //       title: 'Accessories',
+                //       onTap: () {
+                //         model.onChangeTab(1);
+                //       },
+                //       isSelected: model.selectedTab == 1,
+                //     ),
+                //     CustomTab(
+                //       title: 'Operational Cost',
+                //       onTap: () {
+                //         model.onChangeTab(2);
+                //       },
+                //       isSelected: model.selectedTab == 2,
+                //     ),
+                //   ],
+                // ),
+                VehiclesView(model: model),
+                // if (model.selectedTab == 0) VehiclesView(model: model),
+                // if (model.selectedTab == 1) AccessoriesView(model: model),
+                // if (model.selectedTab == 2) OperationalCostView(model: model),
               ],
             ),
           ],
@@ -265,7 +267,99 @@ class VehiclesView extends StatelessWidget {
                         model.onEditVehicle(vehicle);
                       },
                       onDelete: () {
-                        // model.onDeleteVehicle(vehicle);
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                backgroundColor: AppColors.appDarkBlue,
+                                insetPadding:
+                                    EdgeInsets.only(left: 10.0, right: 10.0),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0.r),
+                                ),
+                                title: Text(
+                                  (vehicle.isEnabled ?? true)
+                                      ? 'Disable Vehicle'
+                                      : 'Enable Vehicle',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyling.medium.copyWith(
+                                    fontSize: 16.sp,
+                                  ),
+                                ),
+                                content: Text(
+                                  (vehicle.isEnabled ?? true)
+                                      ? 'Are you sure you want to disable vehicle?'
+                                      : 'Are you sure you want to enable vehicle?',
+                                  style: TextStyling.thin
+                                      .copyWith(fontSize: 12.sp),
+                                ),
+                                actions: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      GestureDetector(
+                                        onTap: () {
+                                          model.onDisableVehicle(
+                                            vehicle.id!,
+                                            !(vehicle.isEnabled!),
+                                          );
+                                          if (context.mounted) {
+                                            Navigator.pop(context);
+                                          }
+                                        },
+                                        child: Container(
+                                          height: 40.0.h,
+                                          width: 70.0.w,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                            color: AppColors.appSkyBlue,
+                                          ),
+                                          child: Center(
+                                            child: Text(
+                                              "Yes",
+                                              style:
+                                                  TextStyling.regular.copyWith(
+                                                fontSize: 12.sp,
+                                                color: AppColors.white,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      HorizontalSpacing(15.w),
+                                      GestureDetector(
+                                        onTap: () {
+                                          if (context.mounted) {
+                                            Navigator.pop(context);
+                                          }
+                                        },
+                                        child: Container(
+                                          height: 40.0.h,
+                                          width: 70.0.w,
+                                          decoration: BoxDecoration(
+                                            color: AppColors.appFaddedBlue,
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                          ),
+                                          child: Center(
+                                            child: Text(
+                                              "No",
+                                              style:
+                                                  TextStyling.regular.copyWith(
+                                                fontSize: 12.sp,
+                                                color: AppColors.white,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  VerticalSpacing(10),
+                                ],
+                              );
+                            });
                       },
                       defaultImageUrl: model
                           .getVehicleDefaultImageUrl(vehicle.manufacturer!.id!),

@@ -23,6 +23,8 @@ class OperationalCostDetailViewModel extends ReactiveViewModel
     }
   }
 
+  Vehicle? _addVehicle;
+
   CostCategory? category;
   Vehicle? selectedVehicle;
 
@@ -64,20 +66,26 @@ class OperationalCostDetailViewModel extends ReactiveViewModel
 
   final TextEditingController purchasePriceController = TextEditingController();
 
-  final TextEditingController vatController = TextEditingController();
+  final TextEditingController vatController = TextEditingController(text: '15');
 
   final TextEditingController priceController = TextEditingController();
 
   int? editAccessoryID;
   VehicleRegistrationAction? registrationAction;
 
-  init(VehicleRegistrationAction action, OperatingCost? accessory) {
+  init(VehicleRegistrationAction action, OperatingCost? accessory,
+      Vehicle? vehicle) {
     registrationAction = action;
+    print(vehicle);
 
     if (action == VehicleRegistrationAction.edit) {
       editAccessoryID = accessory?.id;
 
       _setFields(accessory!);
+    } else {
+      selectedVehicle = vehicle;
+      _addVehicle = vehicle;
+      notifyListeners();
     }
     _getAccessoryCategories();
   }
@@ -97,6 +105,9 @@ class OperationalCostDetailViewModel extends ReactiveViewModel
         ? accessory.total.toString()
         : calculatePrice(accessory.purchasePrice, accessory.vat).toString();
     selectedVehicle = accessory.vehicle;
+
+    _addVehicle =
+        accessory.vehicle; //for fetching the accessories with this vehicle
     notifyListeners();
   }
 
@@ -212,7 +223,44 @@ class OperationalCostDetailViewModel extends ReactiveViewModel
     }
   }
 
+  bool validateInput() {
+    bool isValid = true;
+    StringBuffer message = StringBuffer('Please fill all required fields: ');
+
+    if (selectedVehicle == null) {
+      message.write('Vehicle, ');
+      isValid = false;
+    }
+    if (category == null) {
+      message.write('Category, ');
+      isValid = false;
+    }
+    if (purchasePriceController.text.isEmpty) {
+      message.write('Purchase Price, ');
+      isValid = false;
+    }
+    if (priceController.text.isEmpty) {
+      message.write('Price');
+      isValid = false;
+    }
+
+    // Remove the last comma and space if present
+    if (!isValid) {
+      final errorMsg = message.toString();
+      if (errorMsg.endsWith(', ')) {
+        message.clear();
+        message.write(errorMsg.substring(0, errorMsg.length - 2));
+      }
+      Constants.customWarningSnack(message.toString());
+    }
+
+    return isValid;
+  }
+
   updateOrInsertAccesssory() async {
+    if (!validateInput()) {
+      return;
+    }
     bool success = false;
     // bool hasAttachment = attachment != null;
     bool hasAttachment =
@@ -284,8 +332,9 @@ class OperationalCostDetailViewModel extends ReactiveViewModel
   }
 
   getAllOperationalCosts() async {
-    dataService.operatingCosts =
-        await databaseService.getAllOperationalCosts() ?? [];
+    dataService.operatingCosts = await databaseService
+            .getAllOperationalCostsOfVehicle(_addVehicle!.id!) ??
+        [];
   }
 
   @override
@@ -305,16 +354,33 @@ class OperationalCostDetailViewModel extends ReactiveViewModel
   }
 
   //! Functions Added by Tanzeel
-  calculateTotalPrice(String value) {
-    priceController.text = value;
-    notifyListeners();
-  }
+  // calculateTotalPrice(String value) {
+  //   priceController.text = value;
+  //   notifyListeners();
+  // }
+
+  // calculateTax(String taxRate) {
+  //   if (purchasePriceController.text.isNotEmpty && taxRate.isNotEmpty) {
+  //     double taxAmount = double.parse(purchasePriceController.text) *
+  //         (double.parse(taxRate) / 100);
+  //     double totalPriceAfterTax =
+  //         double.parse(purchasePriceController.text) + taxAmount;
+  //     priceController.text = totalPriceAfterTax.toStringAsFixed(3);
+  //     notifyListeners();
+  //   }
+  // }
 
   calculateTax(String taxRate) {
-    double taxAmount = double.parse(purchasePriceController.text) *
-        (double.parse(taxRate) / 100);
-    double totalPriceAfterTax =
-        double.parse(purchasePriceController.text) + taxAmount;
+    // Check if purchasePriceController.text is empty, if so, assign 0 as default
+    double purchasePrice = purchasePriceController.text.isEmpty
+        ? 0
+        : double.parse(purchasePriceController.text);
+
+    // Check if taxRate is empty, if so, assign 0 as default
+    double rate = taxRate.isEmpty ? 0 : double.parse(taxRate);
+
+    double taxAmount = purchasePrice * (rate / 100);
+    double totalPriceAfterTax = purchasePrice + taxAmount;
     priceController.text = totalPriceAfterTax.toStringAsFixed(3);
     notifyListeners();
   }
