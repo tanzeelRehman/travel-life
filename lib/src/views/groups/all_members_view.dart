@@ -62,7 +62,54 @@ class AllMembersView extends StackedView<AllMembersViewModel> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [],
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 15.w),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Members',
+                            style: TextStyling.bold,
+                          ),
+                          Row(
+                            children: [
+                              Container(
+                                height: 25.h,
+                                width: 25.h,
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    gradient: AppColors.mainButtonGradient),
+                                child: Icon(
+                                  Icons.add,
+                                  color: Colors.white,
+                                  size: 17.sp,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 8.w,
+                              ),
+                              Text(
+                                'Invite',
+                                style: TextStyling.thin,
+                              )
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 40.h,
+                    ),
+                    SizedBox(
+                      height: context.height * 0.73,
+                      child: ListView.builder(
+                        itemBuilder: (context, index) {
+                          return groupMemberTile(context);
+                        },
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -71,7 +118,6 @@ class AllMembersView extends StackedView<AllMembersViewModel> {
       ),
     );
   }
-  //! WIDGETS=========================================================
 
   @override
   AllMembersViewModel viewModelBuilder(BuildContext context) =>
@@ -79,4 +125,57 @@ class AllMembersView extends StackedView<AllMembersViewModel> {
 
   @override
   void onViewModelReady(AllMembersViewModel model) => model.init();
+
+  //! WIDGETS=========================================================
+  Column groupMemberTile(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          width: MediaQuery.of(context).size.width,
+          color: Colors.grey.withOpacity(.5),
+          height: 1,
+        ),
+        SizedBox(
+          height: 25.h,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                CircleAvatar(
+                  radius: 35.r,
+                  backgroundImage: AssetImage(AssetImages.sampleUser),
+                ),
+                SizedBox(
+                  width: 10.w,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Tanzeel',
+                      style: TextStyling.semiBold,
+                    ),
+                    Text(
+                      'Joining Date: ${DateFormat.yMMMd().format(DateTime.now())} ',
+                      style: TextStyling.thin,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            Icon(
+              Icons.arrow_forward_ios,
+              color: Colors.white,
+              size: 20.sp,
+            )
+          ],
+        ),
+        SizedBox(
+          height: 25.h,
+        ),
+      ],
+    );
+  }
 }
