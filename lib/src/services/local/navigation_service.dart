@@ -123,6 +123,10 @@ class NavService {
       _navigationService!
           .navigateTo(Routes.groupMemberProfileView, arguments: arguments);
 
+  static Future<dynamic>? navigateToAddMemberScreen({dynamic arguments}) =>
+      _navigationService!
+          .navigateTo(Routes.addMemberView, arguments: arguments);
+
   static Future<dynamic>? navigateToGroupCreateScreen({
     required GroupAction groupAction,
   }) =>
