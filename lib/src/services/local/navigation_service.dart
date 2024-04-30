@@ -126,6 +126,11 @@ class NavService {
   static Future<dynamic>? navigateToAddMemberScreen({dynamic arguments}) =>
       _navigationService!
           .navigateTo(Routes.addMemberView, arguments: arguments);
+
+  static Future<dynamic>? navigateToInviteMiddleScreen({dynamic arguments}) =>
+      _navigationService!
+          .navigateTo(Routes.inviteMiddleScreenView, arguments: arguments);
+
   static Future<dynamic>? navigateToAllMemberScreen({dynamic arguments}) =>
       _navigationService!
           .navigateTo(Routes.allMembersView, arguments: arguments);

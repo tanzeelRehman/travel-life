@@ -1,8 +1,10 @@
 import 'package:stacked/stacked.dart';
+import 'package:starter_app/src/base/utils/constants.dart';
+import 'package:starter_app/src/services/local/navigation_service.dart';
 
 class AddMemberViewModel extends ReactiveViewModel {
   init() {}
-  List<String> selectedMembersList = ['Tanzeel'];
+  List<String> selectedMembersList = [];
   List<String> allMembersList = [
     'Tanzeel',
     'Ahmed',
@@ -54,5 +56,13 @@ class AddMemberViewModel extends ReactiveViewModel {
   void removeMemberToList(String member) {
     selectedMembersList.remove(member);
     notifyListeners();
+  }
+
+  void sendInvite() async {
+    selectedMembersList.clear();
+    notifyListeners();
+    Constants.customSuccessSnack('Invitation sent to all users');
+    await Future.delayed(Duration(seconds: 2));
+    NavService.navigateToGroupHomeScreen(groupName: 'Scouts');
   }
 }

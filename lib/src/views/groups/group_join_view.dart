@@ -117,10 +117,15 @@ class GroupJoinView extends StackedView<GroupJoinViewModel> {
                             Text(' Total Members', style: TextStyling.thin)
                           ],
                         ),
-                        Text('See all',
-                            style: TextStyling.thin.copyWith(
-                                color: AppColors.appSkyBlue,
-                                decoration: TextDecoration.underline))
+                        GestureDetector(
+                          onTap: () {
+                            model.navigateToSeeAllMembers();
+                          },
+                          child: Text('See all',
+                              style: TextStyling.thin.copyWith(
+                                  color: AppColors.appSkyBlue,
+                                  decoration: TextDecoration.underline)),
+                        )
                       ],
                     ),
                     SizedBox(
@@ -139,16 +144,22 @@ class GroupJoinView extends StackedView<GroupJoinViewModel> {
                     ),
                     if (groupJoin == GroupJoin.join ||
                         groupJoin == GroupJoin.requestJoin)
-                      Container(
-                        height: 55.h,
-                        alignment: Alignment.center,
-                        width: MediaQuery.of(context).size.width,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12.r),
-                            gradient: AppColors.mainButtonGradient),
-                        child: Text(
-                          getReadableGroupJoinType(groupJoin),
-                          style: TextStyling.semiBold,
+                      GestureDetector(
+                        onTap: () {
+                          print('on tap');
+                          model.onJoin();
+                        },
+                        child: Container(
+                          height: 55.h,
+                          alignment: Alignment.center,
+                          width: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12.r),
+                              gradient: AppColors.mainButtonGradient),
+                          child: Text(
+                            getReadableGroupJoinType(groupJoin),
+                            style: TextStyling.semiBold,
+                          ),
                         ),
                       ),
                     if (groupJoin == GroupJoin.leave)

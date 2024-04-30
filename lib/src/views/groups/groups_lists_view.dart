@@ -64,7 +64,9 @@ class GroupsListsView extends StackedView<GroupsListsViewModel> {
                               groupName: "Scouts",
                               imagepath: AssetImages.sampleGroupImage,
                               onAddIconTap: () {},
-                              onArrowIconTap: () {},
+                              onArrowIconTap: () {
+                                model.navigateToGroupHome('Scouts');
+                              },
                               onMoreIconTap: () {},
                             );
                           },
@@ -82,7 +84,9 @@ class GroupsListsView extends StackedView<GroupsListsViewModel> {
                               groupName: "Scouts",
                               imagepath: AssetImages.sampleGroupImage,
                               onAddIconTap: () {},
-                              onArrowIconTap: () {},
+                              onArrowIconTap: () {
+                                model.navigateToGroupHome('Scouts');
+                              },
                               onMoreIconTap: () {},
                             );
                           },

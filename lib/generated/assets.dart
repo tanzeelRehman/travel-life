@@ -54,11 +54,13 @@ class AssetImages {
   static const privateGroups = 'assets/images/private_groups.png';
   static const myGroups = 'assets/images/my_groups.png';
   static const sampleGroupImage = 'assets/images/sample_group_image.png';
+  static const share = 'assets/images/share.png';
 
   //group sub menus
   static const groupChatIcon = 'assets/images/group_chat.png';
   static const groupJoinRequestsIcon = 'assets/images/group_join_request.png';
   static const groupExpensesIcon = 'assets/images/group_expenses.png';
+  static const groupSettingsIcon = 'assets/images/group_settings.png';
 
   //group icons
   static const memberRemoveIcon = 'assets/images/member_remove_icon.png';

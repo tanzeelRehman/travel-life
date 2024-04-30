@@ -97,17 +97,22 @@ class AddMemberView extends StackedView<AddMemberViewModel> {
                     SizedBox(
                       height: 15.h,
                     ),
-                    Container(
-                      height: 56.h,
-                      alignment: Alignment.center,
-                      width: context.width * 0.88,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15.r),
-                        gradient: AppColors.mainButtonGradient,
-                      ),
-                      child: Text(
-                        'Send',
-                        style: TextStyling.bold,
+                    GestureDetector(
+                      onTap: () {
+                        model.sendInvite();
+                      },
+                      child: Container(
+                        height: 56.h,
+                        alignment: Alignment.center,
+                        width: context.width * 0.88,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15.r),
+                          gradient: AppColors.mainButtonGradient,
+                        ),
+                        child: Text(
+                          'Send',
+                          style: TextStyling.bold,
+                        ),
                       ),
                     )
                   ],

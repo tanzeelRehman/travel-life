@@ -92,8 +92,8 @@ class GroupsMainView extends StackedView<GroupsMainViewModel> {
                             imagepath: AssetImages.sampleGroupImage,
                             onAddIconTap: () {},
                             onArrowIconTap: () {
-                              NavService.navigateToAllMemberScreen();
-                              //  model.navigateToGroupHome('Scouts');
+                              model.navigateToGroupJoin(
+                                  GroupJoin.join, 'Scouts');
                             },
                             onMoreIconTap: () {},
                           );

@@ -1,10 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gradient_borders/box_borders/gradient_box_border.dart';
-import 'package:intl/intl.dart';
+
 import 'package:stacked/stacked.dart';
 
 import 'package:starter_app/generated/assets.dart';
@@ -12,9 +11,6 @@ import 'package:starter_app/src/base/utils/utils.dart';
 import 'package:starter_app/src/shared/custom_app_bar.dart';
 import 'package:starter_app/src/shared/custom_tab.dart';
 import 'package:starter_app/src/shared/tab_switcher_widget.dart';
-import 'package:starter_app/src/styles/app_colors.dart';
-import 'package:starter_app/src/styles/text_theme.dart';
-import 'package:starter_app/src/views/groups/models/groups_main_view_model.dart';
 import 'package:starter_app/src/views/groups/models/my_groups_view_model.dart';
 import 'package:starter_app/src/views/groups/widgets/group_tile_widget.dart';
 import 'package:starter_app/src/views/groups/widgets/groups_card.dart';
@@ -88,12 +84,18 @@ class MyGroupsView extends StackedView<MyGroupsViewModel> {
                     child: ListView.builder(
                       itemBuilder: (context, index) {
                         return Groupscard(
+                          onTap: () {
+                            print('tapp');
+                            model.navigateToGroupsHome('Scouts');
+                          },
                           adminName: 'Tanzeel',
                           dateCreated: DateTime.now(),
                           groupName: 'Scouts',
                           imagepath: AssetImages.sampleGroupImage,
                           onDelete: () {},
-                          onEditDetailstap: () {},
+                          onEditDetailstap: () {
+                            model.navigateToGroupEditPage();
+                          },
                           onMoreIconTap: () {},
                           onSeeAllMembersTap: () {},
                         );
@@ -115,7 +117,10 @@ class MyGroupsView extends StackedView<MyGroupsViewModel> {
                           groupName: "Scouts",
                           imagepath: AssetImages.sampleGroupImage,
                           onAddIconTap: () {},
-                          onArrowIconTap: () {},
+                          onArrowIconTap: () {
+                            print('tapp');
+                            model.navigateToGroupsHome('Scouts');
+                          },
                           onMoreIconTap: () {},
                         );
                       },

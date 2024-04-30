@@ -72,28 +72,33 @@ class AllMembersView extends StackedView<AllMembersViewModel> {
                             'Members',
                             style: TextStyling.bold,
                           ),
-                          Row(
-                            children: [
-                              Container(
-                                height: 25.h,
-                                width: 25.h,
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    gradient: AppColors.mainButtonGradient),
-                                child: Icon(
-                                  Icons.add,
-                                  color: Colors.white,
-                                  size: 17.sp,
+                          GestureDetector(
+                            onTap: () {
+                              model.navigateToInviteMiddleScreen();
+                            },
+                            child: Row(
+                              children: [
+                                Container(
+                                  height: 25.h,
+                                  width: 25.h,
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      gradient: AppColors.mainButtonGradient),
+                                  child: Icon(
+                                    Icons.add,
+                                    color: Colors.white,
+                                    size: 17.sp,
+                                  ),
                                 ),
-                              ),
-                              SizedBox(
-                                width: 8.w,
-                              ),
-                              Text(
-                                'Invite',
-                                style: TextStyling.thin,
-                              )
-                            ],
+                                SizedBox(
+                                  width: 8.w,
+                                ),
+                                Text(
+                                  'Invite',
+                                  style: TextStyling.thin,
+                                )
+                              ],
+                            ),
                           )
                         ],
                       ),
@@ -105,7 +110,7 @@ class AllMembersView extends StackedView<AllMembersViewModel> {
                       height: context.height * 0.73,
                       child: ListView.builder(
                         itemBuilder: (context, index) {
-                          return groupMemberTile(context);
+                          return groupMemberTile(context, false, 0, model);
                         },
                       ),
                     ),
@@ -127,55 +132,74 @@ class AllMembersView extends StackedView<AllMembersViewModel> {
   void onViewModelReady(AllMembersViewModel model) => model.init();
 
   //! WIDGETS=========================================================
-  Column groupMemberTile(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          width: MediaQuery.of(context).size.width,
-          color: Colors.grey.withOpacity(.5),
-          height: 1,
-        ),
-        SizedBox(
-          height: 25.h,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                CircleAvatar(
-                  radius: 35.r,
-                  backgroundImage: AssetImage(AssetImages.sampleUser),
-                ),
-                SizedBox(
-                  width: 10.w,
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Tanzeel',
-                      style: TextStyling.semiBold,
-                    ),
-                    Text(
-                      'Joining Date: ${DateFormat.yMMMd().format(DateTime.now())} ',
-                      style: TextStyling.thin,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            Icon(
-              Icons.arrow_forward_ios,
-              color: Colors.white,
-              size: 20.sp,
-            )
-          ],
-        ),
-        SizedBox(
-          height: 25.h,
-        ),
-      ],
+  Widget groupMemberTile(BuildContext context, bool isAdmin, int index,
+      AllMembersViewModel model) {
+    return GestureDetector(
+      onTap: () {
+        model.navigateToMemberProfile();
+      },
+      child: Column(
+        children: [
+          Container(
+            width: MediaQuery.of(context).size.width,
+            color: Colors.grey.withOpacity(.5),
+            height: 1,
+          ),
+          SizedBox(
+            height: 25.h,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  CircleAvatar(
+                    radius: 35.r,
+                    backgroundImage: AssetImage(AssetImages.sampleUser),
+                  ),
+                  SizedBox(
+                    width: 10.w,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Tanzeel',
+                        style: TextStyling.semiBold,
+                      ),
+                      Text(
+                        'Joining Date: ${DateFormat.yMMMd().format(DateTime.now())} ',
+                        style: TextStyling.thin,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              isAdmin
+                  ? Container(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 12.sp, vertical: 8.h),
+                      decoration: BoxDecoration(
+                        gradient: AppColors.mainButtonGradient,
+                        borderRadius: BorderRadius.circular(25.r),
+                      ),
+                      child: Text(
+                        'Admin',
+                        style: TextStyling.bold,
+                      ),
+                    )
+                  : Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.white,
+                      size: 20.sp,
+                    )
+            ],
+          ),
+          SizedBox(
+            height: 25.h,
+          ),
+        ],
+      ),
     );
   }
 }

@@ -72,7 +72,9 @@ class GroupHomeView extends StackedView<GroupHomeViewModel> {
                     ),
                     Positioned(
                       bottom: 20.h,
-                      child: addMembersTile(context, 45, (() {})),
+                      child: seeMembersTile(context, 45, (() {
+                        model.navigateToSeeAllMembers();
+                      })),
                     )
                   ],
                 ),
@@ -91,12 +93,27 @@ class GroupHomeView extends StackedView<GroupHomeViewModel> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         subMenuCard(AssetImages.groupChatIcon, 'Chats', () {}),
-                        subMenuCard(AssetImages.groupJoinRequestsIcon,
-                            'Join Requests', () {}),
+                        subMenuCard(
+                            AssetImages.groupJoinRequestsIcon, 'Join Requests',
+                            () {
+                          model.navigateToJoinRequestsScreen();
+                        }),
                         subMenuCard(
                             AssetImages.groupExpensesIcon, 'Expenses', () {}),
                       ],
-                    )
+                    ),
+                    SizedBox(
+                      height: 25.h,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        subMenuCard(AssetImages.groupSettingsIcon, 'Settings',
+                            () {
+                          model.navigateToEditGroupDetails();
+                        }),
+                      ],
+                    ),
                   ],
                 ),
               )
@@ -133,8 +150,8 @@ class GroupHomeView extends StackedView<GroupHomeViewModel> {
 
 // ! Widgets -----------------------------------------------------------
 //?======================================================================
-  SizedBox addMembersTile(
-      BuildContext context, int memberCount, Function() onAddmembers) {
+  SizedBox seeMembersTile(
+      BuildContext context, int memberCount, Function() onSeeAllMembers) {
     return SizedBox(
       width: context.width,
       child: Row(
@@ -155,9 +172,9 @@ class GroupHomeView extends StackedView<GroupHomeViewModel> {
                   style: TextStyling.thin.copyWith(fontSize: 13.sp),
                 ),
                 GestureDetector(
-                  onTap: onAddmembers,
+                  onTap: onSeeAllMembers,
                   child: Text(
-                    'Add members',
+                    'See all members',
                     style: TextStyling.bold.copyWith(
                         color: AppColors.appSkyBlueLight, fontSize: 13.sp),
                   ),

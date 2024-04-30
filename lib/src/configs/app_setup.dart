@@ -17,6 +17,7 @@ import 'package:starter_app/src/views/groups/group_join_view.dart';
 import 'package:starter_app/src/views/groups/group_member_profile_view.dart';
 import 'package:starter_app/src/views/groups/groups_lists_view.dart';
 import 'package:starter_app/src/views/groups/groups_main_view.dart';
+import 'package:starter_app/src/views/groups/invite_middle_screen_view.dart';
 import 'package:starter_app/src/views/groups/my_groups_view.dart';
 import 'package:starter_app/src/views/home/home_view.dart';
 import 'package:starter_app/src/views/login/login_view.dart';
@@ -56,6 +57,7 @@ import 'package:starter_app/src/views/welcome/welcome_view.dart';
     MaterialRoute(page: GroupCreateView),
     MaterialRoute(page: AddMemberView),
     MaterialRoute(page: AllMembersView),
+    MaterialRoute(page: InviteMiddleScreenView),
   ],
   dependencies: [
     // Lazy singletons
