@@ -8,8 +8,10 @@ import 'package:intl/intl.dart';
 import 'package:stacked/stacked.dart';
 
 import 'package:starter_app/generated/assets.dart';
+import 'package:starter_app/src/base/enums/group_join.dart';
 import 'package:starter_app/src/base/enums/group_type.dart';
 import 'package:starter_app/src/base/utils/utils.dart';
+import 'package:starter_app/src/services/local/navigation_service.dart';
 import 'package:starter_app/src/shared/custom_app_bar.dart';
 import 'package:starter_app/src/styles/app_colors.dart';
 import 'package:starter_app/src/styles/text_theme.dart';
@@ -65,7 +67,9 @@ class GroupsListsView extends StackedView<GroupsListsViewModel> {
                               imagepath: AssetImages.sampleGroupImage,
                               onAddIconTap: () {},
                               onArrowIconTap: () {
-                                model.navigateToGroupHome('Scouts');
+                                NavService.navigateToGroupJoinScreen(
+                                    groupJoin: GroupJoin.join,
+                                    groupName: 'Scouts');
                               },
                               onMoreIconTap: () {},
                             );
@@ -85,7 +89,9 @@ class GroupsListsView extends StackedView<GroupsListsViewModel> {
                               imagepath: AssetImages.sampleGroupImage,
                               onAddIconTap: () {},
                               onArrowIconTap: () {
-                                model.navigateToGroupHome('Scouts');
+                                NavService.navigateToGroupJoinScreen(
+                                    groupJoin: GroupJoin.join,
+                                    groupName: 'Scouts');
                               },
                               onMoreIconTap: () {},
                             );

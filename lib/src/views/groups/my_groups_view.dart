@@ -1,16 +1,22 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 
 import 'package:stacked/stacked.dart';
 
 import 'package:starter_app/generated/assets.dart';
+import 'package:starter_app/src/base/enums/group_action.dart';
 import 'package:starter_app/src/base/utils/utils.dart';
+import 'package:starter_app/src/services/local/navigation_service.dart';
 import 'package:starter_app/src/shared/custom_app_bar.dart';
 import 'package:starter_app/src/shared/custom_tab.dart';
 import 'package:starter_app/src/shared/tab_switcher_widget.dart';
+import 'package:starter_app/src/styles/app_colors.dart';
+import 'package:starter_app/src/styles/text_theme.dart';
 import 'package:starter_app/src/views/groups/models/my_groups_view_model.dart';
 import 'package:starter_app/src/views/groups/widgets/group_tile_widget.dart';
 import 'package:starter_app/src/views/groups/widgets/groups_card.dart';
@@ -76,11 +82,11 @@ class MyGroupsView extends StackedView<MyGroupsViewModel> {
                 height: 15.h,
               ),
               //! My Groups List
-              if (model.selectedTab == 0)
+              if (model.selectedTab == 0) ...[
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20.w),
                   child: SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.77,
+                    height: MediaQuery.of(context).size.height * 0.7,
                     child: ListView.builder(
                       itemBuilder: (context, index) {
                         return Groupscard(
@@ -103,6 +109,36 @@ class MyGroupsView extends StackedView<MyGroupsViewModel> {
                     ),
                   ),
                 ),
+                SizedBox(
+                  height: 10.h,
+                ),
+                SizedBox(
+                  width: Get.width,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          NavService.navigateToGroupCreateScreen(
+                              groupAction: GroupAction.add);
+                        },
+                        child: Container(
+                          alignment: Alignment.center,
+                          height: 55.h,
+                          width: Get.width * 0.9,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15.r),
+                              gradient: AppColors.mainButtonGradient),
+                          child: Text(
+                            'Create new group',
+                            style: TextStyling.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              ],
               //! Joined Groups List
               if (model.selectedTab == 1)
                 Padding(
@@ -127,6 +163,7 @@ class MyGroupsView extends StackedView<MyGroupsViewModel> {
                     ),
                   ),
                 ),
+
               //! Invites Groups List
               if (model.selectedTab == 2)
                 Padding(

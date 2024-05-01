@@ -11,6 +11,7 @@ import 'package:starter_app/generated/assets.dart';
 import 'package:starter_app/src/base/enums/group_join.dart';
 import 'package:starter_app/src/base/enums/group_type.dart';
 import 'package:starter_app/src/base/utils/utils.dart';
+import 'package:starter_app/src/services/local/navigation_service.dart';
 import 'package:starter_app/src/shared/custom_app_bar.dart';
 import 'package:starter_app/src/shared/vehicle_registration_textfield.dart';
 import 'package:starter_app/src/styles/app_colors.dart';
@@ -146,8 +147,8 @@ class GroupJoinView extends StackedView<GroupJoinViewModel> {
                         groupJoin == GroupJoin.requestJoin)
                       GestureDetector(
                         onTap: () {
-                          print('on tap');
-                          model.onJoin();
+                          NavService.navigateToGroupHomeScreen(
+                              groupName: groupName);
                         },
                         child: Container(
                           height: 55.h,
