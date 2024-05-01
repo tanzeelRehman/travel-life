@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:stacked/stacked.dart';
 import 'package:starter_app/src/base/enums/vehicle_registration_action.dart';
 import 'package:starter_app/src/base/utils/constants.dart';
+import 'package:starter_app/src/base/utils/utils.dart';
 import 'package:starter_app/src/models/accessory.dart';
 import 'package:starter_app/src/models/accessory_category.dart';
 import 'package:starter_app/src/models/vehicle.dart';
@@ -27,6 +28,112 @@ class AccessoryDetailViewModel extends ReactiveViewModel
   }
 
   Vehicle? _addVehicle;
+
+  Accessory? editAccessory;
+
+  final int maxFileSizeAllowedInMB = 5;
+
+  final int maxFilesAllowed = 5;
+
+  bool isAttachmentsLimitReached() {
+    final int previousTotalAttachments =
+        editAccessory?.attachments?.length ?? 0;
+
+    final int newTotalAttachments = localAttachments?.length ?? 0;
+
+    return previousTotalAttachments + newTotalAttachments >= maxFilesAllowed;
+  }
+
+  bool isAttachmentsLimitExceeded() {
+    final int previousTotalAttachments =
+        editAccessory?.attachments?.length ?? 0;
+
+    final int newTotalAttachments = localAttachments?.length ?? 0;
+
+    return previousTotalAttachments + newTotalAttachments > maxFilesAllowed;
+  }
+
+  List<File>? localAttachments = [];
+
+  onClickRemoveAttachmentFromLocalAttachment(int i) {
+    localAttachments?.removeAt(i);
+    notifyListeners();
+  }
+
+  bool isRemoveAttachmentLoading = false;
+
+  setRemoveAttachmentLoading(bool v) {
+    isRemoveAttachmentLoading = v;
+    notifyListeners();
+  }
+
+  onClickRemoveAttachment(int i) async {
+    final attachment = editAccessory?.attachments?[i];
+    if (attachment != null) {
+      setRemoveAttachmentLoading(true);
+      final deleted = await databaseService.removeAccessoryAttachment(
+        editAccessory!.id!,
+        attachment.toString(),
+      );
+      if (deleted == null || !deleted) {
+        setRemoveAttachmentLoading(false);
+        Constants.customWarningSnack('Failed to delete attachment');
+        return;
+      }
+      setRemoveAttachmentLoading(false);
+      editAccessory?.attachments?.removeAt(i);
+      notifyListeners();
+
+      getAllAccessories();
+    }
+  }
+
+  onClickAddAttachments() async {
+    if (isAttachmentsLimitReached()) {
+      Constants.customWarningSnack(
+        'You can only add upto $maxFilesAllowed attachments, remove some to add more',
+      );
+      return;
+    }
+
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      allowMultiple: true,
+      allowCompression: true,
+      allowedExtensions: [
+        'pdf',
+        'doc',
+        'docx',
+        'jpg',
+        'jpeg',
+        'png',
+        //TODO: add more
+        // for iphone
+      ], // optional
+      type: FileType.custom,
+
+      dialogTitle: 'Select Attachment',
+      compressionQuality: 40,
+    );
+
+    if (result != null) {
+      for (int i = 0; i < result.files.length; i++) {
+        final file = File(result.files[i].path!);
+        final fileSize = await file.length();
+
+        if (fileSize <= maxFileSizeAllowedInMB * 1024 * 1024) {
+          localAttachments?.add(file);
+        } else {
+          // Handle case where attachment size exceeds max allowed size in MB
+          Constants.customWarningSnack(
+            '${UtilFunctions.getFileNameWithExtension(file)} size exceeds $maxFileSizeAllowedInMB MB, Please choose a attachment under $maxFileSizeAllowedInMB mb',
+          );
+          print('Attachment size exceeds $maxFileSizeAllowedInMB MB');
+        }
+
+        notifyListeners();
+      }
+    }
+  }
 
   AccessoryCategory? category;
   Vehicle? selectedVehicle;
@@ -73,8 +180,6 @@ class AccessoryDetailViewModel extends ReactiveViewModel
 
   final TextEditingController priceController = TextEditingController();
 
-  int? editAccessoryID;
-  int? insertVehicleID;
   VehicleRegistrationAction? registrationAction;
 
   init(VehicleRegistrationAction action, Accessory? accessory,
@@ -82,12 +187,16 @@ class AccessoryDetailViewModel extends ReactiveViewModel
     registrationAction = action;
 
     if (action == VehicleRegistrationAction.edit) {
-      editAccessoryID = accessory?.id;
+      // editAccessoryID = accessory?.id;
+      editAccessory = accessory;
+      notifyListeners();
 
       _setFields(accessory!);
     } else {
       selectedVehicle = insertVehicle;
       _addVehicle = insertVehicle;
+      print(
+          'attachements in editAccessory: ${editAccessory?.attachments?.length}');
       notifyListeners();
     }
     _getAccessoryCategories();
@@ -118,7 +227,7 @@ class AccessoryDetailViewModel extends ReactiveViewModel
     print(supabaseAuthService.user?.id);
     return Accessory(
       id: registrationAction == VehicleRegistrationAction.edit
-          ? editAccessoryID
+          ? editAccessory?.id
           : null,
       user: supabaseAuthService.user?.id,
       description: descriptionController.text,
@@ -181,110 +290,6 @@ class AccessoryDetailViewModel extends ReactiveViewModel
     }
   }
 
-  File? attachment;
-
-  onClickRemoveAttachment() {
-    attachment = null;
-    notifyListeners();
-  }
-
-  onClickAddAttachment() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      allowMultiple: false,
-      allowCompression: true,
-      allowedExtensions: [
-        'pdf',
-        'doc',
-        'docx',
-        'jpg',
-        'jpeg',
-        'png',
-        //TODO: add more
-
-        // for iphone
-      ], // optional
-      type: FileType.custom,
-
-      dialogTitle: 'Select Attachment',
-      compressionQuality: 40,
-    );
-
-    if (result != null) {
-      final file = File(result.files.single.path!);
-      final fileSize = await file.length();
-
-      if (fileSize <= 5 * 1024 * 1024) {
-        attachment = file;
-      } else {
-        // Handle case where attachment size exceeds 5 MB
-        Constants.customWarningSnack(
-            'Attachment size exceeds 5 MB, Please choose a attachment under 5 mb');
-        print('Attachment size exceeds 5 MB');
-        // You may want to display an error message to the user here
-      }
-
-      notifyListeners();
-    }
-  }
-
-  // updateOrInsertAccesssory() async {
-  //   if (editAccessoryID == null &&
-  //       registrationAction == VehicleRegistrationAction.add) {
-  //     setBusy(true);
-
-  //     final inserted =
-  //         await databaseService.insertAccessory(_createAccessory());
-
-  //     if (inserted != null && selectedImage != null) {
-  //       final updatedUserWithProfile =
-  //           await databaseService.insertOrUpdateAccessoryImage(
-  //         inserted.id!,
-  //         selectedImage!,
-  //       );
-  //       setBusy(false);
-
-  //       if (updatedUserWithProfile != null) {
-  //         NavService.back();
-  //         Constants.customSuccessSnack('Vehicle added successfully');
-  //       }
-  //       return;
-  //     }
-  //     setBusy(false);
-
-  //     if (inserted != null) {
-  //       NavService.back();
-  //       Constants.customSuccessSnack('Accessory added successfully');
-  //     }
-  //   } else {
-  //     setBusy(true);
-  //     final inserted =
-  //         await databaseService.updateAccessory(_createAccessory());
-  //     setBusy(false);
-
-  //     if (inserted != null && selectedImage != null) {
-  //       final updatedUserWithProfile =
-  //           await databaseService.insertOrUpdateAccessoryImage(
-  //         inserted.id!,
-  //         selectedImage!,
-  //       );
-  //       setBusy(false);
-
-  //       if (updatedUserWithProfile != null) {
-  //         NavService.back();
-  //         Constants.customSuccessSnack('Accessory updated successfully');
-  //       }
-  //       return;
-  //     }
-
-  //     setBusy(false);
-
-  //     if (inserted != null) {
-  //       NavService.back();
-  //       Constants.customSuccessSnack('Vehicle updated successfully');
-  //     }
-  //   }
-  // }
-
   bool validateInput() {
     bool isValid = true;
     StringBuffer message = StringBuffer('Please fill all required fields: ');
@@ -320,20 +325,27 @@ class AccessoryDetailViewModel extends ReactiveViewModel
   }
 
   updateOrInsertAccesssory() async {
+    if (isAttachmentsLimitExceeded()) {
+      Constants.customWarningSnack(
+          'Max attachments limit ($maxFilesAllowed) reached, Please remove some attachments');
+      return;
+    }
+
     if (!validateInput()) {
       return;
     }
 
     bool success = false;
     bool hasImage = selectedImage != null;
-    bool hasAttachment = attachment != null;
+    bool hasAttachment =
+        localAttachments != null && localAttachments!.isNotEmpty;
 
     try {
       setBusy(true);
 
       final accessory = _createAccessory();
 
-      if (editAccessoryID == null &&
+      if (editAccessory?.id == null &&
           registrationAction == VehicleRegistrationAction.add) {
         final insertedAccessory =
             await databaseService.insertAccessory(accessory);
@@ -350,10 +362,8 @@ class AccessoryDetailViewModel extends ReactiveViewModel
           }
           if (hasAttachment) {
             final updatedAccessoryWithAttachment =
-                await databaseService.insertOrUpdateAccessoryAttachment(
-              insertedAccessory.id!,
-              attachment!,
-            );
+                await databaseService.addAccessoryAttachments(
+                    insertedAccessory.id!, localAttachments!);
             success = updatedAccessoryWithAttachment != null;
           }
         }
@@ -374,10 +384,8 @@ class AccessoryDetailViewModel extends ReactiveViewModel
           }
           if (hasAttachment) {
             final updatedAccessoryWithAttachment =
-                await databaseService.insertOrUpdateAccessoryAttachment(
-              updatedAccessory.id!,
-              attachment!,
-            );
+                await databaseService.addAccessoryAttachments(
+                    updatedAccessory.id!, localAttachments!);
             success = updatedAccessoryWithAttachment != null;
           }
         }
@@ -387,10 +395,10 @@ class AccessoryDetailViewModel extends ReactiveViewModel
         getAllAccessories();
         NavService.back();
         Constants.customSuccessSnack(
-            'Accessory ${editAccessoryID == null ? 'added' : 'updated'} successfully');
+            'Accessory ${editAccessory?.id == null ? 'added' : 'updated'} successfully');
       } else {
         Constants.customErrorSnack(
-            'Failed to ${editAccessoryID == null ? 'add' : 'update'} accessory');
+            'Failed to ${editAccessory?.id == null ? 'add' : 'update'} accessory');
       }
     } catch (e) {
       Constants.customErrorSnack('An error occurred: $e');
@@ -406,12 +414,7 @@ class AccessoryDetailViewModel extends ReactiveViewModel
     notifyListeners();
   }
 
-//! Functions Added by Tanzeel
-  calculateTotalPrice(String value) {
-    priceController.text = value;
-    notifyListeners();
-  }
-
+  //! Functions Added by Tanzeel
   calculateTax(String taxRate) {
     double purchasePrice = purchasePriceController.text.isEmpty
         ? 0

@@ -6,7 +6,7 @@ import 'package:starter_app/src/styles/text_theme.dart';
 class MainButton extends StatefulWidget {
   final String buttonText;
   final Color buttonFontColor;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final bool fullWidth;
   final bool isLoading;
   final double? height;
@@ -47,7 +47,7 @@ class _LoadingButtonState extends State<MainButton> {
         borderRadius: widget.borderRadius ?? BorderRadius.circular(10.r),
       ),
       child: ElevatedButton(
-        onPressed: widget.onPressed,
+        onPressed: widget.isLoading ? null : widget.onPressed,
         style: ButtonStyle(
           elevation: MaterialStateProperty.all(3),
           backgroundColor: MaterialStateProperty.all(Colors.transparent),
@@ -85,3 +85,6 @@ class _LoadingButtonState extends State<MainButton> {
     );
   }
 }
+
+
+//TODO: make this widget a stateless widget

@@ -282,7 +282,7 @@ class DatabaseService with ListenableServiceMixin {
     }
   }
 
-  //GET ALL ACCESSORIES
+  //GET ALL ACCESSORIES OF USER
   Future<List<Accessory>?> getAllAccessories() async {
     try {
       if (!_isConnected()) {
@@ -464,6 +464,128 @@ class DatabaseService with ListenableServiceMixin {
     }
   }
 
+  //ADD OPERATING COST ATTACHMENTS (Insert)
+  Future<Accessory?> addAccessoryAttachments(
+    int accessoryID,
+    List<File> attachments,
+  ) async {
+    try {
+      print('total attachments: ${attachments.length}');
+
+      if (!_isConnected()) {
+        return null;
+      }
+
+      List uploadedAttachmentPaths = [];
+
+      for (File attachment in attachments) {
+        final String randomIdentifier = Uuid().v4();
+
+        final attachmentName =
+            '${_authService.user?.id}/$accessoryID/$randomIdentifier';
+
+        final res = await _supabase.storage
+            .from(SupabaseBuckets.accessoryAttachmentsBucket)
+            .upload(attachmentName, attachment);
+        print('upload res: $res');
+
+        uploadedAttachmentPaths.add(attachmentName);
+      }
+
+      final pehleVaaliAttachments = await getAccessoryAttachments(accessoryID);
+
+      print('pehleVaaliAttachments: ${pehleVaaliAttachments}');
+
+      final updatedUser = await _supabase
+          .from(SupabaseTables.accessories)
+          .update({
+            'attachments': [
+              ...pehleVaaliAttachments,
+              ...uploadedAttachmentPaths
+            ]
+          })
+          .eq('id', accessoryID)
+          .select(accessoryQuery)
+          .single();
+
+      return Accessory.fromMap(updatedUser);
+    } catch (e) {
+      print(e);
+      Constants.customErrorSnack(e.toString());
+      return null;
+    }
+  }
+
+  //REMOVE OPERATING COST ATTACHMENT (DELETE)
+  Future<bool?> removeAccessoryAttachment(
+    int accessoryID,
+    String attachmentPath,
+  ) async {
+    try {
+      print('attachment: $attachmentPath');
+
+      if (!_isConnected()) {
+        return null;
+      }
+
+      List updatedAttachmentPaths = [];
+
+      final res = await _supabase.storage
+          .from(SupabaseBuckets.accessoryAttachmentsBucket)
+          .remove([attachmentPath]);
+
+      print('deleted attachement: ${res.first}');
+
+      final pehleVaaliAttachments = await getAccessoryAttachments(accessoryID);
+
+      updatedAttachmentPaths = pehleVaaliAttachments
+          .where((element) => element != attachmentPath)
+          .toList();
+
+      final updatedUser = await _supabase
+          .from(SupabaseTables.accessories)
+          .update({'attachments': updatedAttachmentPaths})
+          .eq('id', accessoryID)
+          .select(accessoryQuery)
+          .single();
+
+      final updatedAccessory = Accessory.fromMap(updatedUser);
+
+      return updatedAccessory.id != null;
+    } catch (e) {
+      print(e);
+      Constants.customErrorSnack(e.toString());
+      return null;
+    }
+  }
+
+  Future<List<dynamic>> getAccessoryAttachments(int accessoryID) async {
+    try {
+      final res = await _supabase
+          .from(SupabaseTables.accessories)
+          .select('attachments')
+          .eq('id', accessoryID)
+          .single();
+
+      print('attachments in getAccessoryAttachments : ${res}');
+
+      if (res['attachments'] == null) {
+        return [];
+      }
+      return res['attachments'];
+    } catch (e) {
+      print(e);
+      Constants.customErrorSnack(e.toString());
+      return [];
+    }
+  }
+
+  String getAccessoryAttachmentUrl(String attachmentPath) {
+    return _supabase.storage
+        .from(SupabaseBuckets.accessoryAttachmentsBucket)
+        .getPublicUrl(attachmentPath);
+  }
+
 //////////////////////////////////////////////// OPERATING COST //////////////////////////////////////////
 
   //GET ALL OPERATING COSTS CATEGORIES
@@ -609,48 +731,48 @@ class DatabaseService with ListenableServiceMixin {
     }
   }
 
-  //ADD OPERATING COST ATTACHMENT
-  Future<OperatingCost?> insertOrUpdateOperatingCostAttachment(
-      int operatingCostID, File image) async {
-    try {
-      if (!_isConnected()) {
-        return null;
-      }
+  // //ADD OPERATING COST ATTACHMENT
+  // Future<OperatingCost?> insertOrUpdateOperatingCostAttachment(
+  //     int operatingCostID, File image) async {
+  //   try {
+  //     if (!_isConnected()) {
+  //       return null;
+  //     }
 
-      final imageName = '${_authService.user?.id}/$operatingCostID';
+  //     final imageName = '${_authService.user?.id}/$operatingCostID';
 
-      final publicUrl = _supabase.storage
-          .from(SupabaseBuckets.operationalCostAttachmentsBucket)
-          .getPublicUrl(imageName);
+  //     final publicUrl = _supabase.storage
+  //         .from(SupabaseBuckets.operationalCostAttachmentsBucket)
+  //         .getPublicUrl(imageName);
 
-      final bool doesExists = await UtilFunctions.isResourceFound(publicUrl);
+  //     final bool doesExists = await UtilFunctions.isResourceFound(publicUrl);
 
-      if (doesExists) {
-        final res = await _supabase.storage
-            .from(SupabaseBuckets.operationalCostAttachmentsBucket)
-            .update(imageName, image);
-        print('update res: $res');
-      } else {
-        final res = await _supabase.storage
-            .from(SupabaseBuckets.operationalCostAttachmentsBucket)
-            .upload(imageName, image);
-        print('upload res: $res');
-      }
+  //     if (doesExists) {
+  //       final res = await _supabase.storage
+  //           .from(SupabaseBuckets.operationalCostAttachmentsBucket)
+  //           .update(imageName, image);
+  //       print('update res: $res');
+  //     } else {
+  //       final res = await _supabase.storage
+  //           .from(SupabaseBuckets.operationalCostAttachmentsBucket)
+  //           .upload(imageName, image);
+  //       print('upload res: $res');
+  //     }
 
-      final updatedUser = await _supabase
-          .from(SupabaseTables.operatingCosts)
-          .update({'attachment': publicUrl})
-          .eq('id', operatingCostID)
-          .select(operationalCostQuery)
-          .single();
+  //     final updatedUser = await _supabase
+  //         .from(SupabaseTables.operatingCosts)
+  //         .update({'attachment': publicUrl})
+  //         .eq('id', operatingCostID)
+  //         .select(operationalCostQuery)
+  //         .single();
 
-      return OperatingCost.fromMap(updatedUser);
-    } catch (e) {
-      print(e);
-      Constants.customErrorSnack(e.toString());
-      return null;
-    }
-  }
+  //     return OperatingCost.fromMap(updatedUser);
+  //   } catch (e) {
+  //     print(e);
+  //     Constants.customErrorSnack(e.toString());
+  //     return null;
+  //   }
+  // }
 
   //ADD OPERATING COST ATTACHMENTS (Insert)
   Future<OperatingCost?> addOperatingCostAttachments(
@@ -705,8 +827,8 @@ class DatabaseService with ListenableServiceMixin {
     }
   }
 
-  //ADD OPERATING COST ATTACHMENT (Insert)
-  Future<OperatingCost?> removeOperatingCostAttachment(
+  //REMOVE OPERATING COST ATTACHMENT (DELETE)
+  Future<bool?> removeOperatingCostAttachment(
     int operatingCostID,
     String attachmentPath,
   ) async {
@@ -739,7 +861,9 @@ class DatabaseService with ListenableServiceMixin {
           .select(operationalCostQuery)
           .single();
 
-      return OperatingCost.fromMap(updatedUser);
+      final updatedOperatingCost = OperatingCost.fromMap(updatedUser);
+
+      return updatedOperatingCost.id != null;
     } catch (e) {
       print(e);
       Constants.customErrorSnack(e.toString());
@@ -761,10 +885,6 @@ class DatabaseService with ListenableServiceMixin {
       if (res['attachments'] == null) {
         return [];
       }
-      // else{
-
-      // }
-
       return res['attachments'];
     } catch (e) {
       print(e);
