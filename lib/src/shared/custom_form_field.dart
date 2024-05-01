@@ -55,6 +55,7 @@ class _CustomFormFieldState extends State<CustomFormField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      textInputAction: widget.textInputAction ?? TextInputAction.next,
       keyboardType: widget.textInputType,
       textInputAction: widget.textInputAction ?? TextInputAction.next,
       readOnly: widget.readOnly,
