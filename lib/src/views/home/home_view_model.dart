@@ -10,7 +10,10 @@ class HomeViewModel extends ReactiveViewModel with SupabaseAuthViewModel {
   }
 
   onClickTripPlanner() {}
-  onClickVehicleRegistration() {}
+  onClickVehicleRegistration() {
+    NavService.navigateToVehicleRegistration();
+  }
+
   onClickGroups() {}
   onClickMoneyManager() {}
   onClickChats() {}

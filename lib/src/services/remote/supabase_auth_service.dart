@@ -14,13 +14,13 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class SupabaseAuthService with ListenableServiceMixin {
   static late final SharedPreferences prefs;
 
-  static final ConnectivityService connectivityService =
+  static final ConnectivityService _connectivityService =
       locator<ConnectivityService>();
 
-  static final supabase = Supabase.instance.client;
+  static final _supabase = Supabase.instance.client;
 
   ReactiveValue<bool> _userLoggedIn =
-      ReactiveValue(supabase.auth.currentSession != null);
+      ReactiveValue(_supabase.auth.currentSession != null);
 
   bool get userLoggedIn => _userLoggedIn.value;
 
@@ -36,7 +36,7 @@ class SupabaseAuthService with ListenableServiceMixin {
   }
 
   _setupAuthListner() {
-    supabase.auth.onAuthStateChange.listen(
+    _supabase.auth.onAuthStateChange.listen(
       (data) {
         _userLoggedIn.value = data.session != null;
       },
@@ -50,11 +50,11 @@ class SupabaseAuthService with ListenableServiceMixin {
     String? lastName,
     required String phone,
   }) async {
-    if (!connectivityService.isInternetConnected) {
+    if (!_connectivityService.isInternetConnected) {
       throw CustomNoInternetException(message: 'No Internet Connection');
     }
     try {
-      final response = await supabase.auth.signUp(
+      final response = await _supabase.auth.signUp(
         email: email,
         password: password,
       );
@@ -86,11 +86,11 @@ class SupabaseAuthService with ListenableServiceMixin {
   }
 
   Future<AppUser?> login(String email, String password) async {
-    if (!connectivityService.isInternetConnected) {
+    if (!_connectivityService.isInternetConnected) {
       throw CustomNoInternetException(message: 'No Internet Connection');
     }
     try {
-      final response = await supabase.auth.signInWithPassword(
+      final response = await _supabase.auth.signInWithPassword(
         email: email.trim(),
         password: password,
       );
@@ -113,11 +113,11 @@ class SupabaseAuthService with ListenableServiceMixin {
   }
 
   Future logout() async {
-    if (!connectivityService.isInternetConnected) {
+    if (!_connectivityService.isInternetConnected) {
       throw CustomNoInternetException(message: 'No Internet Connection');
     }
     try {
-      await supabase.auth.signOut();
+      await _supabase.auth.signOut();
       _clearUserFromLocal();
     } catch (e) {
       throw AuthExcepection(message: e.toString());
@@ -131,7 +131,7 @@ class SupabaseAuthService with ListenableServiceMixin {
       print(user?.toMap());
       AppUser? response;
       if (user != null) {
-        final createdUser = await supabase
+        final createdUser = await _supabase
             .from(SupabaseTables.appUsers)
             .insert(user.toMap())
             .select()
@@ -150,7 +150,7 @@ class SupabaseAuthService with ListenableServiceMixin {
 
   Future<AppUser?> _getUser(String id) async {
     try {
-      final response = await supabase
+      final response = await _supabase
           .from(SupabaseTables.appUsers)
           .select('*')
           .eq('id', id)
@@ -164,15 +164,15 @@ class SupabaseAuthService with ListenableServiceMixin {
   }
 
   _syncUser() async {
-    if (!connectivityService.isInternetConnected) {
+    if (!_connectivityService.isInternetConnected) {
       print('no internet');
     }
-    if (supabase.auth.currentSession == null) {
+    if (_supabase.auth.currentSession == null) {
       print('supabase auth session is null');
       return;
     }
 
-    final response = await _getUser(supabase.auth.currentUser!.id);
+    final response = await _getUser(_supabase.auth.currentUser!.id);
 
     if (response != null) {
       _appUser.value = response;
@@ -183,18 +183,18 @@ class SupabaseAuthService with ListenableServiceMixin {
   //for profile picture
   Future<String?> uploadProfilePicture(File image) async {
     try {
-      if (!connectivityService.isInternetConnected) {
+      if (!_connectivityService.isInternetConnected) {
         throw CustomNoInternetException(message: 'No Internet Connection');
       }
       final now = DateTime.now();
       final fileName = '${user?.id}/${now.millisecondsSinceEpoch}';
       final response =
-          await supabase.storage.from(SupabaseBuckets.profilePicBucket).upload(
+          await _supabase.storage.from(SupabaseBuckets.profilePicBucket).upload(
                 fileName,
                 image,
               );
 
-      final res = await supabase.storage
+      final res = await _supabase.storage
           .from(SupabaseBuckets.profilePicBucket)
           .getPublicUrl(fileName);
 
@@ -216,12 +216,12 @@ class SupabaseAuthService with ListenableServiceMixin {
 
   //Update user profile with avatar URL
   Future<AppUser?> _updateUserAvatar(String avatarUrl) async {
-    if (!connectivityService.isInternetConnected) {
+    if (!_connectivityService.isInternetConnected) {
       throw CustomNoInternetException(message: 'No Internet Connection');
     }
 
     try {
-      final updatedUser = await supabase
+      final updatedUser = await _supabase
           .from(SupabaseTables.appUsers)
           .update({'avatar': avatarUrl})
           .eq('id', _appUser.value!.id!)
@@ -239,12 +239,12 @@ class SupabaseAuthService with ListenableServiceMixin {
   }
 
   Future<AppUser?> updateUser(AppUser user) async {
-    print(connectivityService.isInternetConnected);
-    if (!connectivityService.isInternetConnected) {
+    print(_connectivityService.isInternetConnected);
+    if (!_connectivityService.isInternetConnected) {
       throw CustomNoInternetException(message: 'No Internet Connection');
     }
     try {
-      final response = await supabase
+      final response = await _supabase
           .from(SupabaseTables.appUsers)
           .update(user.toMap())
           .eq('id', user.id!)

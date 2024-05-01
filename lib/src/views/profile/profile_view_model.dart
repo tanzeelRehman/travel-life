@@ -33,6 +33,17 @@ class ProfileViewModel extends ReactiveViewModel with SupabaseAuthViewModel {
 
   File? selectedImage; //for updating the profile image
 
+  onApproveSelectedImage() async {
+    await _uploadImage();
+    selectedImage = null;
+    notifyListeners();
+  }
+
+  onRemoveSelectedImage() {
+    selectedImage = null;
+    notifyListeners();
+  }
+
   DateTime? dob;
 
   Gender? gender;
@@ -185,7 +196,6 @@ class ProfileViewModel extends ReactiveViewModel with SupabaseAuthViewModel {
 
       selectedImage = imageTemp;
       notifyListeners();
-      _uploadImage();
     } on PlatformException catch (e) {
       print('Failed to pick image: $e');
     }
@@ -203,7 +213,6 @@ class ProfileViewModel extends ReactiveViewModel with SupabaseAuthViewModel {
       selectedImage = imageTemp;
 
       notifyListeners();
-      _uploadImage();
     } on PlatformException catch (e) {
       print('Failed to pick image: $e');
     }

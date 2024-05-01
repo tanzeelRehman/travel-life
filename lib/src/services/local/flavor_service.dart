@@ -27,4 +27,7 @@ class FlavorService {
     // return url other than prod one
     return "";
   }
+
+  static String dummyImageUrl =
+      'https://evimsreigandkjuinogy.supabase.co/storage/v1/object/public/common/dummy_image.jpg?t=2024-04-02T23%3A04%3A29.105Z';
 }
