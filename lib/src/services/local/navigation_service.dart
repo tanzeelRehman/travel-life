@@ -1,8 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:starter_app/src/base/enums/vehicle_registration_action.dart';
 import 'package:starter_app/src/configs/app_setup.locator.dart';
 import 'package:starter_app/src/configs/app_setup.router.dart';
+import 'package:starter_app/src/models/accessory.dart';
+import 'package:starter_app/src/models/operating_cost.dart';
+import 'package:starter_app/src/models/vehicle.dart';
 
 class NavService {
   static NavigationService? _navigationService = locator<NavigationService>();
@@ -29,7 +33,7 @@ class NavService {
   static Future<dynamic>? home({dynamic arguments}) => _navigationService!
       .clearStackAndShow(Routes.homeView, arguments: arguments);
 
-  //NAVIGATE_TO
+  ///////////////////////////NAVIGATE_TO/////////////////////////////////////////
 
   static Future<dynamic>? navigateToRegister({dynamic arguments}) =>
       _navigationService!.navigateTo(Routes.registerView, arguments: arguments);
@@ -43,6 +47,48 @@ class NavService {
   static Future<dynamic>? navigateToEmailConfirmation({dynamic arguments}) =>
       _navigationService!
           .navigateTo(Routes.emailConfrimationView, arguments: arguments);
+
+  //home view navigations:
+  static Future<dynamic>? navigateToVehicleRegistration({dynamic arguments}) =>
+      _navigationService!
+          .navigateTo(Routes.vehicleRegistrationView, arguments: arguments);
+
+  //Vehicle Registration Navigations:
+  static Future<dynamic>? navigateToVehicleDetail(
+          {required VehicleRegistrationAction action, Vehicle? vehicle}) =>
+      _navigationService!.navigateTo(
+        Routes.vehicleDetailView,
+        arguments: VehicleDetailViewArguments(
+          action: action,
+          vehicle: vehicle,
+        ),
+      );
+
+  static Future<dynamic>? navigateToAccessoryDetail(
+          {required VehicleRegistrationAction action,
+          Accessory? accessory,
+          Vehicle? vehicle}) =>
+      _navigationService!.navigateTo(
+        Routes.accessoryDetailView,
+        arguments: AccessoryDetailViewArguments(
+          action: action,
+          accessory: accessory,
+          vehicle: vehicle,
+        ),
+      );
+
+  static Future<dynamic>? navigateToOperationalCostDetail(
+          {required VehicleRegistrationAction action,
+          OperatingCost? operatingCost,
+          Vehicle? vehicle}) =>
+      _navigationService!.navigateTo(
+        Routes.operationalCostDetailView,
+        arguments: OperationalCostDetailViewArguments(
+          action: action,
+          operatingCost: operatingCost,
+          vehicle: vehicle,
+        ),
+      );
 
   //TO GO BACK
   static bool back({dynamic arguments}) => _navigationService!.back();

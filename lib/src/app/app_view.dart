@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:starter_app/generated/assets.dart';
 import 'package:starter_app/src/base/utils/constants.dart';
+import 'package:starter_app/src/base/utils/utils.dart';
+import 'package:starter_app/src/configs/app_setup.locator.dart';
+import 'package:starter_app/src/services/local/connectivity_service.dart';
 import 'package:starter_app/src/services/local/navigation_service.dart';
+import 'package:starter_app/src/shared/spacing.dart';
 import 'package:starter_app/src/styles/app_colors.dart';
+import 'package:starter_app/src/styles/text_theme.dart';
 
 class AppView extends StatelessWidget {
   // This widget is the root of your application.
@@ -11,7 +17,8 @@ class AppView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
+      statusBarColor:
+          AppColors.appDarkBlue, //TODO: this was transparent before.
       statusBarIconBrightness: Brightness.light,
       statusBarBrightness: Brightness.dark,
     ));
@@ -44,12 +51,53 @@ class AppView extends StatelessWidget {
             fontFamily: 'Poppins',
           ),
           builder: (context, child) {
-            return Stack(
-              children: [child!],
-            );
+            final connectivityService = locator<ConnectivityService>();
+            return connectivityService.isInternetConnected
+                ? Stack(
+                    children: [child!],
+                  )
+                : NoInternet();
           },
         );
       },
+    );
+  }
+}
+
+class NoInternet extends StatelessWidget {
+  const NoInternet({Key? key}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SizedBox(
+        width: context.screenSize().width,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              height: 250.h,
+              width: 250.h,
+              child: Image.asset(
+                AssetImages.logo,
+                width: context.screenSize().width * 0.8,
+                height: context.screenSize().width * 0.8,
+              ),
+            ),
+            VerticalSpacing(15),
+            Column(
+              children: [
+                Text(
+                  "No Internet Connection found, check your connection or try again.",
+                  style: TextStyling.bold.copyWith(
+                    color: AppColors.red,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
