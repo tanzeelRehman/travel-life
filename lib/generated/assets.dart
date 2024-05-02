@@ -33,6 +33,7 @@ class AssetImages {
 
   //default user image
   static const String defaultUser = 'assets/images/default_user_image.jpg';
+  static const String sampleUser = 'assets/images/sample_user_image.png';
 
   //vehicle card icons
   static const vehicleCardBuildyear = 'assets/images/build_year.png';
@@ -47,6 +48,22 @@ class AssetImages {
   static const opcVehicleService = 'assets/images/opc_vehicle_service.png';
   static const opcInsurance = 'assets/images/opc_insurance.png';
   static const opcOthers = 'assets/images/opc_others.png';
+
+  //grpups images
+  static const publicGroups = 'assets/images/public_groups.png';
+  static const privateGroups = 'assets/images/private_groups.png';
+  static const myGroups = 'assets/images/my_groups.png';
+  static const sampleGroupImage = 'assets/images/sample_group_image.png';
+  static const share = 'assets/images/share.png';
+
+  //group sub menus
+  static const groupChatIcon = 'assets/images/group_chat.png';
+  static const groupJoinRequestsIcon = 'assets/images/group_join_request.png';
+  static const groupExpensesIcon = 'assets/images/group_expenses.png';
+  static const groupSettingsIcon = 'assets/images/group_settings.png';
+
+  //group icons
+  static const memberRemoveIcon = 'assets/images/member_remove_icon.png';
 }
 
 class AssetIcons {
@@ -139,4 +156,11 @@ class AssetIcons {
 
   static const statusActive = 'assets/icons/status_active.svg';
   static const statusInActive = 'assets/icons/status_inactive.svg';
+
+  //! Groups
+  static const groupAdminIcon = 'assets/icons/group_admin_icon.svg';
+  static const groupCreatedByIcon = 'assets/icons/group_created_by_icon.svg';
+  static const groupCreatedIcon = 'assets/icons/group_created_icon.svg';
+  static const groupLimitIcon = 'assets/icons/group_limit_icon.svg';
+  static const groupNameIcon = 'assets/icons/group_name_icon.svg';
 }

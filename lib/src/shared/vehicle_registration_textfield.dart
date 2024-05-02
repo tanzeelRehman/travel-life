@@ -12,6 +12,7 @@ class VehicleRegistrationTextField extends StatelessWidget {
     Key? key,
     this.controller,
     this.multiline = false,
+    this.height = 100,
     required this.svgIconPath,
     this.hintText,
     required this.labelText,
@@ -22,7 +23,9 @@ class VehicleRegistrationTextField extends StatelessWidget {
   }) : super(key: key);
 
   final TextEditingController? controller;
+  final double height;
   final bool multiline;
+  final bool readOnly;
 
   final String svgIconPath;
   final String? hintText;
@@ -32,7 +35,7 @@ class VehicleRegistrationTextField extends StatelessWidget {
   final List<TextInputFormatter>? textInputFormatters;
   final Function(String)? onchangeAction;
 
-  final bool readOnly;
+  // final bool readOnly;
 
   @override
   Widget build(BuildContext context) {
@@ -69,8 +72,9 @@ class VehicleRegistrationTextField extends StatelessWidget {
                       boxShadow: AppColors.vehicleRegTextFieldBoxShadows,
                     ),
                     padding: EdgeInsets.all(10),
-                    height: multiline ? 100.h : null,
+                    height: multiline ? height.h : null,
                     child: TextField(
+                      readOnly: readOnly,
                       onChanged: onchangeAction,
                       controller: controller,
                       keyboardType: inputType,
@@ -79,7 +83,7 @@ class VehicleRegistrationTextField extends StatelessWidget {
                       decoration: null,
                       expands: multiline,
                       maxLines: multiline ? null : 1,
-                      readOnly: readOnly,
+                      // readOnly: readOnly,
                       style: TextStyling.thin.copyWith(
                         fontSize: 13.sp,
                         color: AppColors.white.withOpacity(0.7),

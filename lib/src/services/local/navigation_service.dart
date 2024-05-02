@@ -1,12 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:starter_app/src/base/enums/group_action.dart';
+import 'package:starter_app/src/base/enums/group_join.dart';
+import 'package:starter_app/src/base/enums/group_type.dart';
 import 'package:starter_app/src/base/enums/vehicle_registration_action.dart';
 import 'package:starter_app/src/configs/app_setup.locator.dart';
 import 'package:starter_app/src/configs/app_setup.router.dart';
 import 'package:starter_app/src/models/accessory.dart';
 import 'package:starter_app/src/models/operating_cost.dart';
 import 'package:starter_app/src/models/vehicle.dart';
+import 'package:starter_app/src/views/groups/models/group_create_view_model.dart';
 
 class NavService {
   static NavigationService? _navigationService = locator<NavigationService>();
@@ -89,7 +93,58 @@ class NavService {
           vehicle: vehicle,
         ),
       );
+  //Groups Navigations:
+  static Future<dynamic>? navigateToGroupsMainScreen({dynamic arguments}) =>
+      _navigationService!
+          .navigateTo(Routes.groupsMainView, arguments: arguments);
 
+  static Future<dynamic>? navigateToGroupsListsScreen(
+          {required GroupType groupType}) =>
+      _navigationService!.navigateTo(Routes.groupsListsView,
+          arguments: GroupsListsViewArguments(groupType: groupType));
+
+  static Future<dynamic>? navigateToMyGroupsScreen({dynamic arguments}) =>
+      _navigationService!.navigateTo(Routes.myGroupsView, arguments: arguments);
+
+  static Future<dynamic>? navigateToGroupJoinScreen(
+          {required GroupJoin groupJoin, required String groupName}) =>
+      _navigationService!.navigateTo(Routes.groupJoinView,
+          arguments: GroupJoinViewArguments(
+              groupJoin: groupJoin, groupName: groupName));
+
+  static Future<dynamic>? navigateToGroupJoinRequestsScreen(
+          {dynamic arguments}) =>
+      _navigationService!
+          .navigateTo(Routes.groupJoinRequestsView, arguments: arguments);
+
+  static Future<dynamic>? navigateToGroupHomeScreen({
+    required String groupName,
+  }) =>
+      _navigationService!.navigateTo(Routes.groupHomeView,
+          arguments: GroupHomeViewArguments(groupName: groupName));
+
+  static Future<dynamic>? navigateToGroupMembersProfileScreen(
+          {dynamic arguments}) =>
+      _navigationService!
+          .navigateTo(Routes.groupMemberProfileView, arguments: arguments);
+
+  static Future<dynamic>? navigateToAddMemberScreen({dynamic arguments}) =>
+      _navigationService!
+          .navigateTo(Routes.addMemberView, arguments: arguments);
+
+  static Future<dynamic>? navigateToInviteMiddleScreen({dynamic arguments}) =>
+      _navigationService!
+          .navigateTo(Routes.inviteMiddleScreenView, arguments: arguments);
+
+  static Future<dynamic>? navigateToAllMemberScreen({dynamic arguments}) =>
+      _navigationService!
+          .navigateTo(Routes.allMembersView, arguments: arguments);
+
+  static Future<dynamic>? navigateToGroupCreateScreen({
+    required GroupAction groupAction,
+  }) =>
+      _navigationService!.navigateTo(Routes.groupCreateView,
+          arguments: GroupCreateViewArguments(action: groupAction));
   //TO GO BACK
   static bool back({dynamic arguments}) => _navigationService!.back();
 }

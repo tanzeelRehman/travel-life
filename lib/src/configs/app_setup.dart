@@ -8,6 +8,17 @@ import 'package:starter_app/src/services/remote/api_service.dart';
 import 'package:starter_app/src/services/remote/database_service.dart';
 import 'package:starter_app/src/services/remote/supabase_auth_service.dart';
 import 'package:starter_app/src/views/email_confirmation/email_confirmation_view.dart';
+import 'package:starter_app/src/views/groups/add_member_view.dart';
+import 'package:starter_app/src/views/groups/all_members_view.dart';
+import 'package:starter_app/src/views/groups/group_create_view.dart';
+import 'package:starter_app/src/views/groups/group_home_view.dart';
+import 'package:starter_app/src/views/groups/group_join_requests_view.dart';
+import 'package:starter_app/src/views/groups/group_join_view.dart';
+import 'package:starter_app/src/views/groups/group_member_profile_view.dart';
+import 'package:starter_app/src/views/groups/groups_lists_view.dart';
+import 'package:starter_app/src/views/groups/groups_main_view.dart';
+import 'package:starter_app/src/views/groups/invite_middle_screen_view.dart';
+import 'package:starter_app/src/views/groups/my_groups_view.dart';
 import 'package:starter_app/src/views/home/home_view.dart';
 import 'package:starter_app/src/views/login/login_view.dart';
 import 'package:starter_app/src/views/profile/profile_view.dart';
@@ -33,6 +44,20 @@ import 'package:starter_app/src/views/welcome/welcome_view.dart';
     MaterialRoute(page: VehicleDetailView),
     MaterialRoute(page: OperationalCostDetailView),
     MaterialRoute(page: AccessoryDetailView),
+    //! Groups Pages
+    MaterialRoute(page: GroupsMainView),
+    MaterialRoute(
+      page: GroupsListsView,
+    ),
+    MaterialRoute(page: MyGroupsView),
+    MaterialRoute(page: GroupJoinView),
+    MaterialRoute(page: GroupJoinRequestsView),
+    MaterialRoute(page: GroupHomeView),
+    MaterialRoute(page: GroupMemberProfileView),
+    MaterialRoute(page: GroupCreateView),
+    MaterialRoute(page: AddMemberView),
+    MaterialRoute(page: AllMembersView),
+    MaterialRoute(page: InviteMiddleScreenView),
   ],
   dependencies: [
     // Lazy singletons
