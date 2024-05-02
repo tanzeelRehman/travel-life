@@ -57,7 +57,6 @@ class _CustomFormFieldState extends State<CustomFormField> {
     return TextFormField(
       textInputAction: widget.textInputAction ?? TextInputAction.next,
       keyboardType: widget.textInputType,
-      textInputAction: widget.textInputAction ?? TextInputAction.next,
       readOnly: widget.readOnly,
       controller: widget.controller,
       obscureText: widget.isPassword,
