@@ -7,7 +7,9 @@ import 'package:stacked/stacked.dart';
 import 'package:starter_app/src/base/enums/vehicle_registration_action.dart';
 import 'package:starter_app/src/base/enums/vehicle_status.dart';
 import 'package:starter_app/src/base/utils/constants.dart';
+import 'package:starter_app/src/models/accessory.dart';
 import 'package:starter_app/src/models/manufacturor.dart';
+import 'package:starter_app/src/models/operating_cost.dart';
 import 'package:starter_app/src/models/vehicle.dart';
 import 'package:starter_app/src/models/vehicle_model.dart';
 import 'package:starter_app/src/services/local/base/data_view_model.dart';
@@ -45,12 +47,15 @@ class VehicleDetailViewModel extends ReactiveViewModel
   onChangeVehicleModel(VehicleModel? v) {
     if (v != null) {
       selectedVehicleModel = v;
+      if (descriptionController.text.isEmpty) {
+        descriptionController.text =
+            "${selectedManufacturer?.name} ${selectedVehicleModel?.model}";
+      }
       notifyListeners();
     }
   }
 
   int? editVehicleID;
-  // VehicleRegistrationAction? registrationAction;
 
   String? manufacturer;
   String? model;
@@ -167,14 +172,20 @@ class VehicleDetailViewModel extends ReactiveViewModel
   final TextEditingController warentyPeriodController =
       TextEditingController(); //will only accept double
 
+  final TextEditingController tireFrontController = TextEditingController();
+
+  final TextEditingController tireRearController = TextEditingController();
+
   init(VehicleRegistrationAction action, Vehicle? vehicle) async {
     _registrationAction = action;
     if (action == VehicleRegistrationAction.edit && vehicle != null) {
-      //TODO: set fields with the data
       _setFieldsForEditing(vehicle);
+      _getAccessoryCategories();
       if (selectedManufacturer != null) {
         _getAllVehicleModels();
       }
+      getAllAccessories(vehicle.id!);
+      getAllOperationalCosts(vehicle.id!);
     }
     await _getAllVehicleManufacturer();
   }
@@ -203,9 +214,6 @@ class VehicleDetailViewModel extends ReactiveViewModel
         vehicle.dailyDistance == null ? '' : vehicle.dailyDistance.toString();
     odometerReadingController.text =
         vehicle.odometer == null ? '' : vehicle.odometer.toString();
-    // status = vehicle.status == null
-    //     ? null
-    //     : getVehicleStatusFromReadable(vehicle.status!);
     status = vehicle.status;
     horsePowerController.text = vehicle.horsepower ?? '';
     fuelConsumptionController.text =
@@ -216,13 +224,14 @@ class VehicleDetailViewModel extends ReactiveViewModel
     manufactureYear = vehicle.manufactureYear != null
         ? DateTime(vehicle.manufactureYear!)
         : null;
+    tireFrontController.text = vehicle.tireFront ?? '';
+    tireRearController.text = vehicle.tireRear ?? '';
   }
 
   Vehicle _createVehicle() {
     Vehicle v = Vehicle();
     if (_registrationAction == VehicleRegistrationAction.add) {
       v = Vehicle(
-        // id: editVehicleID,
         consumption: int.tryParse(fuelConsumptionController.text),
         dailyDistance: int.tryParse(dailyDistanceController.text),
         description: descriptionController.text,
@@ -231,14 +240,12 @@ class VehicleDetailViewModel extends ReactiveViewModel
         manufactureYear: manufactureYear?.year,
         manufacturer: selectedManufacturer,
         model: selectedVehicleModel,
-        // number: registrationNumberController.text,
         odometer: int.tryParse(odometerReadingController.text),
         price: double.tryParse(priceController.text),
         primaryVehicle: isPrimaryVehicle,
         purchaseDate: purchaseDate,
         regNo: registrationNumberController.text,
         serviceInterval: int.tryParse(serviceController.text),
-        // status: status == null ? null : getReadableVehicleStatus(status!),
         status: status,
         tankCapacity: tankCapacityController.text,
         vinNo: vinController.text,
@@ -246,6 +253,8 @@ class VehicleDetailViewModel extends ReactiveViewModel
         warrantyPeriod: int.tryParse(warentyPeriodController.text),
         horsepower: horsePowerController.text,
         user: supabaseAuthService.user?.id,
+        tireFront: tireFrontController.text,
+        tireRear: tireRearController.text,
       );
     } else {
       v = Vehicle(
@@ -258,14 +267,12 @@ class VehicleDetailViewModel extends ReactiveViewModel
         manufactureYear: manufactureYear?.year,
         manufacturer: selectedManufacturer,
         model: selectedVehicleModel,
-        // number: registrationNumberController.text,
         odometer: int.tryParse(odometerReadingController.text),
         price: double.tryParse(priceController.text),
         primaryVehicle: isPrimaryVehicle,
         purchaseDate: purchaseDate,
         regNo: registrationNumberController.text,
         serviceInterval: int.tryParse(serviceController.text),
-        // status: status == null ? null : getReadableVehicleStatus(status!),
         status: status,
         tankCapacity: tankCapacityController.text,
         vinNo: vinController.text,
@@ -273,12 +280,47 @@ class VehicleDetailViewModel extends ReactiveViewModel
         warrantyPeriod: int.tryParse(warentyPeriodController.text),
         horsepower: horsePowerController.text,
         user: supabaseAuthService.user?.id,
+        tireFront: tireFrontController.text,
+        tireRear: tireRearController.text,
       );
     }
     return v;
   }
 
+  bool validateInput() {
+    bool isValid = true;
+    StringBuffer message = StringBuffer('Please fill all required fields: ');
+
+    if (selectedManufacturer == null) {
+      message.write('Manufacturer, ');
+      isValid = false;
+    }
+    if (selectedVehicleModel == null) {
+      message.write('Model, ');
+      isValid = false;
+    }
+    if (priceController.text.isEmpty) {
+      message.write('Price');
+      isValid = false;
+    }
+
+    // Remove the last comma and space if present
+    if (!isValid) {
+      final errorMsg = message.toString();
+      if (errorMsg.endsWith(', ')) {
+        message.clear();
+        message.write(errorMsg.substring(0, errorMsg.length - 2));
+      }
+      Constants.customWarningSnack(message.toString());
+    }
+
+    return isValid;
+  }
+
   updateOrInsertVehicle() async {
+    if (!validateInput()) {
+      return;
+    }
     if (editVehicleID == null &&
         _registrationAction == VehicleRegistrationAction.add) {
       setBusy(true);
@@ -439,5 +481,88 @@ class VehicleDetailViewModel extends ReactiveViewModel
     horsePowerController.dispose();
     fuelConsumptionController.dispose();
     warentyPeriodController.dispose();
+    tireFrontController.dispose();
+    tireRearController.dispose();
+  }
+
+  //////////////////////////////////// EDIT VIEW ////////////////////////////////////////
+
+  //for edit view//////////
+
+  int selectedTab = 0;
+
+  onChangeTab(int v) {
+    selectedTab = v;
+    notifyListeners();
+  }
+
+  //////////////////////////// ACCESSORY VIEW ///////////////////////////////////////
+
+  _getAccessoryCategories() async {
+    final res = await databaseService.getAccessoryCategories();
+
+    if (res != null) {
+      dataService.accessoryCategories = res;
+      notifyListeners();
+    }
+  }
+
+  bool accessoriesLoading = false;
+
+  setAccessoriesLoading(bool v) {
+    accessoriesLoading = v;
+    notifyListeners();
+  }
+
+  getAllAccessories(int vehicleID) async {
+    setAccessoriesLoading(true);
+    dataService.accessories =
+        await databaseService.getAllAccessoriesOfVehicle(vehicleID) ?? [];
+    notifyListeners();
+    setAccessoriesLoading(false);
+  }
+
+  onEditAccessory(Accessory v) {
+    NavService.navigateToAccessoryDetail(
+      action: VehicleRegistrationAction.edit,
+      accessory: v,
+    );
+  }
+
+  onInsertAccessory(Vehicle? vehicle) {
+    NavService.navigateToAccessoryDetail(
+      action: VehicleRegistrationAction.add,
+      vehicle: vehicle,
+    );
+  }
+
+  //////////////////////////// OPERATING COST VIEW ///////////////////////////////////////
+
+  bool operationsCostsLoading = false;
+
+  setOperationsCostsLoading(bool v) {
+    operationsCostsLoading = v;
+    notifyListeners();
+  }
+
+  getAllOperationalCosts(int vehicleID) async {
+    setOperationsCostsLoading(true);
+    dataService.operatingCosts =
+        await databaseService.getAllOperationalCostsOfVehicle(vehicleID) ?? [];
+    setOperationsCostsLoading(false);
+  }
+
+  onEditOperatingCost(OperatingCost v) {
+    NavService.navigateToOperationalCostDetail(
+      action: VehicleRegistrationAction.edit,
+      operatingCost: v,
+    );
+  }
+
+  onInsertOperatingCost(Vehicle? vehicle) {
+    NavService.navigateToOperationalCostDetail(
+      action: VehicleRegistrationAction.add,
+      vehicle: vehicle,
+    );
   }
 }

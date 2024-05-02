@@ -12,6 +12,7 @@ class ProfileTextField extends StatelessWidget {
     this.textInputType,
     this.onTap,
     this.suffixIcon,
+    this.textInputAction,
   }) : super(key: key);
 
   final String title;
@@ -20,6 +21,7 @@ class ProfileTextField extends StatelessWidget {
   final TextInputType? textInputType;
   final VoidCallback? onTap;
   final Widget? suffixIcon;
+  final TextInputAction? textInputAction;
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +38,7 @@ class ProfileTextField extends StatelessWidget {
             ),
           ),
           TextField(
+            textInputAction: textInputAction ?? TextInputAction.next,
             keyboardType: textInputType,
             readOnly: readOnly,
             controller: controller,

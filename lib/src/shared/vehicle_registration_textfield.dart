@@ -35,6 +35,8 @@ class VehicleRegistrationTextField extends StatelessWidget {
   final List<TextInputFormatter>? textInputFormatters;
   final Function(String)? onchangeAction;
 
+  // final bool readOnly;
+
   @override
   Widget build(BuildContext context) {
     return BlurContainer(
@@ -81,6 +83,7 @@ class VehicleRegistrationTextField extends StatelessWidget {
                       decoration: null,
                       expands: multiline,
                       maxLines: multiline ? null : 1,
+                      // readOnly: readOnly,
                       style: TextStyling.thin.copyWith(
                         fontSize: 13.sp,
                         color: AppColors.white.withOpacity(0.7),

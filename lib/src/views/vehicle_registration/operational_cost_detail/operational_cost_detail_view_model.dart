@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:starter_app/src/base/enums/vehicle_registration_action.dart';
 import 'package:starter_app/src/base/utils/constants.dart';
+import 'package:starter_app/src/base/utils/utils.dart';
 import 'package:starter_app/src/models/cost_category.dart';
 import 'package:starter_app/src/models/operating_cost.dart';
 import 'package:starter_app/src/models/vehicle.dart';
@@ -16,12 +17,39 @@ class OperationalCostDetailViewModel extends ReactiveViewModel
     with DataViewModel, DatabaseViewModel, SupabaseAuthViewModel {
   DateTime? purchaseDate;
 
+  final int maxFileSizeAllowedInMB = 5;
+
+  final int maxFilesAllowed = 5;
+
+  bool isAttachmentsLimitReached() {
+    final int previousTotalAttachments =
+        editOperatingCost?.attachments?.length ?? 0;
+
+    final int newTotalAttachments = localAttachments?.length ?? 0;
+
+    return previousTotalAttachments + newTotalAttachments >= maxFilesAllowed;
+  }
+
+  bool isAttachmentsLimitExceeded() {
+    final int previousTotalAttachments =
+        editOperatingCost?.attachments?.length ?? 0;
+
+    final int newTotalAttachments = localAttachments?.length ?? 0;
+
+    return previousTotalAttachments + newTotalAttachments > maxFilesAllowed;
+  }
+
   onChangePurchaseDate(DateTime? v) {
     if (v != null) {
       purchaseDate = v;
       notifyListeners();
     }
   }
+
+  //for edit flow (when the operatingCost is passed)
+  OperatingCost? editOperatingCost;
+
+  Vehicle? _addVehicle;
 
   CostCategory? category;
   Vehicle? selectedVehicle;
@@ -64,20 +92,25 @@ class OperationalCostDetailViewModel extends ReactiveViewModel
 
   final TextEditingController purchasePriceController = TextEditingController();
 
-  final TextEditingController vatController = TextEditingController();
+  final TextEditingController vatController = TextEditingController(text: '15');
 
   final TextEditingController priceController = TextEditingController();
 
-  int? editAccessoryID;
   VehicleRegistrationAction? registrationAction;
 
-  init(VehicleRegistrationAction action, OperatingCost? accessory) {
+  init(VehicleRegistrationAction action, OperatingCost? accessory,
+      Vehicle? vehicle) {
     registrationAction = action;
+    print(vehicle);
 
     if (action == VehicleRegistrationAction.edit) {
-      editAccessoryID = accessory?.id;
+      editOperatingCost = accessory;
 
       _setFields(accessory!);
+    } else {
+      selectedVehicle = vehicle;
+      _addVehicle = vehicle;
+      notifyListeners();
     }
     _getAccessoryCategories();
   }
@@ -97,6 +130,9 @@ class OperationalCostDetailViewModel extends ReactiveViewModel
         ? accessory.total.toString()
         : calculatePrice(accessory.purchasePrice, accessory.vat).toString();
     selectedVehicle = accessory.vehicle;
+
+    _addVehicle =
+        accessory.vehicle; //for fetching the accessories with this vehicle
     notifyListeners();
   }
 
@@ -105,7 +141,7 @@ class OperationalCostDetailViewModel extends ReactiveViewModel
     print(supabaseAuthService.user?.id);
     return OperatingCost(
       id: registrationAction == VehicleRegistrationAction.edit
-          ? editAccessoryID
+          ? editOperatingCost?.id
           : null,
       user: supabaseAuthService.user?.id,
       description: descriptionController.text,
@@ -118,60 +154,49 @@ class OperationalCostDetailViewModel extends ReactiveViewModel
     );
   }
 
-  File? attachment;
-
   List<File>? localAttachments = [];
-
-  onClickRemoveAttachment() {
-    attachment = null;
-    notifyListeners();
-  }
-
-  onClickAddAttachment() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      allowMultiple: false,
-      allowCompression: true,
-      allowedExtensions: [
-        'pdf',
-        'doc',
-        'docx',
-        'jpg',
-        'jpeg',
-        'png',
-        //TODO: add more
-
-        // for iphone
-      ], // optional
-      type: FileType.custom,
-
-      dialogTitle: 'Select Attachment',
-      compressionQuality: 40,
-    );
-
-    if (result != null) {
-      final file = File(result.files.single.path!);
-      final fileSize = await file.length();
-
-      if (fileSize <= 5 * 1024 * 1024) {
-        attachment = file;
-      } else {
-        // Handle case where attachment size exceeds 5 MB
-        Constants.customWarningSnack(
-            'Attachment size exceeds 5 MB, Please choose a attachment under 5 mb');
-        print('Attachment size exceeds 5 MB');
-        // You may want to display an error message to the user here
-      }
-
-      notifyListeners();
-    }
-  }
 
   onClickRemoveAttachmentFromLocalAttachment(int i) {
     localAttachments?.removeAt(i);
     notifyListeners();
   }
 
+  bool isRemoveAttachmentLoading = false;
+
+  setRemoveAttachmentLoading(bool v) {
+    isRemoveAttachmentLoading = v;
+    notifyListeners();
+  }
+
+  onClickRemoveAttachment(int i) async {
+    final attachment = editOperatingCost?.attachments?[i];
+    if (attachment != null) {
+      setRemoveAttachmentLoading(true);
+      final deleted = await databaseService.removeOperatingCostAttachment(
+        editOperatingCost!.id!,
+        attachment.toString(),
+      );
+      if (deleted == null || !deleted) {
+        setRemoveAttachmentLoading(false);
+        Constants.customWarningSnack('Failed to delete attachment');
+        return;
+      }
+      setRemoveAttachmentLoading(false);
+      editOperatingCost?.attachments?.removeAt(i);
+      notifyListeners();
+
+      getAllOperationalCosts();
+    }
+  }
+
   onClickAddAttachments() async {
+    if (isAttachmentsLimitReached()) {
+      Constants.customWarningSnack(
+        'You can only add upto $maxFilesAllowed attachments, remove some to add more',
+      );
+      return;
+    }
+
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       allowMultiple: true,
       allowCompression: true,
@@ -183,7 +208,6 @@ class OperationalCostDetailViewModel extends ReactiveViewModel
         'jpeg',
         'png',
         //TODO: add more
-
         // for iphone
       ], // optional
       type: FileType.custom,
@@ -197,14 +221,14 @@ class OperationalCostDetailViewModel extends ReactiveViewModel
         final file = File(result.files[i].path!);
         final fileSize = await file.length();
 
-        if (fileSize <= 5 * 1024 * 1024) {
-          attachment = file;
+        if (fileSize <= maxFileSizeAllowedInMB * 1024 * 1024) {
           localAttachments?.add(file);
         } else {
-          // Handle case where attachment size exceeds 5 MB
+          // Handle case where attachment size exceeds max allowed size in MB
           Constants.customWarningSnack(
-              'Attachment size exceeds 5 MB, Please choose a attachment under 5 mb');
-          print('Attachment size exceeds 5 MB');
+            '${UtilFunctions.getFileNameWithExtension(file)} size exceeds $maxFileSizeAllowedInMB MB, Please choose a attachment under $maxFileSizeAllowedInMB mb',
+          );
+          print('Attachment size exceeds $maxFileSizeAllowedInMB MB');
         }
 
         notifyListeners();
@@ -212,9 +236,50 @@ class OperationalCostDetailViewModel extends ReactiveViewModel
     }
   }
 
+  bool validateInput() {
+    bool isValid = true;
+    StringBuffer message = StringBuffer('Please fill all required fields: ');
+
+    if (selectedVehicle == null) {
+      message.write('Vehicle, ');
+      isValid = false;
+    }
+    if (category == null) {
+      message.write('Category, ');
+      isValid = false;
+    }
+    if (purchasePriceController.text.isEmpty) {
+      message.write('Purchase Price, ');
+      isValid = false;
+    }
+    if (priceController.text.isEmpty) {
+      message.write('Price');
+      isValid = false;
+    }
+
+    // Remove the last comma and space if present
+    if (!isValid) {
+      final errorMsg = message.toString();
+      if (errorMsg.endsWith(', ')) {
+        message.clear();
+        message.write(errorMsg.substring(0, errorMsg.length - 2));
+      }
+      Constants.customWarningSnack(message.toString());
+    }
+
+    return isValid;
+  }
+
   updateOrInsertAccesssory() async {
+    if (isAttachmentsLimitExceeded()) {
+      Constants.customWarningSnack(
+          'Max attachments limit ($maxFilesAllowed) reached, Please remove some attachments');
+      return;
+    }
+    if (!validateInput()) {
+      return;
+    }
     bool success = false;
-    // bool hasAttachment = attachment != null;
     bool hasAttachment =
         localAttachments != null && localAttachments!.isNotEmpty;
 
@@ -223,7 +288,7 @@ class OperationalCostDetailViewModel extends ReactiveViewModel
 
       final accessory = _createAccessory();
 
-      if (editAccessoryID == null &&
+      if (editOperatingCost?.id == null &&
           registrationAction == VehicleRegistrationAction.add) {
         final insertedAccessory =
             await databaseService.insertOperatingCost(accessory);
@@ -232,12 +297,6 @@ class OperationalCostDetailViewModel extends ReactiveViewModel
 
         if (insertedAccessory != null) {
           if (hasAttachment) {
-            // final updatedAccessoryWithAttachment =
-            //     await databaseService.insertOrUpdateOperatingCostAttachment(
-            //   insertedAccessory.id!,
-            //   attachment!,
-            // );
-
             final updatedOperationalCostWithAttachment =
                 await databaseService.addOperatingCostAttachments(
                     insertedAccessory.id!, localAttachments!);
@@ -252,17 +311,10 @@ class OperationalCostDetailViewModel extends ReactiveViewModel
 
         if (updatedAccessory != null) {
           if (hasAttachment) {
-            // final updatedAccessoryWithAttachment =
-            //     await databaseService.insertOrUpdateOperatingCostAttachment(
-            //   updatedAccessory.id!,
-            //   attachment!,
-            // );
-
             final updatedOperationalCostWithAttachment =
                 await databaseService.addOperatingCostAttachments(
                     updatedAccessory.id!, localAttachments!);
             success = updatedOperationalCostWithAttachment != null;
-            // success = updatedAccessoryWithAttachment != null;
           }
         }
       }
@@ -271,10 +323,10 @@ class OperationalCostDetailViewModel extends ReactiveViewModel
         getAllOperationalCosts();
         NavService.back();
         Constants.customSuccessSnack(
-            'Cost ${editAccessoryID == null ? 'added' : 'updated'} successfully');
+            'Cost ${editOperatingCost?.id == null ? 'added' : 'updated'} successfully');
       } else {
         Constants.customErrorSnack(
-            'Failed to ${editAccessoryID == null ? 'add' : 'update'} cost');
+            'Failed to ${editOperatingCost?.id == null ? 'add' : 'update'} cost');
       }
     } catch (e) {
       Constants.customErrorSnack('An error occurred: $e');
@@ -284,8 +336,9 @@ class OperationalCostDetailViewModel extends ReactiveViewModel
   }
 
   getAllOperationalCosts() async {
-    dataService.operatingCosts =
-        await databaseService.getAllOperationalCosts() ?? [];
+    dataService.operatingCosts = await databaseService
+            .getAllOperationalCostsOfVehicle(_addVehicle!.id!) ??
+        [];
   }
 
   @override
@@ -304,17 +357,15 @@ class OperationalCostDetailViewModel extends ReactiveViewModel
     return price + vatValue;
   }
 
-  //! Functions Added by Tanzeel
-  calculateTotalPrice(String value) {
-    priceController.text = value;
-    notifyListeners();
-  }
-
   calculateTax(String taxRate) {
-    double taxAmount = double.parse(purchasePriceController.text) *
-        (double.parse(taxRate) / 100);
-    double totalPriceAfterTax =
-        double.parse(purchasePriceController.text) + taxAmount;
+    double purchasePrice = purchasePriceController.text.isEmpty
+        ? 0
+        : double.parse(purchasePriceController.text);
+
+    double rate = taxRate.isEmpty ? 0 : double.parse(taxRate);
+
+    double taxAmount = purchasePrice * (rate / 100);
+    double totalPriceAfterTax = purchasePrice + taxAmount;
     priceController.text = totalPriceAfterTax.toStringAsFixed(3);
     notifyListeners();
   }

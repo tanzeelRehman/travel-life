@@ -273,7 +273,9 @@ class StackedRouter extends _i1.RouterBase {
           data.getArgs<OperationalCostDetailViewArguments>(nullOk: false);
       return _i24.MaterialPageRoute<dynamic>(
         builder: (context) => _i11.OperationalCostDetailView(
-            action: args.action, operatingCost: args.operatingCost),
+            action: args.action,
+            operatingCost: args.operatingCost,
+            vehicle: args.vehicle),
         settings: data,
       );
     },
@@ -281,7 +283,9 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<AccessoryDetailViewArguments>(nullOk: false);
       return _i24.MaterialPageRoute<dynamic>(
         builder: (context) => _i12.AccessoryDetailView(
-            action: args.action, accessory: args.accessory),
+            action: args.action,
+            accessory: args.accessory,
+            vehicle: args.vehicle),
         settings: data,
       );
     },
@@ -396,26 +400,31 @@ class OperationalCostDetailViewArguments {
   const OperationalCostDetailViewArguments({
     required this.action,
     this.operatingCost,
+    this.vehicle,
   });
 
   final _i25.VehicleRegistrationAction action;
 
   final _i27.OperatingCost? operatingCost;
 
+  final _i26.Vehicle? vehicle;
+
   @override
   String toString() {
-    return '{"action": "$action", "operatingCost": "$operatingCost"}';
+    return '{"action": "$action", "operatingCost": "$operatingCost", "vehicle": "$vehicle"}';
   }
 
   @override
   bool operator ==(covariant OperationalCostDetailViewArguments other) {
     if (identical(this, other)) return true;
-    return other.action == action && other.operatingCost == operatingCost;
+    return other.action == action &&
+        other.operatingCost == operatingCost &&
+        other.vehicle == vehicle;
   }
 
   @override
   int get hashCode {
-    return action.hashCode ^ operatingCost.hashCode;
+    return action.hashCode ^ operatingCost.hashCode ^ vehicle.hashCode;
   }
 }
 
@@ -423,26 +432,31 @@ class AccessoryDetailViewArguments {
   const AccessoryDetailViewArguments({
     required this.action,
     this.accessory,
+    this.vehicle,
   });
 
   final _i25.VehicleRegistrationAction action;
 
   final _i28.Accessory? accessory;
 
+  final _i26.Vehicle? vehicle;
+
   @override
   String toString() {
-    return '{"action": "$action", "accessory": "$accessory"}';
+    return '{"action": "$action", "accessory": "$accessory", "vehicle": "$vehicle"}';
   }
 
   @override
   bool operator ==(covariant AccessoryDetailViewArguments other) {
     if (identical(this, other)) return true;
-    return other.action == action && other.accessory == accessory;
+    return other.action == action &&
+        other.accessory == accessory &&
+        other.vehicle == vehicle;
   }
 
   @override
   int get hashCode {
-    return action.hashCode ^ accessory.hashCode;
+    return action.hashCode ^ accessory.hashCode ^ vehicle.hashCode;
   }
 }
 
@@ -672,6 +686,7 @@ extension NavigatorStateExtension on _i32.NavigationService {
   Future<dynamic> navigateToOperationalCostDetailView({
     required _i25.VehicleRegistrationAction action,
     _i27.OperatingCost? operatingCost,
+    _i26.Vehicle? vehicle,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -680,7 +695,7 @@ extension NavigatorStateExtension on _i32.NavigationService {
   }) async {
     return navigateTo<dynamic>(Routes.operationalCostDetailView,
         arguments: OperationalCostDetailViewArguments(
-            action: action, operatingCost: operatingCost),
+            action: action, operatingCost: operatingCost, vehicle: vehicle),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
@@ -690,6 +705,7 @@ extension NavigatorStateExtension on _i32.NavigationService {
   Future<dynamic> navigateToAccessoryDetailView({
     required _i25.VehicleRegistrationAction action,
     _i28.Accessory? accessory,
+    _i26.Vehicle? vehicle,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -697,8 +713,8 @@ extension NavigatorStateExtension on _i32.NavigationService {
         transition,
   }) async {
     return navigateTo<dynamic>(Routes.accessoryDetailView,
-        arguments:
-            AccessoryDetailViewArguments(action: action, accessory: accessory),
+        arguments: AccessoryDetailViewArguments(
+            action: action, accessory: accessory, vehicle: vehicle),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
@@ -1001,6 +1017,7 @@ extension NavigatorStateExtension on _i32.NavigationService {
   Future<dynamic> replaceWithOperationalCostDetailView({
     required _i25.VehicleRegistrationAction action,
     _i27.OperatingCost? operatingCost,
+    _i26.Vehicle? vehicle,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1009,7 +1026,7 @@ extension NavigatorStateExtension on _i32.NavigationService {
   }) async {
     return replaceWith<dynamic>(Routes.operationalCostDetailView,
         arguments: OperationalCostDetailViewArguments(
-            action: action, operatingCost: operatingCost),
+            action: action, operatingCost: operatingCost, vehicle: vehicle),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
@@ -1019,6 +1036,7 @@ extension NavigatorStateExtension on _i32.NavigationService {
   Future<dynamic> replaceWithAccessoryDetailView({
     required _i25.VehicleRegistrationAction action,
     _i28.Accessory? accessory,
+    _i26.Vehicle? vehicle,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1026,8 +1044,8 @@ extension NavigatorStateExtension on _i32.NavigationService {
         transition,
   }) async {
     return replaceWith<dynamic>(Routes.accessoryDetailView,
-        arguments:
-            AccessoryDetailViewArguments(action: action, accessory: accessory),
+        arguments: AccessoryDetailViewArguments(
+            action: action, accessory: accessory, vehicle: vehicle),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,

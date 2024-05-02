@@ -76,7 +76,7 @@ class Accessory {
         'height': height,
         'width': width,
         // 'accessoryimage_attachment': accessoryImageAttachment,
-        'attachments': attachments
+        // 'attachments': attachments
       };
 
   Map<String, dynamic> insertToMap() => {
@@ -93,7 +93,7 @@ class Accessory {
         // 'invoice_attachment': invoiceAttachment,
         'height': height,
         'width': width,
-        'attachments': attachments
+        // 'attachments': attachments
         // 'accessoryimage_attachment':
         //     accessoryImageAttachment, //might also remove this idk
       };

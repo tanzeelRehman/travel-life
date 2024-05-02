@@ -121,6 +121,10 @@ class LoginView extends StackedView<LoginViewModel> {
                     primaryColor: AppColors.white,
                     textColor: AppColors.white,
                     isLabelCenter: false,
+                    textInputAction: TextInputAction.done,
+                    onFieldSubmitted: (p0) {
+                      model.onLogin();
+                    },
                   ),
                   SizedBox(height: 32.h),
                   MainButton(
@@ -129,19 +133,19 @@ class LoginView extends StackedView<LoginViewModel> {
                     onPressed: model.onLogin,
                     isLoading: model.isBusy,
                   ),
-                  SizedBox(height: 5.h),
-                  Center(
-                    child: TextButton(
-                      onPressed: model.onClickForgetPassword,
-                      child: Text(
-                        'Forget password?',
-                        style: TextStyling.thin.copyWith(
-                          fontSize: 14.sp,
-                          color: AppColors.appSkyBlue,
-                        ),
-                      ),
-                    ),
-                  ),
+                  // SizedBox(height: 5.h),
+                  // Center(
+                  //   child: TextButton(
+                  //     onPressed: model.onClickForgetPassword,
+                  //     child: Text(
+                  //       'Forget password?',
+                  //       style: TextStyling.thin.copyWith(
+                  //         fontSize: 14.sp,
+                  //         color: AppColors.appSkyBlue,
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                   Spacer(
                     flex: 2,
                   ),

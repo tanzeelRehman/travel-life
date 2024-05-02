@@ -23,6 +23,8 @@ class CustomFormField extends StatefulWidget {
   List<TextInputFormatter>? textInputFormatters;
   final BorderRadius? borderRadius;
   final TextInputType? textInputType;
+  final TextInputAction? textInputAction;
+  final void Function(String)? onFieldSubmitted;
 
   CustomFormField({
     this.textInputFormatters,
@@ -41,6 +43,8 @@ class CustomFormField extends StatefulWidget {
     required this.isLabelCenter,
     this.borderRadius,
     this.textInputType,
+    this.textInputAction,
+    this.onFieldSubmitted,
   });
 
   @override
@@ -51,6 +55,7 @@ class _CustomFormFieldState extends State<CustomFormField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      textInputAction: widget.textInputAction ?? TextInputAction.next,
       keyboardType: widget.textInputType,
       readOnly: widget.readOnly,
       controller: widget.controller,
@@ -60,6 +65,7 @@ class _CustomFormFieldState extends State<CustomFormField> {
       cursorColor: widget.primaryColor.withOpacity(0.5),
       maxLength: widget.maxLength,
       inputFormatters: widget.textInputFormatters,
+      onFieldSubmitted: widget.onFieldSubmitted,
       decoration: InputDecoration(
         counterText: '',
         prefixIcon: widget.prefixWidget != null
@@ -132,7 +138,6 @@ class _CustomFormFieldState extends State<CustomFormField> {
         ),
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(
-            // color: widget.,
             color: AppColors.appSkyBlue.withOpacity(0.5),
           ),
           borderRadius: widget.borderRadius ??
@@ -140,17 +145,15 @@ class _CustomFormFieldState extends State<CustomFormField> {
                 Radius.circular(8),
               ),
         ),
-        // enabledBorder: OutlineInputBorder(
-        //   // borderSide: BorderSide.none,
-        //   borderSide: BorderSide(
-        //     // color: widget.,
-        //     color: AppColors.grey,
-        //   ),
-        //   borderRadius: widget.borderRadius ??
-        //       BorderRadius.all(
-        //         Radius.circular(8),
-        //       ),
-        // ),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Colors.transparent,
+          ),
+          borderRadius: widget.borderRadius ??
+              BorderRadius.all(
+                Radius.circular(8),
+              ),
+        ),
         border: InputBorder.none,
       ),
     );

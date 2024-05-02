@@ -74,7 +74,7 @@ class OperatingCost {
         'attachment': attachment,
         'height': height,
         'width': width,
-        'attachments': attachments,
+        // 'attachments': attachments, // this was causing the issue.
       };
 
   Map<String, dynamic> insertToMap() => {
@@ -91,7 +91,7 @@ class OperatingCost {
         'attachment': attachment,
         'height': height,
         'width': width,
-        'attachments': attachments,
+        // 'attachments': attachments, //this was causing the issue.
       };
 
   static List<OperatingCost>? fromJsonList(

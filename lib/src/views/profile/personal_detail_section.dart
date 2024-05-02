@@ -80,22 +80,22 @@ class PersonalDetailSection extends StatelessWidget {
               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
             onPressed: () async {
-              // final selectedDate = await DatePicker.showSimpleDatePicker(
-              //   context,
-              //   backgroundColor: AppColors.appDarkBlue.withOpacity(1),
-              //   dateFormat: 'dd-MMM-yyyy',
-              //   confirmText: 'Confirm',
-              //   cancelText: 'Cancel',
-              //   titleText: 'Birth Date',
-              //   itemTextStyle: TextStyling.bold.copyWith(),
-              //   textColor: AppColors.white,
-              //   confirmTextColor: AppColors.appSkyBlue,
-              //   cancelTextColor: AppColors.appFaddedBlue,
-              //   lastDate: DateTime.now(),
-              //   initialDate: model.dob ?? DateTime.now(),
-              // );
+              final selectedDate = await DatePicker.showSimpleDatePicker(
+                context,
+                backgroundColor: AppColors.appDarkBlue.withOpacity(1),
+                dateFormat: 'dd-MMM-yyyy',
+                confirmText: 'Confirm',
+                cancelText: 'Cancel',
+                titleText: 'Birth Date',
+                itemTextStyle: TextStyling.bold.copyWith(),
+                textColor: AppColors.white,
+                confirmTextColor: AppColors.appSkyBlue,
+                cancelTextColor: AppColors.appFaddedBlue,
+                lastDate: DateTime.now(),
+                initialDate: model.dob ?? DateTime.now(),
+              );
 
-              // model.onSelectDob(selectedDate);
+              model.onSelectDob(selectedDate);
             },
             icon: Icon(
               Icons.calendar_month,

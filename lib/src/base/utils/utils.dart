@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -126,5 +128,13 @@ class UtilFunctions {
     } catch (e) {
       return false;
     }
+  }
+
+  static String getFileNameWithExtension(File file) {
+    return file.path.split('/').last + 'file';
+  }
+
+  static String getFileNameWithoutExtension(File file) {
+    return file.path.split('/').last.split('.').first + 'file';
   }
 }
