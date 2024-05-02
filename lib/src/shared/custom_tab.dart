@@ -13,6 +13,7 @@ class CustomTab extends StatelessWidget {
     this.width,
     this.fontSize,
     this.padding,
+    this.count,
   }) : super(key: key);
 
   final String title;
@@ -21,6 +22,7 @@ class CustomTab extends StatelessWidget {
   final double? height;
   final double? width;
   final double? fontSize;
+  final int? count;
   final EdgeInsetsGeometry? padding;
 
   @override
@@ -37,14 +39,35 @@ class CustomTab extends StatelessWidget {
         padding:
             padding ?? EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.h),
         child: Center(
-          child: Text(
-            title,
-            style: TextStyling.semiBold.copyWith(
-              color: isSelected ? AppColors.white : AppColors.appDarkBlue,
-              fontSize: fontSize ?? 12.sp,
-            ),
-            overflow: TextOverflow.ellipsis,
-          ),
+          child: count == null
+              ? Text(
+                  title,
+                  style: TextStyling.semiBold.copyWith(
+                    color: isSelected ? AppColors.white : AppColors.appDarkBlue,
+                    fontSize: fontSize ?? 12.sp,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                )
+              : Badge(
+                  backgroundColor:
+                      isSelected ? AppColors.white : AppColors.appDarkBlue,
+                  offset: Offset(16, -6),
+                  label: Text(
+                    count.toString(),
+                    style: TextStyle(
+                        color:
+                            isSelected ? AppColors.appDarkBlue : Colors.white),
+                  ),
+                  child: Text(
+                    title,
+                    style: TextStyling.semiBold.copyWith(
+                      color:
+                          isSelected ? AppColors.white : AppColors.appDarkBlue,
+                      fontSize: fontSize ?? 12.sp,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
         ),
       ),
     );

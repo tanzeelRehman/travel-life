@@ -5,17 +5,34 @@
 // **************************************************************************
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:flutter/material.dart' as _i13;
+import 'package:flutter/material.dart' as _i24;
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart' as _i1;
-import 'package:stacked_services/stacked_services.dart' as _i18;
+import 'package:stacked_services/stacked_services.dart' as _i32;
+import 'package:starter_app/src/base/enums/group_action.dart' as _i31;
+import 'package:starter_app/src/base/enums/group_join.dart' as _i30;
+import 'package:starter_app/src/base/enums/group_type.dart' as _i29;
 import 'package:starter_app/src/base/enums/vehicle_registration_action.dart'
-    as _i14;
-import 'package:starter_app/src/models/accessory.dart' as _i17;
-import 'package:starter_app/src/models/operating_cost.dart' as _i16;
-import 'package:starter_app/src/models/vehicle.dart' as _i15;
+    as _i25;
+import 'package:starter_app/src/models/accessory.dart' as _i28;
+import 'package:starter_app/src/models/operating_cost.dart' as _i27;
+import 'package:starter_app/src/models/vehicle.dart' as _i26;
 import 'package:starter_app/src/views/email_confirmation/email_confirmation_view.dart'
     as _i8;
+import 'package:starter_app/src/views/groups/add_member_view.dart' as _i21;
+import 'package:starter_app/src/views/groups/all_members_view.dart' as _i22;
+import 'package:starter_app/src/views/groups/group_create_view.dart' as _i20;
+import 'package:starter_app/src/views/groups/group_home_view.dart' as _i18;
+import 'package:starter_app/src/views/groups/group_join_requests_view.dart'
+    as _i17;
+import 'package:starter_app/src/views/groups/group_join_view.dart' as _i16;
+import 'package:starter_app/src/views/groups/group_member_profile_view.dart'
+    as _i19;
+import 'package:starter_app/src/views/groups/groups_lists_view.dart' as _i14;
+import 'package:starter_app/src/views/groups/groups_main_view.dart' as _i13;
+import 'package:starter_app/src/views/groups/invite_middle_screen_view.dart'
+    as _i23;
+import 'package:starter_app/src/views/groups/my_groups_view.dart' as _i15;
 import 'package:starter_app/src/views/home/home_view.dart' as _i6;
 import 'package:starter_app/src/views/login/login_view.dart' as _i5;
 import 'package:starter_app/src/views/profile/profile_view.dart' as _i7;
@@ -54,6 +71,28 @@ class Routes {
 
   static const accessoryDetailView = '/accessory-detail-view';
 
+  static const groupsMainView = '/groups-main-view';
+
+  static const groupsListsView = '/groups-lists-view';
+
+  static const myGroupsView = '/my-groups-view';
+
+  static const groupJoinView = '/group-join-view';
+
+  static const groupJoinRequestsView = '/group-join-requests-view';
+
+  static const groupHomeView = '/group-home-view';
+
+  static const groupMemberProfileView = '/group-member-profile-view';
+
+  static const groupCreateView = '/group-create-view';
+
+  static const addMemberView = '/add-member-view';
+
+  static const allMembersView = '/all-members-view';
+
+  static const inviteMiddleScreenView = '/invite-middle-screen-view';
+
   static const all = <String>{
     splashView,
     welcomeView,
@@ -66,6 +105,17 @@ class Routes {
     vehicleDetailView,
     operationalCostDetailView,
     accessoryDetailView,
+    groupsMainView,
+    groupsListsView,
+    myGroupsView,
+    groupJoinView,
+    groupJoinRequestsView,
+    groupHomeView,
+    groupMemberProfileView,
+    groupCreateView,
+    addMemberView,
+    allMembersView,
+    inviteMiddleScreenView,
   };
 }
 
@@ -115,60 +165,104 @@ class StackedRouter extends _i1.RouterBase {
       Routes.accessoryDetailView,
       page: _i12.AccessoryDetailView,
     ),
+    _i1.RouteDef(
+      Routes.groupsMainView,
+      page: _i13.GroupsMainView,
+    ),
+    _i1.RouteDef(
+      Routes.groupsListsView,
+      page: _i14.GroupsListsView,
+    ),
+    _i1.RouteDef(
+      Routes.myGroupsView,
+      page: _i15.MyGroupsView,
+    ),
+    _i1.RouteDef(
+      Routes.groupJoinView,
+      page: _i16.GroupJoinView,
+    ),
+    _i1.RouteDef(
+      Routes.groupJoinRequestsView,
+      page: _i17.GroupJoinRequestsView,
+    ),
+    _i1.RouteDef(
+      Routes.groupHomeView,
+      page: _i18.GroupHomeView,
+    ),
+    _i1.RouteDef(
+      Routes.groupMemberProfileView,
+      page: _i19.GroupMemberProfileView,
+    ),
+    _i1.RouteDef(
+      Routes.groupCreateView,
+      page: _i20.GroupCreateView,
+    ),
+    _i1.RouteDef(
+      Routes.addMemberView,
+      page: _i21.AddMemberView,
+    ),
+    _i1.RouteDef(
+      Routes.allMembersView,
+      page: _i22.AllMembersView,
+    ),
+    _i1.RouteDef(
+      Routes.inviteMiddleScreenView,
+      page: _i23.InviteMiddleScreenView,
+    ),
   ];
 
   final _pagesMap = <Type, _i1.StackedRouteFactory>{
     _i2.SplashView: (data) {
-      return _i13.MaterialPageRoute<dynamic>(
+      return _i24.MaterialPageRoute<dynamic>(
         builder: (context) => _i2.SplashView(),
         settings: data,
       );
     },
     _i3.WelcomeView: (data) {
-      return _i13.MaterialPageRoute<dynamic>(
+      return _i24.MaterialPageRoute<dynamic>(
         builder: (context) => _i3.WelcomeView(),
         settings: data,
       );
     },
     _i4.RegisterView: (data) {
-      return _i13.MaterialPageRoute<dynamic>(
+      return _i24.MaterialPageRoute<dynamic>(
         builder: (context) => _i4.RegisterView(),
         settings: data,
       );
     },
     _i5.LoginView: (data) {
-      return _i13.MaterialPageRoute<dynamic>(
+      return _i24.MaterialPageRoute<dynamic>(
         builder: (context) => _i5.LoginView(),
         settings: data,
       );
     },
     _i6.HomeView: (data) {
-      return _i13.MaterialPageRoute<dynamic>(
+      return _i24.MaterialPageRoute<dynamic>(
         builder: (context) => _i6.HomeView(),
         settings: data,
       );
     },
     _i7.ProfileView: (data) {
-      return _i13.MaterialPageRoute<dynamic>(
+      return _i24.MaterialPageRoute<dynamic>(
         builder: (context) => _i7.ProfileView(),
         settings: data,
       );
     },
     _i8.EmailConfrimationView: (data) {
-      return _i13.MaterialPageRoute<dynamic>(
+      return _i24.MaterialPageRoute<dynamic>(
         builder: (context) => _i8.EmailConfrimationView(),
         settings: data,
       );
     },
     _i9.VehicleRegistrationView: (data) {
-      return _i13.MaterialPageRoute<dynamic>(
+      return _i24.MaterialPageRoute<dynamic>(
         builder: (context) => _i9.VehicleRegistrationView(),
         settings: data,
       );
     },
     _i10.VehicleDetailView: (data) {
       final args = data.getArgs<VehicleDetailViewArguments>(nullOk: false);
-      return _i13.MaterialPageRoute<dynamic>(
+      return _i24.MaterialPageRoute<dynamic>(
         builder: (context) =>
             _i10.VehicleDetailView(action: args.action, vehicle: args.vehicle),
         settings: data,
@@ -177,7 +271,7 @@ class StackedRouter extends _i1.RouterBase {
     _i11.OperationalCostDetailView: (data) {
       final args =
           data.getArgs<OperationalCostDetailViewArguments>(nullOk: false);
-      return _i13.MaterialPageRoute<dynamic>(
+      return _i24.MaterialPageRoute<dynamic>(
         builder: (context) => _i11.OperationalCostDetailView(
             action: args.action,
             operatingCost: args.operatingCost,
@@ -187,11 +281,82 @@ class StackedRouter extends _i1.RouterBase {
     },
     _i12.AccessoryDetailView: (data) {
       final args = data.getArgs<AccessoryDetailViewArguments>(nullOk: false);
-      return _i13.MaterialPageRoute<dynamic>(
+      return _i24.MaterialPageRoute<dynamic>(
         builder: (context) => _i12.AccessoryDetailView(
             action: args.action,
             accessory: args.accessory,
             vehicle: args.vehicle),
+        settings: data,
+      );
+    },
+    _i13.GroupsMainView: (data) {
+      return _i24.MaterialPageRoute<dynamic>(
+        builder: (context) => _i13.GroupsMainView(),
+        settings: data,
+      );
+    },
+    _i14.GroupsListsView: (data) {
+      final args = data.getArgs<GroupsListsViewArguments>(nullOk: false);
+      return _i24.MaterialPageRoute<dynamic>(
+        builder: (context) => _i14.GroupsListsView(args.groupType),
+        settings: data,
+      );
+    },
+    _i15.MyGroupsView: (data) {
+      return _i24.MaterialPageRoute<dynamic>(
+        builder: (context) => _i15.MyGroupsView(),
+        settings: data,
+      );
+    },
+    _i16.GroupJoinView: (data) {
+      final args = data.getArgs<GroupJoinViewArguments>(nullOk: false);
+      return _i24.MaterialPageRoute<dynamic>(
+        builder: (context) =>
+            _i16.GroupJoinView(args.groupJoin, args.groupName),
+        settings: data,
+      );
+    },
+    _i17.GroupJoinRequestsView: (data) {
+      return _i24.MaterialPageRoute<dynamic>(
+        builder: (context) => _i17.GroupJoinRequestsView(),
+        settings: data,
+      );
+    },
+    _i18.GroupHomeView: (data) {
+      final args = data.getArgs<GroupHomeViewArguments>(nullOk: false);
+      return _i24.MaterialPageRoute<dynamic>(
+        builder: (context) => _i18.GroupHomeView(groupName: args.groupName),
+        settings: data,
+      );
+    },
+    _i19.GroupMemberProfileView: (data) {
+      return _i24.MaterialPageRoute<dynamic>(
+        builder: (context) => _i19.GroupMemberProfileView(),
+        settings: data,
+      );
+    },
+    _i20.GroupCreateView: (data) {
+      final args = data.getArgs<GroupCreateViewArguments>(nullOk: false);
+      return _i24.MaterialPageRoute<dynamic>(
+        builder: (context) => _i20.GroupCreateView(action: args.action),
+        settings: data,
+      );
+    },
+    _i21.AddMemberView: (data) {
+      return _i24.MaterialPageRoute<dynamic>(
+        builder: (context) => _i21.AddMemberView(),
+        settings: data,
+      );
+    },
+    _i22.AllMembersView: (data) {
+      return _i24.MaterialPageRoute<dynamic>(
+        builder: (context) => _i22.AllMembersView(),
+        settings: data,
+      );
+    },
+    _i23.InviteMiddleScreenView: (data) {
+      return _i24.MaterialPageRoute<dynamic>(
+        builder: (context) => _i23.InviteMiddleScreenView(),
         settings: data,
       );
     },
@@ -210,9 +375,9 @@ class VehicleDetailViewArguments {
     required this.vehicle,
   });
 
-  final _i14.VehicleRegistrationAction action;
+  final _i25.VehicleRegistrationAction action;
 
-  final _i15.Vehicle? vehicle;
+  final _i26.Vehicle? vehicle;
 
   @override
   String toString() {
@@ -238,11 +403,11 @@ class OperationalCostDetailViewArguments {
     this.vehicle,
   });
 
-  final _i14.VehicleRegistrationAction action;
+  final _i25.VehicleRegistrationAction action;
 
-  final _i16.OperatingCost? operatingCost;
+  final _i27.OperatingCost? operatingCost;
 
-  final _i15.Vehicle? vehicle;
+  final _i26.Vehicle? vehicle;
 
   @override
   String toString() {
@@ -270,11 +435,11 @@ class AccessoryDetailViewArguments {
     this.vehicle,
   });
 
-  final _i14.VehicleRegistrationAction action;
+  final _i25.VehicleRegistrationAction action;
 
-  final _i17.Accessory? accessory;
+  final _i28.Accessory? accessory;
 
-  final _i15.Vehicle? vehicle;
+  final _i26.Vehicle? vehicle;
 
   @override
   String toString() {
@@ -295,7 +460,100 @@ class AccessoryDetailViewArguments {
   }
 }
 
-extension NavigatorStateExtension on _i18.NavigationService {
+class GroupsListsViewArguments {
+  const GroupsListsViewArguments({required this.groupType});
+
+  final _i29.GroupType groupType;
+
+  @override
+  String toString() {
+    return '{"groupType": "$groupType"}';
+  }
+
+  @override
+  bool operator ==(covariant GroupsListsViewArguments other) {
+    if (identical(this, other)) return true;
+    return other.groupType == groupType;
+  }
+
+  @override
+  int get hashCode {
+    return groupType.hashCode;
+  }
+}
+
+class GroupJoinViewArguments {
+  const GroupJoinViewArguments({
+    required this.groupJoin,
+    required this.groupName,
+  });
+
+  final _i30.GroupJoin groupJoin;
+
+  final String groupName;
+
+  @override
+  String toString() {
+    return '{"groupJoin": "$groupJoin", "groupName": "$groupName"}';
+  }
+
+  @override
+  bool operator ==(covariant GroupJoinViewArguments other) {
+    if (identical(this, other)) return true;
+    return other.groupJoin == groupJoin && other.groupName == groupName;
+  }
+
+  @override
+  int get hashCode {
+    return groupJoin.hashCode ^ groupName.hashCode;
+  }
+}
+
+class GroupHomeViewArguments {
+  const GroupHomeViewArguments({required this.groupName});
+
+  final String groupName;
+
+  @override
+  String toString() {
+    return '{"groupName": "$groupName"}';
+  }
+
+  @override
+  bool operator ==(covariant GroupHomeViewArguments other) {
+    if (identical(this, other)) return true;
+    return other.groupName == groupName;
+  }
+
+  @override
+  int get hashCode {
+    return groupName.hashCode;
+  }
+}
+
+class GroupCreateViewArguments {
+  const GroupCreateViewArguments({required this.action});
+
+  final _i31.GroupAction action;
+
+  @override
+  String toString() {
+    return '{"action": "$action"}';
+  }
+
+  @override
+  bool operator ==(covariant GroupCreateViewArguments other) {
+    if (identical(this, other)) return true;
+    return other.action == action;
+  }
+
+  @override
+  int get hashCode {
+    return action.hashCode;
+  }
+}
+
+extension NavigatorStateExtension on _i32.NavigationService {
   Future<dynamic> navigateToSplashView([
     int? routerId,
     bool preventDuplicates = true,
@@ -409,8 +667,8 @@ extension NavigatorStateExtension on _i18.NavigationService {
   }
 
   Future<dynamic> navigateToVehicleDetailView({
-    required _i14.VehicleRegistrationAction action,
-    required _i15.Vehicle? vehicle,
+    required _i25.VehicleRegistrationAction action,
+    required _i26.Vehicle? vehicle,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -426,9 +684,9 @@ extension NavigatorStateExtension on _i18.NavigationService {
   }
 
   Future<dynamic> navigateToOperationalCostDetailView({
-    required _i14.VehicleRegistrationAction action,
-    _i16.OperatingCost? operatingCost,
-    _i15.Vehicle? vehicle,
+    required _i25.VehicleRegistrationAction action,
+    _i27.OperatingCost? operatingCost,
+    _i26.Vehicle? vehicle,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -445,9 +703,9 @@ extension NavigatorStateExtension on _i18.NavigationService {
   }
 
   Future<dynamic> navigateToAccessoryDetailView({
-    required _i14.VehicleRegistrationAction action,
-    _i17.Accessory? accessory,
-    _i15.Vehicle? vehicle,
+    required _i25.VehicleRegistrationAction action,
+    _i28.Accessory? accessory,
+    _i26.Vehicle? vehicle,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -457,6 +715,170 @@ extension NavigatorStateExtension on _i18.NavigationService {
     return navigateTo<dynamic>(Routes.accessoryDetailView,
         arguments: AccessoryDetailViewArguments(
             action: action, accessory: accessory, vehicle: vehicle),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> navigateToGroupsMainView([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return navigateTo<dynamic>(Routes.groupsMainView,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> navigateToGroupsListsView({
+    required _i29.GroupType groupType,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return navigateTo<dynamic>(Routes.groupsListsView,
+        arguments: GroupsListsViewArguments(groupType: groupType),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> navigateToMyGroupsView([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return navigateTo<dynamic>(Routes.myGroupsView,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> navigateToGroupJoinView({
+    required _i30.GroupJoin groupJoin,
+    required String groupName,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return navigateTo<dynamic>(Routes.groupJoinView,
+        arguments:
+            GroupJoinViewArguments(groupJoin: groupJoin, groupName: groupName),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> navigateToGroupJoinRequestsView([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return navigateTo<dynamic>(Routes.groupJoinRequestsView,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> navigateToGroupHomeView({
+    required String groupName,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return navigateTo<dynamic>(Routes.groupHomeView,
+        arguments: GroupHomeViewArguments(groupName: groupName),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> navigateToGroupMemberProfileView([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return navigateTo<dynamic>(Routes.groupMemberProfileView,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> navigateToGroupCreateView({
+    required _i31.GroupAction action,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return navigateTo<dynamic>(Routes.groupCreateView,
+        arguments: GroupCreateViewArguments(action: action),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> navigateToAddMemberView([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return navigateTo<dynamic>(Routes.addMemberView,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> navigateToAllMembersView([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return navigateTo<dynamic>(Routes.allMembersView,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> navigateToInviteMiddleScreenView([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return navigateTo<dynamic>(Routes.inviteMiddleScreenView,
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
@@ -576,8 +998,8 @@ extension NavigatorStateExtension on _i18.NavigationService {
   }
 
   Future<dynamic> replaceWithVehicleDetailView({
-    required _i14.VehicleRegistrationAction action,
-    required _i15.Vehicle? vehicle,
+    required _i25.VehicleRegistrationAction action,
+    required _i26.Vehicle? vehicle,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -593,9 +1015,9 @@ extension NavigatorStateExtension on _i18.NavigationService {
   }
 
   Future<dynamic> replaceWithOperationalCostDetailView({
-    required _i14.VehicleRegistrationAction action,
-    _i16.OperatingCost? operatingCost,
-    _i15.Vehicle? vehicle,
+    required _i25.VehicleRegistrationAction action,
+    _i27.OperatingCost? operatingCost,
+    _i26.Vehicle? vehicle,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -612,9 +1034,9 @@ extension NavigatorStateExtension on _i18.NavigationService {
   }
 
   Future<dynamic> replaceWithAccessoryDetailView({
-    required _i14.VehicleRegistrationAction action,
-    _i17.Accessory? accessory,
-    _i15.Vehicle? vehicle,
+    required _i25.VehicleRegistrationAction action,
+    _i28.Accessory? accessory,
+    _i26.Vehicle? vehicle,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -624,6 +1046,170 @@ extension NavigatorStateExtension on _i18.NavigationService {
     return replaceWith<dynamic>(Routes.accessoryDetailView,
         arguments: AccessoryDetailViewArguments(
             action: action, accessory: accessory, vehicle: vehicle),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> replaceWithGroupsMainView([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return replaceWith<dynamic>(Routes.groupsMainView,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> replaceWithGroupsListsView({
+    required _i29.GroupType groupType,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return replaceWith<dynamic>(Routes.groupsListsView,
+        arguments: GroupsListsViewArguments(groupType: groupType),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> replaceWithMyGroupsView([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return replaceWith<dynamic>(Routes.myGroupsView,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> replaceWithGroupJoinView({
+    required _i30.GroupJoin groupJoin,
+    required String groupName,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return replaceWith<dynamic>(Routes.groupJoinView,
+        arguments:
+            GroupJoinViewArguments(groupJoin: groupJoin, groupName: groupName),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> replaceWithGroupJoinRequestsView([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return replaceWith<dynamic>(Routes.groupJoinRequestsView,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> replaceWithGroupHomeView({
+    required String groupName,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return replaceWith<dynamic>(Routes.groupHomeView,
+        arguments: GroupHomeViewArguments(groupName: groupName),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> replaceWithGroupMemberProfileView([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return replaceWith<dynamic>(Routes.groupMemberProfileView,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> replaceWithGroupCreateView({
+    required _i31.GroupAction action,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return replaceWith<dynamic>(Routes.groupCreateView,
+        arguments: GroupCreateViewArguments(action: action),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> replaceWithAddMemberView([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return replaceWith<dynamic>(Routes.addMemberView,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> replaceWithAllMembersView([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return replaceWith<dynamic>(Routes.allMembersView,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> replaceWithInviteMiddleScreenView([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return replaceWith<dynamic>(Routes.inviteMiddleScreenView,
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,

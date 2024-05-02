@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 import 'package:hexcolor/hexcolor.dart';
 
 class AppColors {
@@ -32,6 +34,9 @@ class AppColors {
   static HexColor eventMoneyManagerColor = HexColor("#20D256");
 
   static HexColor vehicleRegTextFieldBgColor = HexColor("#242C3B");
+
+  static Color blueGrayShade = Color(0xff444E65);
+  static Color appSkyBlueLight = Color(0xff34C8E8);
 
   static Gradient mainButtonGradient = LinearGradient(
     colors: [
@@ -171,4 +176,54 @@ class AppColors {
       blurStyle: BlurStyle.inner,
     ),
   ];
+  //! Groups
+  static BoxDecoration groupCardsDecoration = BoxDecoration(
+      borderRadius: BorderRadius.circular(15.r),
+      gradient: LinearGradient(colors: [
+        Color(0xff363E51),
+        Color(0xff4C5770),
+      ]),
+      border: GradientBoxBorder(
+        gradient: LinearGradient(colors: [
+          Color(0xffFFFFFF).withOpacity(.4),
+          Color(0xff000000).withOpacity(.4)
+        ]),
+        width: .5,
+      ));
+  static BoxDecoration groupCardsDecoration2MoreTransparent = BoxDecoration(
+      borderRadius: BorderRadius.circular(15.r),
+      gradient: LinearGradient(colors: [
+        Color(0xff353F54).withOpacity(.5),
+        Color(0xff222834).withOpacity(.5),
+      ]),
+      border: GradientBoxBorder(
+        gradient: LinearGradient(colors: [
+          Color(0xffFFFFFF).withOpacity(.4),
+          Color(0xff5A5A5A).withOpacity(.4),
+          Color(0xffA8A8A8).withOpacity(.4)
+        ]),
+        width: .5,
+      ));
+  static BoxDecoration groupCardsDecoration2LessTransparent = BoxDecoration(
+      borderRadius: BorderRadius.circular(15.r),
+      gradient: LinearGradient(colors: [
+        Color(0xff353F54).withOpacity(.95),
+        Color(0xff222834).withOpacity(.95),
+      ]),
+      border: GradientBoxBorder(
+        gradient: LinearGradient(colors: [
+          Color(0xffFFFFFF).withOpacity(.4),
+          Color(0xff5A5A5A).withOpacity(.4),
+          Color(0xffA8A8A8).withOpacity(.4)
+        ]),
+        width: .5,
+      ));
+  static GradientBoxBorder gradientBordersDecoration = GradientBoxBorder(
+    gradient: LinearGradient(colors: [
+      Color(0xffFFFFFF).withOpacity(.4),
+      Color(0xff5A5A5A).withOpacity(.4),
+      Color(0xffA8A8A8).withOpacity(.4)
+    ]),
+    width: 2,
+  );
 }
