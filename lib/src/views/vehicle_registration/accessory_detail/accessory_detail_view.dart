@@ -548,7 +548,6 @@ class AccessoryDetailView extends StackedView<AccessoryDetailViewModel> {
                                 MainButton(
                                   buttonText: 'Browse Files',
                                   onPressed: () {
-                                    //TODO: open file picker with restriction options
                                     model.onClickAddAttachments();
                                   },
                                   isLoading: false,

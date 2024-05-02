@@ -179,7 +179,6 @@ class VehicleDetailViewModel extends ReactiveViewModel
   init(VehicleRegistrationAction action, Vehicle? vehicle) async {
     _registrationAction = action;
     if (action == VehicleRegistrationAction.edit && vehicle != null) {
-      //TODO: set fields with the data
       _setFieldsForEditing(vehicle);
       _getAccessoryCategories();
       if (selectedManufacturer != null) {

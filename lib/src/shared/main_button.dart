@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:starter_app/src/styles/app_colors.dart';
 import 'package:starter_app/src/styles/text_theme.dart';
 
-class MainButton extends StatefulWidget {
+class MainButton extends StatelessWidget {
   final String buttonText;
   final Color buttonFontColor;
   final VoidCallback? onPressed;
@@ -16,6 +16,7 @@ class MainButton extends StatefulWidget {
   final Gradient? gradient;
   final BorderRadiusGeometry? borderRadius;
   final Widget? child;
+
   const MainButton({
     Key? key,
     required this.buttonText,
@@ -33,21 +34,16 @@ class MainButton extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<MainButton> createState() => _LoadingButtonState();
-}
-
-class _LoadingButtonState extends State<MainButton> {
-  @override
   Widget build(BuildContext context) {
     return Container(
-      height: widget.height ?? 60.h,
-      width: widget.fullWidth ? double.infinity : widget.width,
+      height: height ?? 60.h,
+      width: fullWidth ? double.infinity : width,
       decoration: BoxDecoration(
-        gradient: widget.gradient ?? AppColors.mainButtonGradient,
-        borderRadius: widget.borderRadius ?? BorderRadius.circular(10.r),
+        gradient: gradient ?? AppColors.mainButtonGradient,
+        borderRadius: borderRadius ?? BorderRadius.circular(10.r),
       ),
       child: ElevatedButton(
-        onPressed: widget.isLoading ? null : widget.onPressed,
+        onPressed: isLoading ? null : onPressed,
         style: ButtonStyle(
           elevation: MaterialStateProperty.all(3),
           backgroundColor: MaterialStateProperty.all(Colors.transparent),
@@ -58,13 +54,12 @@ class _LoadingButtonState extends State<MainButton> {
             ),
           ),
           padding: MaterialStatePropertyAll(
-            widget.padding ??
-                EdgeInsets.symmetric(vertical: 10.h, horizontal: 24.w),
+            padding ?? EdgeInsets.symmetric(vertical: 10.h, horizontal: 24.w),
           ),
           visualDensity: VisualDensity.compact,
           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
         ),
-        child: widget.isLoading
+        child: isLoading
             ? Padding(
                 padding: const EdgeInsets.all(4.0),
                 child: Transform.scale(
@@ -74,17 +69,14 @@ class _LoadingButtonState extends State<MainButton> {
                   ),
                 ),
               )
-            : widget.child ??
+            : child ??
                 Text(
-                  widget.buttonText,
+                  buttonText,
                   style: TextStyling.bold.copyWith(
-                    fontSize: widget.fontSize ?? 18.sp,
+                    fontSize: fontSize ?? 18.sp,
                   ),
                 ),
       ),
     );
   }
 }
-
-
-//TODO: make this widget a stateless widget
