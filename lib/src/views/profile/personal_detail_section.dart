@@ -89,8 +89,8 @@ class PersonalDetailSection extends StatelessWidget {
                 titleText: 'Birth Date',
                 itemTextStyle: TextStyling.bold.copyWith(),
                 textColor: AppColors.white,
-                confirmTextColor: AppColors.appSkyBlue,
-                cancelTextColor: AppColors.appFaddedBlue,
+                // confirmTextColor: AppColors.appSkyBlue,
+                // cancelTextColor: AppColors.appFaddedBlue,
                 lastDate: DateTime.now(),
                 initialDate: model.dob ?? DateTime.now(),
               );
