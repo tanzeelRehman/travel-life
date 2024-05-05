@@ -118,15 +118,13 @@ class GroupJoinView extends StackedView<GroupJoinViewModel> {
                             Text(' Total Members', style: TextStyling.thin)
                           ],
                         ),
-                        GestureDetector(
-                          onTap: () {
-                            model.navigateToSeeAllMembers();
-                          },
-                          child: Text('See all',
-                              style: TextStyling.thin.copyWith(
-                                  color: AppColors.appSkyBlue,
-                                  decoration: TextDecoration.underline)),
-                        )
+                        // GestureDetector(
+                        //   onTap: () {},
+                        //   child: Text('See all',
+                        //       style: TextStyling.thin.copyWith(
+                        //           color: AppColors.appSkyBlue,
+                        //           decoration: TextDecoration.underline)),
+                        // )
                       ],
                     ),
                     SizedBox(
