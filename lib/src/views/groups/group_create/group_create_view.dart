@@ -26,7 +26,7 @@ import 'package:starter_app/src/styles/app_colors.dart';
 import 'package:starter_app/src/styles/text_theme.dart';
 import 'package:starter_app/src/views/bottomsheets/manufacturer_bottomsheet/manufacturer_bottomsheet_view.dart';
 import 'package:starter_app/src/views/bottomsheets/vehicle_model_bottomsheet/vehicle_model_bottomsheet_view.dart';
-import 'package:starter_app/src/views/groups/models/group_create_view_model.dart';
+import 'package:starter_app/src/views/groups/group_create/group_create_view_model.dart';
 import 'package:starter_app/src/views/vehicle_registration/vehicle_detail/vehicle_detail_view_model.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 

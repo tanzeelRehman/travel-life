@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 import 'package:starter_app/src/styles/text_theme.dart';
-import 'package:starter_app/src/views/groups/models/add_member_view_model.dart';
+import 'package:starter_app/src/views/groups/add_members/add_member_view_model.dart';
 
 class AddMemberTile extends StatelessWidget {
   final String name;

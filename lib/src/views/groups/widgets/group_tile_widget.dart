@@ -1,23 +1,24 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:starter_app/generated/assets.dart';
+import 'package:starter_app/src/models/group.dart';
 import 'package:starter_app/src/styles/app_colors.dart';
 import 'package:starter_app/src/styles/text_theme.dart';
 
 class GroupsTile extends StatelessWidget {
-  final String imagepath;
-  final String groupName;
-  final String adminName;
-  final DateTime createdate;
+  // final String imagepath;
+  // final String groupName;
+  // final String adminName;
+  // final DateTime createdate;
+  final Group group;
   final Function() onAddIconTap;
   final Function() onMoreIconTap;
   final Function() onArrowIconTap;
   const GroupsTile({
     Key? key,
-    required this.imagepath,
-    required this.groupName,
-    required this.adminName,
-    required this.createdate,
+    required this.group,
     required this.onAddIconTap,
     required this.onMoreIconTap,
     required this.onArrowIconTap,
@@ -32,9 +33,14 @@ class GroupsTile extends StatelessWidget {
       decoration: AppColors.groupCardsDecoration,
       child: Row(
         children: [
-          ClipRRect(
+          Expanded(
+            child: ClipRRect(
               borderRadius: BorderRadius.circular(15.r),
-              child: Image.asset(imagepath)),
+              child: group.groupImage != null && group.groupImage!.isNotEmpty
+                  ? CachedNetworkImage(imageUrl: group.groupImage ?? "")
+                  : Image.asset(AssetImages.logo),
+            ),
+          ),
           SizedBox(
             width: 15.w,
           ),
@@ -73,7 +79,7 @@ class GroupsTile extends StatelessWidget {
                 ),
               ),
               Text(
-                groupName,
+                group.name ?? "",
                 style: TextStyling.semiBold.copyWith(fontSize: 15.sp),
               ),
               SizedBox(
@@ -85,7 +91,7 @@ class GroupsTile extends StatelessWidget {
                       style: TextStyling.thin.copyWith(fontSize: 14.sp),
                     ),
                     Text(
-                      adminName,
+                      group.admin?.firstname ?? "",
                       style: TextStyling.semiBold.copyWith(fontSize: 14.sp),
                     ),
                     Spacer(),
@@ -111,7 +117,7 @@ class GroupsTile extends StatelessWidget {
                 ),
               ),
               Text(
-                DateFormat.yMMMd().format(createdate),
+                DateFormat.yMMMd().format(group.createdAt ?? DateTime.now()),
                 style: TextStyling.thin.copyWith(fontSize: 14.sp),
               )
             ],

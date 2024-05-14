@@ -11,4 +11,7 @@ class SupabaseTables {
 
   static const accessoryCategories = 'AccessoryCategory';
   static const operatingCostCategories = 'CostCategories';
+
+  static const groups = 'groups';
+  static const groupMemebers = 'group_members';
 }

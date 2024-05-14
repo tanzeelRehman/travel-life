@@ -11,12 +11,13 @@ import 'package:starter_app/generated/assets.dart';
 import 'package:starter_app/src/base/enums/group_join.dart';
 import 'package:starter_app/src/base/enums/group_type.dart';
 import 'package:starter_app/src/base/utils/utils.dart';
+import 'package:starter_app/src/models/group.dart';
 import 'package:starter_app/src/services/local/navigation_service.dart';
 import 'package:starter_app/src/shared/custom_app_bar.dart';
 import 'package:starter_app/src/styles/app_colors.dart';
 import 'package:starter_app/src/styles/text_theme.dart';
-import 'package:starter_app/src/views/groups/models/groups_lists_view_model.dart';
-import 'package:starter_app/src/views/groups/models/groups_main_view_model.dart';
+import 'package:starter_app/src/views/groups/groups_lists/groups_lists_view_model.dart';
+import 'package:starter_app/src/views/groups/groups_main/groups_main_view_model.dart';
 import 'package:starter_app/src/views/groups/widgets/group_tile_widget.dart';
 
 class GroupsListsView extends StackedView<GroupsListsViewModel> {
@@ -61,10 +62,12 @@ class GroupsListsView extends StackedView<GroupsListsViewModel> {
                           itemCount: 8,
                           itemBuilder: (context, index) {
                             return GroupsTile(
-                              adminName: "Tanzeel",
-                              createdate: DateTime.now(),
-                              groupName: "Scouts",
-                              imagepath: AssetImages.sampleGroupImage,
+                              // adminName: "Tanzeel",
+                              // createdate: DateTime.now(),
+                              // groupName: "Scouts",
+                              // imagepath: AssetImages.sampleGroupImage,
+                              group: Group.dummyGroup,
+
                               onAddIconTap: () {},
                               onArrowIconTap: () {
                                 NavService.navigateToGroupJoinScreen(
@@ -83,10 +86,12 @@ class GroupsListsView extends StackedView<GroupsListsViewModel> {
                           itemCount: 8,
                           itemBuilder: (context, index) {
                             return GroupsTile(
-                              adminName: "Tanzeel",
-                              createdate: DateTime.now(),
-                              groupName: "Scouts",
-                              imagepath: AssetImages.sampleGroupImage,
+                              // adminName: "Tanzeel",
+                              // createdate: DateTime.now(),
+                              // groupName: "Scouts",
+                              // imagepath: AssetImages.sampleGroupImage,
+                              group: Group.dummyGroup,
+
                               onAddIconTap: () {},
                               onArrowIconTap: () {
                                 NavService.navigateToGroupJoinScreen(

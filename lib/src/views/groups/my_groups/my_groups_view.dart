@@ -11,13 +11,14 @@ import 'package:stacked/stacked.dart';
 import 'package:starter_app/generated/assets.dart';
 import 'package:starter_app/src/base/enums/group_action.dart';
 import 'package:starter_app/src/base/utils/utils.dart';
+import 'package:starter_app/src/models/group.dart';
 import 'package:starter_app/src/services/local/navigation_service.dart';
 import 'package:starter_app/src/shared/custom_app_bar.dart';
 import 'package:starter_app/src/shared/custom_tab.dart';
 import 'package:starter_app/src/shared/tab_switcher_widget.dart';
 import 'package:starter_app/src/styles/app_colors.dart';
 import 'package:starter_app/src/styles/text_theme.dart';
-import 'package:starter_app/src/views/groups/models/my_groups_view_model.dart';
+import 'package:starter_app/src/views/groups/my_groups/my_groups_view_model.dart';
 import 'package:starter_app/src/views/groups/widgets/group_tile_widget.dart';
 import 'package:starter_app/src/views/groups/widgets/groups_card.dart';
 import 'package:starter_app/src/views/groups/widgets/groups_invite_tile_widget.dart';
@@ -148,10 +149,11 @@ class MyGroupsView extends StackedView<MyGroupsViewModel> {
                     child: ListView.builder(
                       itemBuilder: (context, index) {
                         return GroupsTile(
-                          adminName: "Tanzeel",
-                          createdate: DateTime.now(),
-                          groupName: "Scouts",
-                          imagepath: AssetImages.sampleGroupImage,
+                          // adminName: "Tanzeel",
+                          // createdate: DateTime.now(),
+                          // groupName: "Scouts",
+                          // imagepath: AssetImages.sampleGroupImage,
+                          group: Group.dummyGroup,
                           onAddIconTap: () {},
                           onArrowIconTap: () {
                             print('tapp');

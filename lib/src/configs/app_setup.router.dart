@@ -19,20 +19,28 @@ import 'package:starter_app/src/models/operating_cost.dart' as _i27;
 import 'package:starter_app/src/models/vehicle.dart' as _i26;
 import 'package:starter_app/src/views/email_confirmation/email_confirmation_view.dart'
     as _i8;
-import 'package:starter_app/src/views/groups/add_member_view.dart' as _i21;
-import 'package:starter_app/src/views/groups/all_members_view.dart' as _i22;
-import 'package:starter_app/src/views/groups/group_create_view.dart' as _i20;
-import 'package:starter_app/src/views/groups/group_home_view.dart' as _i18;
-import 'package:starter_app/src/views/groups/group_join_requests_view.dart'
+import 'package:starter_app/src/views/groups/add_members/add_member_view.dart'
+    as _i21;
+import 'package:starter_app/src/views/groups/all_members/all_members_view.dart'
+    as _i22;
+import 'package:starter_app/src/views/groups/group_create/group_create_view.dart'
+    as _i20;
+import 'package:starter_app/src/views/groups/group_home/group_home_view.dart'
+    as _i18;
+import 'package:starter_app/src/views/groups/group_join_requests/group_join_requests_view.dart'
     as _i17;
-import 'package:starter_app/src/views/groups/group_join_view.dart' as _i16;
-import 'package:starter_app/src/views/groups/group_member_profile_view.dart'
+import 'package:starter_app/src/views/groups/group_join/group_join_view.dart'
+    as _i16;
+import 'package:starter_app/src/views/groups/group_member_profile/group_member_profile_view.dart'
     as _i19;
-import 'package:starter_app/src/views/groups/groups_lists_view.dart' as _i14;
-import 'package:starter_app/src/views/groups/groups_main_view.dart' as _i13;
-import 'package:starter_app/src/views/groups/invite_middle_screen_view.dart'
+import 'package:starter_app/src/views/groups/groups_lists/groups_lists_view.dart'
+    as _i14;
+import 'package:starter_app/src/views/groups/groups_main/groups_main_view.dart'
+    as _i13;
+import 'package:starter_app/src/views/groups/invite_middle_screen/invite_middle_screen_view.dart'
     as _i23;
-import 'package:starter_app/src/views/groups/my_groups_view.dart' as _i15;
+import 'package:starter_app/src/views/groups/my_groups/my_groups_view.dart'
+    as _i15;
 import 'package:starter_app/src/views/home/home_view.dart' as _i6;
 import 'package:starter_app/src/views/login/login_view.dart' as _i5;
 import 'package:starter_app/src/views/profile/profile_view.dart' as _i7;

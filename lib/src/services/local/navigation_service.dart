@@ -10,7 +10,7 @@ import 'package:starter_app/src/configs/app_setup.router.dart';
 import 'package:starter_app/src/models/accessory.dart';
 import 'package:starter_app/src/models/operating_cost.dart';
 import 'package:starter_app/src/models/vehicle.dart';
-import 'package:starter_app/src/views/groups/models/group_create_view_model.dart';
+import 'package:starter_app/src/views/groups/group_create/group_create_view_model.dart';
 
 class NavService {
   static NavigationService? _navigationService = locator<NavigationService>();

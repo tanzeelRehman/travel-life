@@ -19,7 +19,7 @@ import 'package:starter_app/src/shared/tab_switcher_widget.dart';
 import 'package:starter_app/src/styles/app_colors.dart';
 import 'package:starter_app/src/styles/text_theme.dart';
 import 'package:starter_app/src/views/dialogs/groups_dialog/remove_person_dialog.dart';
-import 'package:starter_app/src/views/groups/models/group_member_profile_view_model.dart';
+import 'package:starter_app/src/views/groups/group_member_profile/group_member_profile_view_model.dart';
 import 'package:starter_app/src/views/profile/extended_profile_section.dart';
 import 'package:starter_app/src/views/profile/personal_detail_section.dart';
 import 'package:starter_app/src/views/profile/profile_view_model.dart';

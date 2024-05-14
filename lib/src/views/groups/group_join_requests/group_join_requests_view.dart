@@ -14,9 +14,9 @@ import 'package:starter_app/src/base/utils/utils.dart';
 import 'package:starter_app/src/shared/custom_app_bar.dart';
 import 'package:starter_app/src/styles/app_colors.dart';
 import 'package:starter_app/src/styles/text_theme.dart';
-import 'package:starter_app/src/views/groups/models/group_join_requests_view_model.dart';
-import 'package:starter_app/src/views/groups/models/groups_lists_view_model.dart';
-import 'package:starter_app/src/views/groups/models/groups_main_view_model.dart';
+import 'package:starter_app/src/views/groups/group_join_requests/group_join_requests_view_model.dart';
+import 'package:starter_app/src/views/groups/groups_lists/groups_lists_view_model.dart';
+import 'package:starter_app/src/views/groups/groups_main/groups_main_view_model.dart';
 import 'package:starter_app/src/views/groups/widgets/group_tile_widget.dart';
 
 class GroupJoinRequestsView extends StackedView<GroupJoinRequestsViewModel> {

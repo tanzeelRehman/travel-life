@@ -193,4 +193,8 @@ class AppUser {
   }
 
   String toJson() => json.encode(toMap());
+
+  static List<AppUser>? fromJsonList(List<dynamic>? jsonList) {
+    return jsonList?.map((e) => AppUser.fromMap(e)).toList();
+  }
 }

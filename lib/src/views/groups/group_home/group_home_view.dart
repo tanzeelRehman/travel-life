@@ -16,9 +16,9 @@ import 'package:starter_app/src/shared/custom_app_bar.dart';
 import 'package:starter_app/src/shared/custom_app_bar_with_transparent_bg.dart';
 import 'package:starter_app/src/styles/app_colors.dart';
 import 'package:starter_app/src/styles/text_theme.dart';
-import 'package:starter_app/src/views/groups/models/group_home_view_model.dart';
-import 'package:starter_app/src/views/groups/models/groups_lists_view_model.dart';
-import 'package:starter_app/src/views/groups/models/groups_main_view_model.dart';
+import 'package:starter_app/src/views/groups/group_home/group_home_view_model.dart';
+import 'package:starter_app/src/views/groups/groups_lists/groups_lists_view_model.dart';
+import 'package:starter_app/src/views/groups/groups_main/groups_main_view_model.dart';
 import 'package:starter_app/src/views/groups/widgets/group_tile_widget.dart';
 
 class GroupHomeView extends StackedView<GroupHomeViewModel> {
