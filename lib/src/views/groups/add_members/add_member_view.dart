@@ -1,28 +1,24 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:gradient_borders/box_borders/gradient_box_border.dart';
-import 'package:intl/intl.dart';
 import 'package:stacked/stacked.dart';
 
 import 'package:starter_app/generated/assets.dart';
-import 'package:starter_app/src/base/enums/group_type.dart';
 import 'package:starter_app/src/base/utils/utils.dart';
+import 'package:starter_app/src/models/group.dart';
 import 'package:starter_app/src/shared/custom_app_bar.dart';
-import 'package:starter_app/src/shared/vehicle_registration_textfield.dart';
+import 'package:starter_app/src/shared/spacing.dart';
 import 'package:starter_app/src/styles/app_colors.dart';
 import 'package:starter_app/src/styles/text_theme.dart';
 import 'package:starter_app/src/views/groups/add_members/add_member_view_model.dart';
-import 'package:starter_app/src/views/groups/groups_lists/groups_lists_view_model.dart';
-import 'package:starter_app/src/views/groups/groups_main/groups_main_view_model.dart';
 import 'package:starter_app/src/views/groups/widgets/add_member_searchbar.dart';
 import 'package:starter_app/src/views/groups/widgets/add_member_tile.dart';
-import 'package:starter_app/src/views/groups/widgets/group_tile_widget.dart';
 
 class AddMemberView extends StackedView<AddMemberViewModel> {
+  final Group group;
+
+  AddMemberView({required this.group});
+
   @override
   Widget builder(
       BuildContext context, AddMemberViewModel model, Widget? child) {
@@ -38,17 +34,16 @@ class AddMemberView extends StackedView<AddMemberViewModel> {
             opacity: 0.5,
           ),
         ),
-        child: Padding(
-          padding: EdgeInsets.only(top: 12.h),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CustomAppBar(
-                titleText: 'Add Members',
-              ),
-              Spacer(),
-              Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CustomAppBar(
+              titleText: 'Add Members',
+            ),
+            VerticalSpacing(30.h),
+            Expanded(
+              child: Container(
                 height: context.height * 0.85,
                 width: context.width,
                 padding: EdgeInsets.only(left: 15.w, right: 15.w, top: 25.h),
@@ -60,66 +55,70 @@ class AddMemberView extends StackedView<AddMemberViewModel> {
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     AddMemberSearchBar(
-                      seacrchController: TextEditingController(),
-                      onSearch: () {},
+                      seacrchController: model.searchController,
+                      onSearch: () {
+                        model.filterMembersList(model.searchController.text);
+                      },
+                      onChanged: (query) {
+                        model.filterMembersList(query);
+                      },
                     ),
-                    SizedBox(
-                      height: 15.h,
-                    ),
-                    SizedBox(
-                      width: context.width * 0.88,
-                      height: 35,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: model.selectedMembersList.length,
-                        itemBuilder: (context, index) {
-                          return selectedMemberChip(model, index);
-                        },
+                    if (model.selectedMembersList.isNotEmpty) ...[
+                      VerticalSpacing(20.h),
+                      SizedBox(
+                        height: 35,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: model.selectedMembersList.length,
+                          itemBuilder: (context, index) {
+                            return selectedMemberChip(model, index);
+                          },
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 8.h,
-                    ),
-                    SizedBox(
-                      height: context.height * 0.6,
-                      width: context.width * 0.88,
+                      VerticalSpacing(10.h),
+                    ],
+                    if (model.selectedMembersList.isEmpty)
+                      VerticalSpacing(10.h),
+                    Expanded(
                       child: ListView.builder(
-                        itemCount: model.allMembersList.length,
+                        itemCount: model.filterdMembersList.length,
                         itemBuilder: (context, index) {
                           return AddMemberTile(
-                              name: model.allMembersList[index], model: model);
+                            user: model.filterdMembersList[index],
+                            model: model,
+                          );
                         },
                       ),
                     ),
-                    SizedBox(
-                      height: 15.h,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        model.sendInvite();
-                      },
-                      child: Container(
-                        height: 56.h,
-                        alignment: Alignment.center,
-                        width: context.width * 0.88,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15.r),
-                          gradient: AppColors.mainButtonGradient,
-                        ),
-                        child: Text(
-                          'Send',
-                          style: TextStyling.bold,
+                    if (model.selectedMembersList.isNotEmpty) ...[
+                      SizedBox(height: 15.h),
+                      GestureDetector(
+                        onTap: () {
+                          model.sendInvite();
+                        },
+                        child: Container(
+                          height: 56.h,
+                          alignment: Alignment.center,
+                          width: context.width * 0.88,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15.r),
+                            gradient: AppColors.mainButtonGradient,
+                          ),
+                          child: Text(
+                            'Send',
+                            style: TextStyling.bold,
+                          ),
                         ),
                       ),
-                    )
+                      SizedBox(height: 15.h),
+                    ],
                   ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -141,7 +140,7 @@ class AddMemberView extends StackedView<AddMemberViewModel> {
         child: Row(
           children: [
             Text(
-              model.selectedMembersList[index],
+              model.selectedMembersList[index].firstname ?? '',
               style: TextStyling.medium,
             ),
             SizedBox(
@@ -162,5 +161,5 @@ class AddMemberView extends StackedView<AddMemberViewModel> {
       AddMemberViewModel();
 
   @override
-  void onViewModelReady(AddMemberViewModel model) => model.init();
+  void onViewModelReady(AddMemberViewModel model) => model.init(group);
 }

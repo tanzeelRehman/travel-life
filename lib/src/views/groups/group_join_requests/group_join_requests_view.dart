@@ -1,26 +1,20 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
-import 'package:gradient_borders/box_borders/gradient_box_border.dart';
-import 'package:intl/intl.dart';
 import 'package:stacked/stacked.dart';
 
 import 'package:starter_app/generated/assets.dart';
-import 'package:starter_app/src/base/enums/group_type.dart';
 import 'package:starter_app/src/base/utils/utils.dart';
+import 'package:starter_app/src/models/group.dart';
 import 'package:starter_app/src/shared/custom_app_bar.dart';
+import 'package:starter_app/src/shared/empty_state_widget.dart';
+import 'package:starter_app/src/shared/loading_indicator.dart';
 import 'package:starter_app/src/styles/app_colors.dart';
 import 'package:starter_app/src/styles/text_theme.dart';
 import 'package:starter_app/src/views/groups/group_join_requests/group_join_requests_view_model.dart';
-import 'package:starter_app/src/views/groups/groups_lists/groups_lists_view_model.dart';
-import 'package:starter_app/src/views/groups/groups_main/groups_main_view_model.dart';
-import 'package:starter_app/src/views/groups/widgets/group_tile_widget.dart';
 
 class GroupJoinRequestsView extends StackedView<GroupJoinRequestsViewModel> {
-  GroupJoinRequestsView();
+  final Group group;
+  GroupJoinRequestsView({required this.group});
   @override
   Widget builder(
       BuildContext context, GroupJoinRequestsViewModel model, Widget? child) {
@@ -35,88 +29,96 @@ class GroupJoinRequestsView extends StackedView<GroupJoinRequestsViewModel> {
             opacity: 0.5,
           ),
         ),
-        child: Padding(
-          padding: EdgeInsets.only(top: 12.h),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CustomAppBar(
-                titleText: 'Join Requests',
-              ),
-              Column(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CustomAppBar(
+              titleText: 'Join Requests',
+            ),
+            Expanded(
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  SizedBox(
-                    height: 20.h,
-                  ),
-                  Container(
-                    decoration: AppColors.groupCardsDecoration.copyWith(
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(25.r),
-                            topRight: Radius.circular(25.r))),
-                    height: MediaQuery.of(context).size.height * 0.85,
-                    width: MediaQuery.of(context).size.width,
-                    padding:
-                        EdgeInsets.only(left: 25.w, right: 15.w, top: 15.h),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              '13 Requests',
-                              style: TextStyling.bold,
-                            ),
-                            Row(
-                              children: [
-                                Container(
-                                  height: 25.h,
-                                  width: 25.h,
-                                  decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      gradient: AppColors.mainButtonGradient),
-                                  child: Icon(
-                                    Icons.add,
-                                    color: Colors.white,
-                                    size: 17.sp,
+                  SizedBox(height: 40.h),
+                  Expanded(
+                    child: Container(
+                      decoration: AppColors.groupCardsDecoration.copyWith(
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(25.r),
+                              topRight: Radius.circular(25.r))),
+                      height: MediaQuery.of(context).size.height * 0.85,
+                      width: MediaQuery.of(context).size.width,
+                      padding:
+                          EdgeInsets.only(left: 25.w, right: 15.w, top: 15.h),
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                '${model.joinRequests.length} Requests',
+                                style: TextStyling.bold,
+                              ),
+                              Row(
+                                children: [
+                                  Container(
+                                    height: 25.h,
+                                    width: 25.h,
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        gradient: AppColors.mainButtonGradient),
+                                    child: Icon(
+                                      Icons.add,
+                                      color: Colors.white,
+                                      size: 17.sp,
+                                    ),
                                   ),
-                                ),
-                                SizedBox(
-                                  width: 8.w,
-                                ),
-                                Text(
-                                  'Invite',
-                                  style: TextStyling.thin,
-                                )
-                              ],
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: 25.h,
-                        ),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.75,
-                          child: ListView.builder(
-                            itemBuilder: (context, index) {
-                              return JoinRequestTile(
-                                imagepath: AssetImages.sampleUser,
-                                days: '3',
-                                name: 'Muazzam',
-                                onAccept: () {},
-                                onreject: () {},
-                              );
-                            },
+                                  SizedBox(
+                                    width: 8.w,
+                                  ),
+                                  Text(
+                                    'Invite',
+                                    style: TextStyling.thin,
+                                  )
+                                ],
+                              )
+                            ],
                           ),
-                        )
-                      ],
+                          SizedBox(height: 15.h),
+                          Expanded(
+                            child: model.isBusy
+                                ? Center(
+                                    child: LoadingIndicator(
+                                      color: AppColors.appSkyBlue,
+                                    ),
+                                  )
+                                : model.joinRequests.isEmpty
+                                    ? Center(
+                                        child: EmptyStateWidget(
+                                          text: 'No Requests',
+                                        ),
+                                      )
+                                    : ListView.builder(
+                                        itemBuilder: (context, index) {
+                                          return JoinRequestTile(
+                                            imagepath: AssetImages.sampleUser,
+                                            days: '3',
+                                            name: 'Muazzam',
+                                            onAccept: () {},
+                                            onreject: () {},
+                                          );
+                                        },
+                                      ),
+                          )
+                        ],
+                      ),
                     ),
                   )
                 ],
-              )
-            ],
-          ),
+              ),
+            )
+          ],
         ),
       ),
     );
@@ -127,7 +129,7 @@ class GroupJoinRequestsView extends StackedView<GroupJoinRequestsViewModel> {
       GroupJoinRequestsViewModel();
 
   @override
-  void onViewModelReady(GroupJoinRequestsViewModel model) => model.init();
+  void onViewModelReady(GroupJoinRequestsViewModel model) => model.init(group);
 }
 
 class JoinRequestTile extends StatelessWidget {

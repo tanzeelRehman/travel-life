@@ -1,26 +1,16 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:flutter/cupertino.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:gradient_borders/box_borders/gradient_box_border.dart';
-import 'package:intl/intl.dart';
 import 'package:stacked/stacked.dart';
 
 import 'package:starter_app/generated/assets.dart';
-import 'package:starter_app/src/base/enums/group_type.dart';
 import 'package:starter_app/src/base/utils/utils.dart';
 import 'package:starter_app/src/models/group.dart';
-import 'package:starter_app/src/services/local/navigation_service.dart';
-import 'package:starter_app/src/shared/custom_app_bar.dart';
 import 'package:starter_app/src/shared/custom_app_bar_with_transparent_bg.dart';
 import 'package:starter_app/src/styles/app_colors.dart';
 import 'package:starter_app/src/styles/text_theme.dart';
 import 'package:starter_app/src/views/groups/group_home/group_home_view_model.dart';
-import 'package:starter_app/src/views/groups/groups_lists/groups_lists_view_model.dart';
-import 'package:starter_app/src/views/groups/groups_main/groups_main_view_model.dart';
-import 'package:starter_app/src/views/groups/widgets/group_tile_widget.dart';
 
 class GroupHomeView extends StackedView<GroupHomeViewModel> {
   final Group group;
@@ -54,17 +44,24 @@ class GroupHomeView extends StackedView<GroupHomeViewModel> {
                   children: [
                     Positioned(
                       child: SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.35,
-                          width: MediaQuery.of(context).size.width,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(25.r),
-                                bottomRight: Radius.circular(25.r)),
-                            child: Image.asset(
-                              AssetImages.sampleGroupImage,
-                              fit: BoxFit.fitWidth,
-                            ),
-                          )),
+                        height: MediaQuery.of(context).size.height * 0.35,
+                        width: MediaQuery.of(context).size.width,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(25.r),
+                            bottomRight: Radius.circular(25.r),
+                          ),
+                          child: group.groupImage != null
+                              ? CachedNetworkImage(
+                                  imageUrl: group.groupImage!,
+                                  fit: BoxFit.cover,
+                                )
+                              : Image.asset(
+                                  AssetImages.defaultImage,
+                                  fit: BoxFit.contain,
+                                ),
+                        ),
+                      ),
                     ),
                     Positioned(
                       top: 35.h,
@@ -73,51 +70,131 @@ class GroupHomeView extends StackedView<GroupHomeViewModel> {
                     ),
                     Positioned(
                       bottom: 20.h,
-                      child: seeMembersTile(context, 45, (() {
-                        model.navigateToSeeAllMembers();
-                      })),
+                      child: seeMembersTile(
+                        context,
+                        group.totalMembers ?? 0,
+                        (() {
+                          model.navigateToSeeAllMembers();
+                        }),
+                      ),
                     )
                   ],
                 ),
               ),
               //! START OF THE BODY --------------------------------------------
               //?================================================================>
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 27.w, vertical: 15.h),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: 20.h,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        subMenuCard(AssetImages.groupChatIcon, 'Chats', () {}),
-                        subMenuCard(
-                            AssetImages.groupJoinRequestsIcon, 'Join Requests',
-                            () {
-                          model.navigateToJoinRequestsScreen();
-                        }),
-                        subMenuCard(
-                            AssetImages.groupExpensesIcon, 'Expenses', () {}),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 25.h,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        subMenuCard(AssetImages.groupSettingsIcon, 'Settings',
-                            () {
-                          model.navigateToEditGroupDetails();
-                        }),
-                      ],
-                    ),
-                  ],
+              //WHEN im admin and the group is a private group
+              if (model.isGroupAdmin() && !(group.isPublic ?? true))
+                Padding(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 27.w, vertical: 15.h),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: 20.h,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          subMenuCard(
+                              AssetImages.groupChatIcon, 'Chats', () {}),
+                          subMenuCard(AssetImages.groupJoinRequestsIcon,
+                              'Join Requests', () {
+                            model.navigateToJoinRequestsScreen();
+                          }),
+                          subMenuCard(
+                              AssetImages.groupExpensesIcon, 'Expenses', () {}),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 25.h,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          subMenuCard(AssetImages.groupSettingsIcon, 'Settings',
+                              () {
+                            model.navigateToEditGroupDetails();
+                          }),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              )
+              //WHEN im admin and the group is a public group
+              if (model.isGroupAdmin() && (group.isPublic ?? true))
+                Padding(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 27.w, vertical: 15.h),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: 20.h,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          subMenuCard(
+                            AssetImages.groupChatIcon,
+                            'Chats',
+                            () {},
+                          ),
+                          subMenuCard(
+                            AssetImages.groupExpensesIcon,
+                            'Expenses',
+                            () {},
+                          ),
+                          subMenuCard(
+                            AssetImages.groupSettingsIcon,
+                            'Settings',
+                            () {
+                              model.navigateToEditGroupDetails();
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              //WHEN im not an admin
+              if (!model.isGroupAdmin())
+                Padding(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 27.w, vertical: 15.h),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: 20.h,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          subMenuCard(
+                            AssetImages.groupChatIcon,
+                            'Chats',
+                            () {},
+                          ),
+                          subMenuCard(
+                            AssetImages.groupExpensesIcon,
+                            'Expenses',
+                            () {},
+                          ),
+                          Opacity(
+                            opacity: 0,
+                            child: subMenuCard(
+                              AssetImages.groupExpensesIcon,
+                              'Expenses',
+                              () {},
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                )
             ],
           ),
         ),
@@ -152,7 +229,10 @@ class GroupHomeView extends StackedView<GroupHomeViewModel> {
 // ! Widgets -----------------------------------------------------------
 //?======================================================================
   SizedBox seeMembersTile(
-      BuildContext context, int memberCount, Function() onSeeAllMembers) {
+    BuildContext context,
+    int memberCount,
+    VoidCallback onSeeAllMembers,
+  ) {
     return SizedBox(
       width: context.width,
       child: Row(
@@ -193,5 +273,5 @@ class GroupHomeView extends StackedView<GroupHomeViewModel> {
       GroupHomeViewModel();
 
   @override
-  void onViewModelReady(GroupHomeViewModel model) => model.init();
+  void onViewModelReady(GroupHomeViewModel model) => model.init(group);
 }

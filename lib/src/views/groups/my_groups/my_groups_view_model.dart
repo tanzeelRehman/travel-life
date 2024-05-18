@@ -2,11 +2,12 @@ import 'package:stacked/stacked.dart';
 import 'package:starter_app/src/base/enums/group_action.dart';
 import 'package:starter_app/src/base/utils/constants.dart';
 import 'package:starter_app/src/models/group.dart';
-import 'package:starter_app/src/models/invited_group.dart';
+import 'package:starter_app/src/services/local/base/data_view_model.dart';
 import 'package:starter_app/src/services/local/navigation_service.dart';
 import 'package:starter_app/src/services/remote/base/database_view_model.dart';
 
-class MyGroupsViewModel extends ReactiveViewModel with DatabaseViewModel {
+class MyGroupsViewModel extends ReactiveViewModel
+    with DatabaseViewModel, DataViewModel {
   init() async {
     getMyGroups();
     getJoinedGroups();
@@ -14,10 +15,6 @@ class MyGroupsViewModel extends ReactiveViewModel with DatabaseViewModel {
   }
 
   int selectedTab = 0;
-
-  List<InvitedGroup> invites = [];
-  List<Group> myGroups = [];
-  List<Group> joinedGroups = [];
 
   bool invitesLoading = false;
   bool myGroupsLoading = false;
@@ -43,30 +40,37 @@ class MyGroupsViewModel extends ReactiveViewModel with DatabaseViewModel {
     notifyListeners();
   }
 
-  navigateToGroupEditPage() {
-    NavService.navigateToGroupCreateScreen(groupAction: GroupAction.edit);
+  navigateToGroupAddPage() {
+    NavService.navigateToGroupCreateScreen(
+        groupAction: GroupAction.add, group: null);
+  }
+
+  navigateToGroupEditPage(Group group) {
+    NavService.navigateToGroupCreateScreen(
+      groupAction: GroupAction.edit,
+      group: group,
+    );
   }
 
   navigateToGroupsHome(Group group) {
     NavService.navigateToGroupHomeScreen(group: group);
   }
 
-  //TODO: make all these lists available in the dataService. invites, mygroups, joinedgorups
   getInvites() async {
     setInvitesLoading(true);
-    invites = await databaseService.getInvitedGroups() ?? [];
+    dataService.invites = await databaseService.getInvitedGroups() ?? [];
     setInvitesLoading(false);
   }
 
   getMyGroups() async {
     setMyGroupsLoading(true);
-    myGroups = await databaseService.getMyCreatedGroups() ?? [];
+    dataService.myGroups = await databaseService.getMyCreatedGroups() ?? [];
     setMyGroupsLoading(false);
   }
 
   getJoinedGroups() async {
     setJoinedGroupsLoading(true);
-    joinedGroups = await databaseService.getJoinedGroups() ?? [];
+    dataService.joinedGroups = await databaseService.getJoinedGroups() ?? [];
     setJoinedGroupsLoading(false);
   }
 
@@ -76,6 +80,7 @@ class MyGroupsViewModel extends ReactiveViewModel with DatabaseViewModel {
     final res = await databaseService.acceptInviteRequest(groupMemberId);
     if (res) {
       Constants.customSuccessSnack('Invitation accepted');
+      getJoinedGroups();
       getInvites();
     }
     setBusy(false);
@@ -86,7 +91,7 @@ class MyGroupsViewModel extends ReactiveViewModel with DatabaseViewModel {
 
     final res = await databaseService.rejectInviteRequest(groupMemberId);
     if (res) {
-      Constants.customSuccessSnack('Invitation accepted');
+      Constants.customSuccessSnack('Invitation Rejected');
       getInvites();
     }
     setBusy(false);

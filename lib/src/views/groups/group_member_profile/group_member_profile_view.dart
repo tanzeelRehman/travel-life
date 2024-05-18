@@ -1,30 +1,24 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:get/get.dart';
 import 'package:stacked/stacked.dart';
 
 import 'package:starter_app/generated/assets.dart';
 import 'package:starter_app/src/base/utils/utils.dart';
+import 'package:starter_app/src/models/see_all_members_user.dart';
 import 'package:starter_app/src/shared/custom_app_bar.dart';
-import 'package:starter_app/src/shared/custom_tab.dart';
-import 'package:starter_app/src/shared/editable_profile_avatar.dart';
-import 'package:starter_app/src/shared/full_screen_loading_indicator.dart';
-import 'package:starter_app/src/shared/main_button.dart';
 import 'package:starter_app/src/shared/profile_textfield.dart';
 import 'package:starter_app/src/shared/spacing.dart';
-import 'package:starter_app/src/shared/tab_switcher_widget.dart';
 import 'package:starter_app/src/styles/app_colors.dart';
 import 'package:starter_app/src/styles/text_theme.dart';
 import 'package:starter_app/src/views/dialogs/groups_dialog/remove_person_dialog.dart';
 import 'package:starter_app/src/views/groups/group_member_profile/group_member_profile_view_model.dart';
-import 'package:starter_app/src/views/profile/extended_profile_section.dart';
-import 'package:starter_app/src/views/profile/personal_detail_section.dart';
-import 'package:starter_app/src/views/profile/profile_view_model.dart';
 
 class GroupMemberProfileView extends StackedView<GroupMemberProfileViewModel> {
+  final SeeAllMembersUser member;
+
+  const GroupMemberProfileView({Key? key, required this.member})
+      : super(key: key);
+
   @override
   Widget builder(
       BuildContext context, GroupMemberProfileViewModel model, Widget? child) {

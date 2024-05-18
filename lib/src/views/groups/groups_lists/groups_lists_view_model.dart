@@ -1,15 +1,19 @@
 import 'package:stacked/stacked.dart';
 import 'package:starter_app/src/base/enums/group_type.dart';
 import 'package:starter_app/src/models/group.dart';
+import 'package:starter_app/src/services/local/base/data_view_model.dart';
 import 'package:starter_app/src/services/local/navigation_service.dart';
 import 'package:starter_app/src/services/remote/base/database_view_model.dart';
 
-class GroupsListsViewModel extends ReactiveViewModel with DatabaseViewModel {
+class GroupsListsViewModel extends ReactiveViewModel
+    with DatabaseViewModel, DataViewModel {
   List<Group> groups = [];
   init(GroupType type) async {
     if (type == GroupType.public) {
+      groups = dataService.publicGroups;
       await loadPublicGroups();
     } else {
+      groups = dataService.privateGroups;
       await loadPrivateGroups();
     }
   }
@@ -20,14 +24,14 @@ class GroupsListsViewModel extends ReactiveViewModel with DatabaseViewModel {
 
   loadPublicGroups() async {
     setBusy(true);
-    groups = await databaseService.getPublicGroups() ?? [];
+    dataService.publicGroups = await databaseService.getPublicGroups() ?? [];
     notifyListeners();
     setBusy(false);
   }
 
   loadPrivateGroups() async {
     setBusy(true);
-    groups = await databaseService.getPrivateGroups() ?? [];
+    dataService.privateGroups = await databaseService.getPrivateGroups() ?? [];
     notifyListeners();
     setBusy(false);
   }

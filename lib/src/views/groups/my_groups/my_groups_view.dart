@@ -1,22 +1,19 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 
 import 'package:stacked/stacked.dart';
 
 import 'package:starter_app/generated/assets.dart';
-import 'package:starter_app/src/base/enums/group_action.dart';
 import 'package:starter_app/src/base/utils/utils.dart';
 import 'package:starter_app/src/models/group.dart';
-import 'package:starter_app/src/services/local/navigation_service.dart';
 import 'package:starter_app/src/shared/custom_app_bar.dart';
 import 'package:starter_app/src/shared/custom_tab.dart';
 import 'package:starter_app/src/shared/empty_state_widget.dart';
 import 'package:starter_app/src/shared/loading_indicator.dart';
+import 'package:starter_app/src/shared/main_floating_action_button.dart';
 import 'package:starter_app/src/shared/tab_switcher_widget.dart';
 import 'package:starter_app/src/styles/app_colors.dart';
-import 'package:starter_app/src/styles/text_theme.dart';
 import 'package:starter_app/src/views/groups/my_groups/my_groups_view_model.dart';
 import 'package:starter_app/src/views/groups/widgets/group_tile_widget.dart';
 import 'package:starter_app/src/views/groups/widgets/groups_card.dart';
@@ -26,6 +23,10 @@ class MyGroupsView extends StackedView<MyGroupsViewModel> {
   @override
   Widget builder(BuildContext context, MyGroupsViewModel model, Widget? child) {
     return Scaffold(
+      floatingActionButton: MainFloatingActionButton(
+        onTap: model.navigateToGroupAddPage,
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       body: Container(
         width: context.screenSize().width,
         height: context.completeHeight(),
@@ -51,7 +52,7 @@ class MyGroupsView extends StackedView<MyGroupsViewModel> {
               outerPadding: EdgeInsets.symmetric(horizontal: 20.w),
               tabs: [
                 CustomTab(
-                  count: model.myGroups.length,
+                  count: model.dataService.myGroups.length,
                   title: 'My Groups',
                   onTap: () {
                     model.onChangeTab(0);
@@ -59,7 +60,7 @@ class MyGroupsView extends StackedView<MyGroupsViewModel> {
                   isSelected: model.selectedTab == 0,
                 ),
                 CustomTab(
-                  count: model.joinedGroups.length,
+                  count: model.dataService.joinedGroups.length,
                   title: 'Joined Groups',
                   onTap: () {
                     model.onChangeTab(1);
@@ -67,7 +68,7 @@ class MyGroupsView extends StackedView<MyGroupsViewModel> {
                   isSelected: model.selectedTab == 1,
                 ),
                 CustomTab(
-                  count: model.invites.length,
+                  count: model.dataService.invites.length,
                   title: 'Invites',
                   onTap: () {
                     model.onChangeTab(2);
@@ -89,7 +90,7 @@ class MyGroupsView extends StackedView<MyGroupsViewModel> {
                         ),
                       ),
                     )
-                  : model.myGroups.isEmpty
+                  : model.dataService.myGroups.isEmpty
                       ? Expanded(
                           child: Center(
                             child: EmptyStateWidget(
@@ -101,18 +102,17 @@ class MyGroupsView extends StackedView<MyGroupsViewModel> {
                       : Expanded(
                           child: ListView.builder(
                             padding: EdgeInsets.symmetric(horizontal: 20.w),
-                            itemCount: model.myGroups.length,
+                            itemCount: model.dataService.myGroups.length,
                             itemBuilder: (context, index) {
-                              final grp = model.myGroups[index];
+                              final grp = model.dataService.myGroups[index];
                               return Groupscard(
                                 group: grp,
                                 onTap: () {
-                                  print('tapp');
-                                  model.navigateToGroupsHome(Group.dummyGroup);
+                                  model.navigateToGroupsHome(grp);
                                 },
                                 onDelete: () {},
                                 onEditDetailstap: () {
-                                  model.navigateToGroupEditPage();
+                                  model.navigateToGroupEditPage(grp);
                                 },
                                 onMoreIconTap: () {},
                                 onSeeAllMembersTap: () {},
@@ -120,39 +120,39 @@ class MyGroupsView extends StackedView<MyGroupsViewModel> {
                             },
                           ),
                         ),
-              SizedBox(
-                height: 10.h,
-              ),
-              //TODO: change this with floating action button
-              SizedBox(
-                width: Get.width,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        NavService.navigateToGroupCreateScreen(
-                            groupAction: GroupAction.add);
-                      },
-                      child: Container(
-                        alignment: Alignment.center,
-                        height: 55.h,
-                        width: Get.width * 0.9,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15.r),
-                            gradient: AppColors.mainButtonGradient),
-                        child: Text(
-                          'Create new group',
-                          style: TextStyling.bold,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: 10.h,
-              ),
+              // SizedBox(
+              //   height: 10.h,
+              // ),
+              // //TODO: change this with floating action button
+              // SizedBox(
+              //   width: Get.width,
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.center,
+              //     children: [
+              //       GestureDetector(
+              //         onTap: () {
+              //           NavService.navigateToGroupCreateScreen(
+              //               groupAction: GroupAction.add);
+              //         },
+              //         child: Container(
+              //           alignment: Alignment.center,
+              //           height: 55.h,
+              //           width: Get.width * 0.9,
+              //           decoration: BoxDecoration(
+              //               borderRadius: BorderRadius.circular(15.r),
+              //               gradient: AppColors.mainButtonGradient),
+              //           child: Text(
+              //             'Create new group',
+              //             style: TextStyling.bold,
+              //           ),
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // ),
+              // SizedBox(
+              //   height: 10.h,
+              // ),
             ],
             //! Joined Groups List
             if (model.selectedTab == 1)
@@ -164,7 +164,7 @@ class MyGroupsView extends StackedView<MyGroupsViewModel> {
                         ),
                       ),
                     )
-                  : model.joinedGroups.isEmpty
+                  : model.dataService.joinedGroups.isEmpty
                       ? Expanded(
                           child: Center(
                             child: EmptyStateWidget(
@@ -175,15 +175,15 @@ class MyGroupsView extends StackedView<MyGroupsViewModel> {
                       : Expanded(
                           child: ListView.builder(
                             padding: EdgeInsets.symmetric(horizontal: 20.w),
-                            itemCount: model.joinedGroups.length,
+                            itemCount: model.dataService.joinedGroups.length,
                             itemBuilder: (context, index) {
-                              final grp = model.joinedGroups[index];
+                              final grp = model.dataService.joinedGroups[index];
                               return GroupsTile(
                                 group: grp,
                                 onAddIconTap: () {},
                                 onArrowIconTap: () {
                                   print('tapp');
-                                  model.navigateToGroupsHome(Group.dummyGroup);
+                                  model.navigateToGroupsHome(grp);
                                 },
                                 onMoreIconTap: () {},
                               );
@@ -201,7 +201,7 @@ class MyGroupsView extends StackedView<MyGroupsViewModel> {
                         ),
                       ),
                     )
-                  : model.invites.isEmpty
+                  : model.dataService.invites.isEmpty
                       ? Expanded(
                           child: Center(
                             child: EmptyStateWidget(
@@ -212,9 +212,10 @@ class MyGroupsView extends StackedView<MyGroupsViewModel> {
                       : Expanded(
                           child: ListView.builder(
                             padding: EdgeInsets.symmetric(horizontal: 20.w),
-                            itemCount: model.invites.length,
+                            itemCount: model.dataService.invites.length,
                             itemBuilder: (context, index) {
-                              final invitedGroup = model.invites[index];
+                              final invitedGroup =
+                                  model.dataService.invites[index];
                               return GroupsInviteTile(
                                 isButtonLoading: model.isBusy,
                                 invitedGroup: invitedGroup,

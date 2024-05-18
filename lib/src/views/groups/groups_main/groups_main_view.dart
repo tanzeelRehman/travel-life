@@ -88,11 +88,13 @@ class GroupsMainView extends StackedView<GroupsMainViewModel> {
                                 color: AppColors.appSkyBlue,
                               ),
                             )
-                          : model.forYouGroups.isNotEmpty
+                          : model.dataService.forYouGroups.isNotEmpty
                               ? ListView.builder(
-                                  itemCount: model.forYouGroups.length,
+                                  itemCount:
+                                      model.dataService.forYouGroups.length,
                                   itemBuilder: (context, index) {
-                                    final grp = model.forYouGroups[index];
+                                    final grp =
+                                        model.dataService.forYouGroups[index];
                                     print('grp: ${grp.toString()}');
                                     return GroupsTile(
                                       group: grp,

@@ -10,6 +10,7 @@ import 'package:starter_app/src/configs/app_setup.router.dart';
 import 'package:starter_app/src/models/accessory.dart';
 import 'package:starter_app/src/models/group.dart';
 import 'package:starter_app/src/models/operating_cost.dart';
+import 'package:starter_app/src/models/see_all_members_user.dart';
 import 'package:starter_app/src/models/vehicle.dart';
 import 'package:starter_app/src/views/groups/group_create/group_create_view_model.dart';
 
@@ -114,9 +115,9 @@ class NavService {
               GroupJoinViewArguments(groupJoin: groupJoin, group: group));
 
   static Future<dynamic>? navigateToGroupJoinRequestsScreen(
-          {dynamic arguments}) =>
-      _navigationService!
-          .navigateTo(Routes.groupJoinRequestsView, arguments: arguments);
+          {required Group group}) =>
+      _navigationService!.navigateTo(Routes.groupJoinRequestsView,
+          arguments: GroupJoinRequestsViewArguments(group: group));
 
   static Future<dynamic>? navigateToGroupHomeScreen({
     required Group group,
@@ -125,27 +126,34 @@ class NavService {
           arguments: GroupHomeViewArguments(group: group));
 
   static Future<dynamic>? navigateToGroupMembersProfileScreen(
-          {dynamic arguments}) =>
-      _navigationService!
-          .navigateTo(Routes.groupMemberProfileView, arguments: arguments);
+          {required SeeAllMembersUser member}) =>
+      _navigationService!.navigateTo(
+        Routes.groupMemberProfileView,
+        arguments: GroupMemberProfileViewArguments(member: member),
+      );
 
-  static Future<dynamic>? navigateToAddMemberScreen({dynamic arguments}) =>
-      _navigationService!
-          .navigateTo(Routes.addMemberView, arguments: arguments);
+  static Future<dynamic>? navigateToAddMemberScreen({required Group group}) =>
+      _navigationService!.navigateTo(Routes.addMemberView,
+          arguments: AddMemberViewArguments(group: group));
 
-  static Future<dynamic>? navigateToInviteMiddleScreen({dynamic arguments}) =>
-      _navigationService!
-          .navigateTo(Routes.inviteMiddleScreenView, arguments: arguments);
+  static Future<dynamic>? navigateToInviteMiddleScreen(
+          {required Group group}) =>
+      _navigationService!.navigateTo(Routes.inviteMiddleScreenView,
+          arguments: InviteMiddleScreenViewArguments(group: group));
 
-  static Future<dynamic>? navigateToAllMemberScreen({dynamic arguments}) =>
-      _navigationService!
-          .navigateTo(Routes.allMembersView, arguments: arguments);
+  static Future<dynamic>? navigateToAllMemberScreen({required Group group}) =>
+      _navigationService!.navigateTo(Routes.allMembersView,
+          arguments: AllMembersViewArguments(group: group));
 
   static Future<dynamic>? navigateToGroupCreateScreen({
     required GroupAction groupAction,
+    required Group? group,
   }) =>
       _navigationService!.navigateTo(Routes.groupCreateView,
-          arguments: GroupCreateViewArguments(action: groupAction));
+          arguments: GroupCreateViewArguments(
+            action: groupAction,
+            group: group,
+          ));
   //TO GO BACK
   static bool back({dynamic arguments}) => _navigationService!.back();
 }

@@ -877,12 +877,23 @@ class DatabaseService with ListenableServiceMixin {
         return null;
       }
 
-      final res = await _supabase
-          .from(SupabaseTables.groups)
-          .select(groupsQuery)
-          .eq('is_public', true);
+      final res =
+          await _supabase.from(SupabaseTables.groups).select(groupsQuery);
 
-      return Group.fromJsonList(res);
+      //filter out my joined groups
+      final joinedGroups = await _supabase
+          .from(SupabaseTables.groupMemebers)
+          .select('*')
+          .eq('joined', true)
+          .eq('user', '${_authService.user?.id}');
+
+      final joinedGroupIds =
+          joinedGroups.map((group) => group['group']).toList();
+
+      final filteredGroups =
+          res.where((group) => !joinedGroupIds.contains(group['id'])).toList();
+
+      return Group.fromJsonList(filteredGroups);
     } catch (e) {
       print(e);
       Constants.customErrorSnack(e.toString());
@@ -902,7 +913,20 @@ class DatabaseService with ListenableServiceMixin {
           .select(groupsQuery)
           .eq('is_public', true);
 
-      return Group.fromJsonList(res);
+      //filter out my joined groups
+      final joinedGroups = await _supabase
+          .from(SupabaseTables.groupMemebers)
+          .select('*')
+          .eq('joined', true)
+          .eq('user', '${_authService.user?.id}');
+
+      final joinedGroupIds =
+          joinedGroups.map((group) => group['group']).toList();
+
+      final filteredGroups =
+          res.where((group) => !joinedGroupIds.contains(group['id'])).toList();
+
+      return Group.fromJsonList(filteredGroups);
     } catch (e) {
       print(e);
       Constants.customErrorSnack(e.toString());
@@ -922,7 +946,20 @@ class DatabaseService with ListenableServiceMixin {
           .select(groupsQuery)
           .eq('is_public', false);
 
-      return Group.fromJsonList(res);
+      //filter out my joined groups
+      final joinedGroups = await _supabase
+          .from(SupabaseTables.groupMemebers)
+          .select('*')
+          .eq('joined', true)
+          .eq('user', '${_authService.user?.id}');
+
+      final joinedGroupIds =
+          joinedGroups.map((group) => group['group']).toList();
+
+      final filteredGroups =
+          res.where((group) => !joinedGroupIds.contains(group['id'])).toList();
+
+      return Group.fromJsonList(filteredGroups);
     } catch (e) {
       print(e);
       Constants.customErrorSnack(e.toString());
@@ -1083,8 +1120,16 @@ class DatabaseService with ListenableServiceMixin {
           .single();
 
       print(res);
+      if (res['id'] != null) {
+        final joined = await joinPublicGroup(
+            _authService.user?.id ?? '', res['id'] as int);
 
-      return Group.fromMap(res);
+        if (joined) {
+          return Group.fromMap(res);
+        }
+      } else {
+        return null;
+      }
     } catch (e) {
       print(e);
       Constants.customErrorSnack(e.toString());
@@ -1393,15 +1438,197 @@ class DatabaseService with ListenableServiceMixin {
     }
   }
 
-  //TODO: remove a user from group i.e delete a row from group memeber
+  //TODO: invite user to group
+  Future<bool> inviteUserToGroup(String userId, int groupId,
+      {bool showSnackbar = false}) async {
+    try {
+      if (!_isConnected()) {
+        return false;
+      }
 
-  //TODO: invite users to group i.e this will have to be checked if the groupmember with same group and user id exits then udate the fields if not then add a new row in the groups member table
+      final doesExist = await _supabase
+          .from(SupabaseTables.groupMemebers)
+          .select(groupMembersQuery)
+          .eq('group', groupId)
+          .eq('user', userId)
+          .single();
 
-  //TODO: leave group
+      if (doesExist.isEmpty) {
+        final res = await _supabase
+            .from(SupabaseTables.groupMemebers)
+            .insert({
+              'user': userId,
+              'group': groupId,
+              'joined': false,
+              'requested_to_join': false,
+              'invited': true,
+              'invited_by': [_authService.user!.id!],
+            })
+            .select(groupMembersQuery)
+            .single();
+        return res['id'] != null;
+      }
+
+      //TODO: update the invited_by field
+      List<dynamic>? invitedBy = doesExist['invited_by'];
+
+      List<dynamic> newInvitedBy = [];
+
+      if (invitedBy != null && invitedBy.isNotEmpty) {
+        newInvitedBy.addAll(invitedBy);
+      }
+      newInvitedBy.add(_authService.user!.id!);
+
+      final res = await _supabase
+          .from(SupabaseTables.groupMemebers)
+          .update({
+            'invited': 'true',
+            'invited_by': newInvitedBy,
+          })
+          .eq('id', doesExist['id'])
+          .select(groupMembersQuery)
+          .single();
+
+      return res['id'] != null;
+    } catch (e) {
+      print(e);
+      Constants.customErrorSnack(e.toString());
+      return false;
+    }
+  }
+
+  //TODO: leave group / remove user from group
+  Future<bool> leaveOrRemoveUserFromGroup(String userId, int groupId) async {
+    try {
+      if (!_isConnected()) {
+        return false;
+      }
+
+      final res = await _supabase
+          .from(SupabaseTables.groupMemebers)
+          .delete()
+          .eq('user', userId)
+          .eq('group', groupId)
+          .select(groupMembersQuery)
+          .single();
+      return res['id'] != null;
+    } catch (e) {
+      print(e);
+      Constants.customErrorSnack(e.toString());
+      return false;
+    }
+  }
 
   //TODO: request to join group
+  Future<bool> requestToJoinGroup(String userId, int groupId) async {
+    try {
+      if (!_isConnected()) {
+        return false;
+      }
+
+      final doesExist = await _supabase
+          .from(SupabaseTables.groupMemebers)
+          .select(groupMembersQuery)
+          .eq('group', groupId)
+          .eq('user', userId)
+          .single();
+
+      if (doesExist.isEmpty) {
+        final res = await joinPublicGroup(userId, groupId);
+        return res;
+      }
+
+      final res = await _supabase
+          .from(SupabaseTables.groupMemebers)
+          .update({
+            'join_request_time': DateTime.now().toIso8601String(),
+            'requested_to_join': true,
+          })
+          .eq('id', doesExist['id'])
+          .select(groupMembersQuery)
+          .single();
+
+      return res['id'] != null;
+    } catch (e) {
+      print(e);
+      Constants.customErrorSnack(e.toString());
+      return false;
+    }
+  }
 
   //TODO: join group
+  Future<bool> joinPublicGroup(String userId, int groupId) async {
+    try {
+      if (!_isConnected()) {
+        return false;
+      }
+
+      final groupMembers = await _supabase
+          .from(SupabaseTables.groupMemebers)
+          .select(groupMembersQuery)
+          .eq('group', groupId)
+          .eq('user', userId);
+
+      if (groupMembers.isNotEmpty) {
+        Constants.customWarningSnack('You are already a member of this group');
+        return false;
+      }
+
+      final res = await _supabase
+          .from(SupabaseTables.groupMemebers)
+          .insert({
+            'user': userId,
+            'group': groupId,
+            'date_joined': DateTime.now().toIso8601String(),
+            'joined': true,
+          })
+          .select(groupMembersQuery)
+          .single();
+
+      return res['id'] != null;
+    } catch (e) {
+      print(e);
+      Constants.customErrorSnack(e.toString());
+      return false;
+    }
+  }
+
+  // get the list of users for inviting
+  Future<List<AppUser>?> getUsersForInvite(int groupId) async {
+    try {
+      if (!_isConnected()) {
+        return null;
+      }
+
+      final res = await _supabase.from(SupabaseTables.appUsers).select('*');
+
+      //TODO: filter the users that are not invited yet or requested to join
+      final alreadyInvited = await _supabase
+          .from(SupabaseTables.groupMemebers)
+          .select('user')
+          .eq('group', groupId)
+          .eq('invited', true);
+
+      final alreadyJoined = await _supabase
+          .from(SupabaseTables.groupMemebers)
+          .select('user')
+          .eq('group', groupId)
+          .eq('joined', true);
+
+      final filteredRes = res
+          .where((user) => !alreadyInvited.any((u) => u['user'] == user['id']))
+          .toList();
+
+      filteredRes.removeWhere(
+          (user) => alreadyJoined.any((u) => u['user'] == user['id']));
+
+      return AppUser.fromJsonList(filteredRes);
+    } catch (e) {
+      print(e);
+      Constants.customErrorSnack(e.toString());
+      return null;
+    }
+  }
 
   //TODO: important: when a user joins a group joined will be true baki sab false and join date will also be updated
 

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
@@ -14,6 +15,7 @@ import 'package:starter_app/src/styles/app_colors.dart';
 import 'package:starter_app/src/styles/text_theme.dart';
 import 'package:starter_app/src/views/groups/group_join/group_join_view_model.dart';
 
+//TODO: add total members count here as well like in group main screen.
 class GroupJoinView extends StackedView<GroupJoinViewModel> {
   final GroupJoin groupJoin;
   final Group group;
@@ -21,7 +23,10 @@ class GroupJoinView extends StackedView<GroupJoinViewModel> {
   GroupJoinView(this.groupJoin, this.group);
   @override
   Widget builder(
-      BuildContext context, GroupJoinViewModel model, Widget? child) {
+    BuildContext context,
+    GroupJoinViewModel model,
+    Widget? child,
+  ) {
     print('create at is ${group.createdAt}');
     // print(group.createdAt);
     return Scaffold(
@@ -36,7 +41,7 @@ class GroupJoinView extends StackedView<GroupJoinViewModel> {
           ),
         ),
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 0.w, vertical: 12.h),
+          padding: EdgeInsets.symmetric(horizontal: 0.w, vertical: 0.h),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -59,12 +64,18 @@ class GroupJoinView extends StackedView<GroupJoinViewModel> {
                             borderRadius: BorderRadius.circular(15.sp),
                             border: AppColors.gradientBordersDecoration),
                         child: SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.3,
-                            width: MediaQuery.of(context).size.width,
-                            child: Image.asset(
-                              AssetImages.sampleGroupImage,
-                              fit: BoxFit.fitWidth,
-                            )),
+                          height: MediaQuery.of(context).size.height * 0.3,
+                          width: MediaQuery.of(context).size.width,
+                          child: group.groupImage != null
+                              ? CachedNetworkImage(
+                                  imageUrl: group.groupImage!,
+                                  fit: BoxFit.cover,
+                                )
+                              : Image.asset(
+                                  AssetImages.defaultImage,
+                                  fit: BoxFit.fitHeight,
+                                ),
+                        ),
                       ),
                     ),
                     SizedBox(
@@ -115,13 +126,6 @@ class GroupJoinView extends StackedView<GroupJoinViewModel> {
                             Text(' Total Members', style: TextStyling.thin)
                           ],
                         ),
-                        // GestureDetector(
-                        //   onTap: () {},
-                        //   child: Text('See all',
-                        //       style: TextStyling.thin.copyWith(
-                        //           color: AppColors.appSkyBlue,
-                        //           decoration: TextDecoration.underline)),
-                        // )
                       ],
                     ),
                     SizedBox(
@@ -142,9 +146,7 @@ class GroupJoinView extends StackedView<GroupJoinViewModel> {
                         groupJoin == GroupJoin.requestJoin)
                       GestureDetector(
                         onTap: () {
-                          NavService.navigateToGroupHomeScreen(
-                            group: group,
-                          );
+                          model.onClickJoinOrRequestJoin(groupJoin);
                         },
                         child: Container(
                           height: 55.h,
@@ -160,17 +162,22 @@ class GroupJoinView extends StackedView<GroupJoinViewModel> {
                         ),
                       ),
                     if (groupJoin == GroupJoin.leave)
-                      Container(
-                        height: 55.h,
-                        alignment: Alignment.center,
-                        width: MediaQuery.of(context).size.width,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12.r),
-                            color: Colors.red,
-                            border: AppColors.gradientBordersDecoration),
-                        child: Text(
-                          getReadableGroupJoinType(groupJoin),
-                          style: TextStyling.semiBold,
+                      GestureDetector(
+                        onTap: () {
+                          model.onGroupLeave();
+                        },
+                        child: Container(
+                          height: 55.h,
+                          alignment: Alignment.center,
+                          width: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12.r),
+                              color: Colors.red,
+                              border: AppColors.gradientBordersDecoration),
+                          child: Text(
+                            getReadableGroupJoinType(groupJoin),
+                            style: TextStyling.semiBold,
+                          ),
                         ),
                       ),
                   ],

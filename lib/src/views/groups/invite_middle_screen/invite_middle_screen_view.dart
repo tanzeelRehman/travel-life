@@ -1,25 +1,19 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:gradient_borders/box_borders/gradient_box_border.dart';
-import 'package:intl/intl.dart';
 import 'package:stacked/stacked.dart';
 
 import 'package:starter_app/generated/assets.dart';
-import 'package:starter_app/src/base/enums/group_type.dart';
 import 'package:starter_app/src/base/utils/utils.dart';
+import 'package:starter_app/src/models/group.dart';
 import 'package:starter_app/src/shared/custom_app_bar.dart';
 import 'package:starter_app/src/styles/app_colors.dart';
 import 'package:starter_app/src/styles/text_theme.dart';
-import 'package:starter_app/src/views/groups/groups_lists/groups_lists_view_model.dart';
-import 'package:starter_app/src/views/groups/groups_main/groups_main_view_model.dart';
 import 'package:starter_app/src/views/groups/invite_middle_screen/invite_middle_screen_view_model.dart';
-import 'package:starter_app/src/views/groups/widgets/group_tile_widget.dart';
 
 class InviteMiddleScreenView extends StackedView<InviteMiddleScreenViewModel> {
+  final Group group;
+  InviteMiddleScreenView({required this.group});
   @override
   Widget builder(
       BuildContext context, InviteMiddleScreenViewModel model, Widget? child) {
@@ -123,5 +117,5 @@ class InviteMiddleScreenView extends StackedView<InviteMiddleScreenViewModel> {
       InviteMiddleScreenViewModel();
 
   @override
-  void onViewModelReady(InviteMiddleScreenViewModel model) => model.init();
+  void onViewModelReady(InviteMiddleScreenViewModel model) => model.init(group);
 }
