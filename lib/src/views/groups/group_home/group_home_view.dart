@@ -11,6 +11,7 @@ import 'package:stacked/stacked.dart';
 import 'package:starter_app/generated/assets.dart';
 import 'package:starter_app/src/base/enums/group_type.dart';
 import 'package:starter_app/src/base/utils/utils.dart';
+import 'package:starter_app/src/models/group.dart';
 import 'package:starter_app/src/services/local/navigation_service.dart';
 import 'package:starter_app/src/shared/custom_app_bar.dart';
 import 'package:starter_app/src/shared/custom_app_bar_with_transparent_bg.dart';
@@ -22,9 +23,9 @@ import 'package:starter_app/src/views/groups/groups_main/groups_main_view_model.
 import 'package:starter_app/src/views/groups/widgets/group_tile_widget.dart';
 
 class GroupHomeView extends StackedView<GroupHomeViewModel> {
-  final String groupName;
+  final Group group;
   GroupHomeView({
-    required this.groupName,
+    required this.group,
   });
 
   @override
@@ -67,8 +68,8 @@ class GroupHomeView extends StackedView<GroupHomeViewModel> {
                     ),
                     Positioned(
                       top: 35.h,
-                      child:
-                          CustomAppBarWithTransparentBG(groupName: groupName),
+                      child: CustomAppBarWithTransparentBG(
+                          groupName: group.name ?? ''),
                     ),
                     Positioned(
                       bottom: 20.h,

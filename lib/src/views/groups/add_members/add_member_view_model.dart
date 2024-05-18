@@ -1,5 +1,6 @@
 import 'package:stacked/stacked.dart';
 import 'package:starter_app/src/base/utils/constants.dart';
+import 'package:starter_app/src/models/group.dart';
 import 'package:starter_app/src/services/local/navigation_service.dart';
 
 class AddMemberViewModel extends ReactiveViewModel {
@@ -63,6 +64,6 @@ class AddMemberViewModel extends ReactiveViewModel {
     notifyListeners();
     Constants.customSuccessSnack('Invitation sent to all users');
     await Future.delayed(Duration(seconds: 2));
-    NavService.navigateToGroupHomeScreen(groupName: 'Scouts');
+    NavService.navigateToGroupHomeScreen(group: Group.dummyGroup);
   }
 }

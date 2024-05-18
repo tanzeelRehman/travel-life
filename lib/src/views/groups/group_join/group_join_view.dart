@@ -1,34 +1,29 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 import 'package:intl/intl.dart';
 import 'package:stacked/stacked.dart';
 
 import 'package:starter_app/generated/assets.dart';
 import 'package:starter_app/src/base/enums/group_join.dart';
-import 'package:starter_app/src/base/enums/group_type.dart';
 import 'package:starter_app/src/base/utils/utils.dart';
+import 'package:starter_app/src/models/group.dart';
 import 'package:starter_app/src/services/local/navigation_service.dart';
 import 'package:starter_app/src/shared/custom_app_bar.dart';
 import 'package:starter_app/src/shared/vehicle_registration_textfield.dart';
 import 'package:starter_app/src/styles/app_colors.dart';
 import 'package:starter_app/src/styles/text_theme.dart';
 import 'package:starter_app/src/views/groups/group_join/group_join_view_model.dart';
-import 'package:starter_app/src/views/groups/groups_lists/groups_lists_view_model.dart';
-import 'package:starter_app/src/views/groups/groups_main/groups_main_view_model.dart';
-import 'package:starter_app/src/views/groups/widgets/group_tile_widget.dart';
 
 class GroupJoinView extends StackedView<GroupJoinViewModel> {
   final GroupJoin groupJoin;
-  final String groupName;
+  final Group group;
 
-  GroupJoinView(this.groupJoin, this.groupName);
+  GroupJoinView(this.groupJoin, this.group);
   @override
   Widget builder(
       BuildContext context, GroupJoinViewModel model, Widget? child) {
+    print('create at is ${group.createdAt}');
+    // print(group.createdAt);
     return Scaffold(
       body: Container(
         width: context.screenSize().width,
@@ -47,7 +42,7 @@ class GroupJoinView extends StackedView<GroupJoinViewModel> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               CustomAppBar(
-                titleText: groupName,
+                titleText: group.name ?? '',
               ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 27.w, vertical: 15.h),
@@ -83,7 +78,7 @@ class GroupJoinView extends StackedView<GroupJoinViewModel> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              groupName,
+                              group.name ?? '',
                               style: TextStyling.bold.copyWith(fontSize: 25.sp),
                             ),
                             Row(
@@ -93,7 +88,7 @@ class GroupJoinView extends StackedView<GroupJoinViewModel> {
                                   style: TextStyling.thin,
                                 ),
                                 Text(
-                                  'Tanzeel',
+                                  group.admin?.firstname ?? '',
                                   style: TextStyling.semiBold,
                                 ),
                               ],
@@ -101,7 +96,9 @@ class GroupJoinView extends StackedView<GroupJoinViewModel> {
                           ],
                         ),
                         Text(
-                          DateFormat.yMMMd().format(DateTime.now()),
+                          group.createdAt != null
+                              ? DateFormat('yMMMd').format(group.createdAt!)
+                              : '----',
                           style: TextStyling.thin,
                         )
                       ],
@@ -146,7 +143,8 @@ class GroupJoinView extends StackedView<GroupJoinViewModel> {
                       GestureDetector(
                         onTap: () {
                           NavService.navigateToGroupHomeScreen(
-                              groupName: groupName);
+                            group: group,
+                          );
                         },
                         child: Container(
                           height: 55.h,
@@ -190,5 +188,5 @@ class GroupJoinView extends StackedView<GroupJoinViewModel> {
       GroupJoinViewModel();
 
   @override
-  void onViewModelReady(GroupJoinViewModel model) => model.init();
+  void onViewModelReady(GroupJoinViewModel model) => model.init(group);
 }

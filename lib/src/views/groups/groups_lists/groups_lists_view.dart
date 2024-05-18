@@ -1,10 +1,5 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gradient_borders/box_borders/gradient_box_border.dart';
-import 'package:intl/intl.dart';
 import 'package:stacked/stacked.dart';
 
 import 'package:starter_app/generated/assets.dart';
@@ -14,10 +9,10 @@ import 'package:starter_app/src/base/utils/utils.dart';
 import 'package:starter_app/src/models/group.dart';
 import 'package:starter_app/src/services/local/navigation_service.dart';
 import 'package:starter_app/src/shared/custom_app_bar.dart';
+import 'package:starter_app/src/shared/empty_state_widget.dart';
+import 'package:starter_app/src/shared/loading_indicator.dart';
 import 'package:starter_app/src/styles/app_colors.dart';
-import 'package:starter_app/src/styles/text_theme.dart';
 import 'package:starter_app/src/views/groups/groups_lists/groups_lists_view_model.dart';
-import 'package:starter_app/src/views/groups/groups_main/groups_main_view_model.dart';
 import 'package:starter_app/src/views/groups/widgets/group_tile_widget.dart';
 
 class GroupsListsView extends StackedView<GroupsListsViewModel> {
@@ -38,76 +33,84 @@ class GroupsListsView extends StackedView<GroupsListsViewModel> {
             opacity: 0.5,
           ),
         ),
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 0.w, vertical: 12.h),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CustomAppBar(
-                titleText: '${getReadableGroupType(groupType)} Groups',
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 27.w, vertical: 15.h),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: 20.h,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CustomAppBar(
+              titleText: '${getReadableGroupType(groupType)} Groups',
+            ),
+            model.isBusy
+                ? Expanded(
+                    child: Center(
+                      child: LoadingIndicator(
+                        color: AppColors.appSkyBlue,
+                      ),
                     ),
-                    if (groupType == GroupType.public)
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.81,
+                  )
+                : model.groups.isEmpty
+                    ? Expanded(
+                        child: Center(
+                          child: EmptyStateWidget(
+                            text:
+                                'No ${getReadableGroupType(groupType)} Groups Available',
+                          ),
+                        ),
+                      )
+                    : Expanded(
                         child: ListView.builder(
-                          itemCount: 8,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 27.w,
+                            vertical: 20.h,
+                          ),
+                          itemCount: model.groups.length,
                           itemBuilder: (context, index) {
+                            final grp = model.groups[index];
                             return GroupsTile(
-                              // adminName: "Tanzeel",
-                              // createdate: DateTime.now(),
-                              // groupName: "Scouts",
-                              // imagepath: AssetImages.sampleGroupImage,
-                              group: Group.dummyGroup,
-
+                              group: grp,
                               onAddIconTap: () {},
                               onArrowIconTap: () {
                                 NavService.navigateToGroupJoinScreen(
-                                    groupJoin: GroupJoin.join,
-                                    groupName: 'Scouts');
+                                  groupJoin: groupType == GroupType.public
+                                      ? GroupJoin.join
+                                      : GroupJoin.requestJoin,
+                                  group: grp,
+                                );
                               },
                               onMoreIconTap: () {},
                             );
                           },
                         ),
                       ),
-                    if (groupType == GroupType.private)
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.81,
-                        child: ListView.builder(
-                          itemCount: 8,
-                          itemBuilder: (context, index) {
-                            return GroupsTile(
-                              // adminName: "Tanzeel",
-                              // createdate: DateTime.now(),
-                              // groupName: "Scouts",
-                              // imagepath: AssetImages.sampleGroupImage,
-                              group: Group.dummyGroup,
+            // if (groupType == GroupType.private)
+            //   Expanded(
+            //     child: ListView.builder(
+            //       padding: EdgeInsets.symmetric(
+            //         horizontal: 27.w,
+            //         vertical: 20.h,
+            //       ),
+            //       itemCount: 8,
+            //       itemBuilder: (context, index) {
+            //         return GroupsTile(
+            //           // adminName: "Tanzeel",
+            //           // createdate: DateTime.now(),
+            //           // groupName: "Scouts",
+            //           // imagepath: AssetImages.sampleGroupImage,
+            //           group: Group.dummyGroup,
 
-                              onAddIconTap: () {},
-                              onArrowIconTap: () {
-                                NavService.navigateToGroupJoinScreen(
-                                    groupJoin: GroupJoin.join,
-                                    groupName: 'Scouts');
-                              },
-                              onMoreIconTap: () {},
-                            );
-                          },
-                        ),
-                      )
-                  ],
-                ),
-              )
-            ],
-          ),
+            //           onAddIconTap: () {},
+            //           onArrowIconTap: () {
+            //             NavService.navigateToGroupJoinScreen(
+            //               groupJoin: GroupJoin.requestJoin,
+            //               group: Group.dummyGroup,
+            //             );
+            //           },
+            //           onMoreIconTap: () {},
+            //         );
+            //       },
+            //     ),
+            //   )
+          ],
         ),
       ),
     );

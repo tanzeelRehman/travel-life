@@ -31,93 +31,93 @@ class GroupsMainView extends StackedView<GroupsMainViewModel> {
             opacity: 0.5,
           ),
         ),
-        child: Padding(
-          padding: EdgeInsets.only(top: 0.h),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CustomAppBar(
-                titleText: 'Groups',
-              ),
-              VerticalSpacing(20.h),
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 27.w),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          groupCard(
-                            () {
-                              model.navigateToGroupLists(GroupType.public);
-                            },
-                            'Public Groups',
-                            AssetImages.publicGroups,
-                          ),
-                          groupCard(
-                            () {
-                              model.navigateToGroupLists(GroupType.private);
-                            },
-                            'Private Groups',
-                            AssetImages.privateGroups,
-                          ),
-                          groupCard(
-                            () {
-                              model.navigateToMyGroups();
-                            },
-                            'My Groups',
-                            AssetImages.myGroups,
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 40.h,
-                      ),
-                      Text(
-                        "Groups for you",
-                        style: TextStyling.bold.copyWith(fontSize: 18.sp),
-                      ),
-                      SizedBox(
-                        height: 10.h,
-                      ),
-                      Expanded(
-                        child: model.isBusy
-                            ? Center(
-                                child: LoadingIndicator(
-                                  color: AppColors.appSkyBlue,
-                                ),
-                              )
-                            : model.forYouGroups.isNotEmpty
-                                ? ListView.builder(
-                                    itemCount: model.forYouGroups.length,
-                                    itemBuilder: (context, index) {
-                                      final grp = model.forYouGroups[index];
-                                      return GroupsTile(
-                                        group: grp,
-                                        onAddIconTap: () {},
-                                        onArrowIconTap: () {
-                                          model.navigateToGroupJoin(
-                                              GroupJoin.join, 'Scouts');
-                                        },
-                                        onMoreIconTap: () {},
-                                      );
-                                    },
-                                  )
-                                : Center(
-                                    child: EmptyStateWidget(
-                                      text: 'No suggested groups',
-                                    ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CustomAppBar(
+              titleText: 'Groups',
+            ),
+            VerticalSpacing(20.h),
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 27.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        groupCard(
+                          () {
+                            model.navigateToGroupLists(GroupType.public);
+                          },
+                          'Public Groups',
+                          AssetImages.publicGroups,
+                        ),
+                        groupCard(
+                          () {
+                            model.navigateToGroupLists(GroupType.private);
+                          },
+                          'Private Groups',
+                          AssetImages.privateGroups,
+                        ),
+                        groupCard(
+                          () {
+                            model.navigateToMyGroups();
+                          },
+                          'My Groups',
+                          AssetImages.myGroups,
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 40.h,
+                    ),
+                    Text(
+                      "Groups for you",
+                      style: TextStyling.bold.copyWith(fontSize: 18.sp),
+                    ),
+                    SizedBox(
+                      height: 10.h,
+                    ),
+                    Expanded(
+                      child: model.isBusy
+                          ? Center(
+                              child: LoadingIndicator(
+                                color: AppColors.appSkyBlue,
+                              ),
+                            )
+                          : model.forYouGroups.isNotEmpty
+                              ? ListView.builder(
+                                  itemCount: model.forYouGroups.length,
+                                  itemBuilder: (context, index) {
+                                    final grp = model.forYouGroups[index];
+                                    print('grp: ${grp.toString()}');
+                                    return GroupsTile(
+                                      group: grp,
+                                      onAddIconTap: () {},
+                                      onArrowIconTap: () {
+                                        model.navigateToGroupJoin(
+                                          GroupJoin.join,
+                                          grp,
+                                        );
+                                      },
+                                      onMoreIconTap: () {},
+                                    );
+                                  },
+                                )
+                              : Center(
+                                  child: EmptyStateWidget(
+                                    text: 'No suggested groups',
                                   ),
-                      )
-                    ],
-                  ),
+                                ),
+                    )
+                  ],
                 ),
-              )
-            ],
-          ),
+              ),
+            )
+          ],
         ),
       ),
     );

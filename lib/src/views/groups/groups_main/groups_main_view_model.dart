@@ -22,14 +22,12 @@ class GroupsMainViewModel extends ReactiveViewModel
     NavService.navigateToMyGroupsScreen();
   }
 
-  navigateToGroupJoin(GroupJoin groupJoin, String groupName) {
+  navigateToGroupJoin(GroupJoin groupJoin, Group group) {
     NavService.navigateToGroupJoinScreen(
-        groupJoin: groupJoin, groupName: groupName);
+      groupJoin: groupJoin,
+      group: group,
+    );
   }
-
-  // navigateToGroupHome(String groupName) {
-  //   NavService.navigateToGroupHomeScreen(groupName: groupName);
-  // }
 
   getGroupsForYou() async {
     setBusy(true);

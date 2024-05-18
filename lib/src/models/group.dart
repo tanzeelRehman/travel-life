@@ -146,6 +146,11 @@ class Group {
     return jsonList?.map((json) => Group.fromMap(json)).toList();
   }
 
+  static List<Group>? fromJoinedGroupJsonList(
+      List<Map<String, dynamic>>? jsonList) {
+    return jsonList?.map((json) => Group.fromMap(json['group'])).toList();
+  }
+
   static Group dummyGroup = Group(
     createdAt: DateTime.now(),
     admin: AppUser(

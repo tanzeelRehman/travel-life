@@ -1,30 +1,28 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:starter_app/generated/assets.dart';
+import 'package:starter_app/src/models/app_user.dart';
+import 'package:starter_app/src/models/invited_group.dart';
 import 'package:starter_app/src/styles/app_colors.dart';
 import 'package:starter_app/src/styles/text_theme.dart';
 
 class GroupsInviteTile extends StatelessWidget {
-  final String imagepath;
-  final String groupName;
-  final String adminName;
-  final String invitedBy;
-  final DateTime createdate;
-  final Function() onAddIconTap;
-  final Function() onMoreIconTap;
-  final Function() onArrowIconTap;
-  final Function() onAccept;
-  final Function() onReject;
+  final InvitedGroup invitedGroup;
+  final VoidCallback onAddIconTap;
+  final VoidCallback onMoreIconTap;
+  final VoidCallback onArrowIconTap;
+  final VoidCallback onAccept;
+  final VoidCallback onReject;
+  final bool isButtonLoading;
   const GroupsInviteTile({
     Key? key,
-    required this.imagepath,
-    required this.groupName,
-    required this.adminName,
-    required this.createdate,
+    required this.isButtonLoading,
+    required this.invitedGroup,
     required this.onAddIconTap,
     required this.onMoreIconTap,
     required this.onArrowIconTap,
-    required this.invitedBy,
     required this.onAccept,
     required this.onReject,
   }) : super(key: key);
@@ -42,11 +40,19 @@ class GroupsInviteTile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ClipRRect(
-                  borderRadius: BorderRadius.circular(15.r),
-                  child: SizedBox(
-                      height: 110.h,
-                      width: 110.w,
-                      child: Image.asset(imagepath))),
+                borderRadius: BorderRadius.circular(15.r),
+                child: SizedBox(
+                  height: 110.h,
+                  width: 110.w,
+                  child: invitedGroup.group?.groupImage != null
+                      ? CachedNetworkImage(
+                          imageUrl: invitedGroup.group!.groupImage!,
+                        )
+                      : Image.asset(
+                          AssetImages.defaultImage,
+                        ),
+                ),
+              ),
               SizedBox(
                 width: 15.w,
               ),
@@ -70,7 +76,7 @@ class GroupsInviteTile extends StatelessWidget {
                       ],
                     ),
                     Text(
-                      groupName,
+                      invitedGroup.group?.name ?? '----',
                       style: TextStyling.semiBold,
                     ),
                     Row(
@@ -83,7 +89,7 @@ class GroupsInviteTile extends StatelessWidget {
                               style: TextStyling.thin,
                             ),
                             Text(
-                              adminName,
+                              invitedGroup.group?.admin?.firstname ?? '----',
                               style: TextStyling.semiBold,
                             ),
                           ],
@@ -109,7 +115,10 @@ class GroupsInviteTile extends StatelessWidget {
                       ],
                     ),
                     Text(
-                      DateFormat.yMMMd().format(createdate),
+                      invitedGroup.group?.createdAt != null
+                          ? DateFormat.yMMMd()
+                              .format(invitedGroup.group!.createdAt!)
+                          : '----',
                       style: TextStyling.thin,
                     )
                   ],
@@ -134,7 +143,7 @@ class GroupsInviteTile extends StatelessWidget {
                   style: TextStyling.thin,
                 ),
                 Text(
-                  invitedBy,
+                  getInvitedByString(invitedGroup.invitedBy),
                   style: TextStyling.thin.copyWith(color: AppColors.appSkyBlue),
                 ),
               ],
@@ -162,7 +171,7 @@ class GroupsInviteTile extends StatelessWidget {
                 ),
               ),
               GestureDetector(
-                onTap: onAccept,
+                onTap: isButtonLoading ? null : onAccept,
                 child: Container(
                   height: 50.h,
                   width: MediaQuery.of(context).size.width * 0.4,
@@ -172,8 +181,9 @@ class GroupsInviteTile extends StatelessWidget {
                     style: TextStyling.medium,
                   ),
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12.r),
-                      gradient: AppColors.mainButtonGradient),
+                    borderRadius: BorderRadius.circular(12.r),
+                    gradient: AppColors.mainButtonGradient,
+                  ),
                 ),
               ),
             ],
@@ -182,4 +192,22 @@ class GroupsInviteTile extends StatelessWidget {
       ),
     );
   }
+}
+
+String getInvitedByString(List<AppUser>? users) {
+  if (users == null || users.isEmpty) {
+    return '----';
+  }
+  String res = '';
+
+  users.forEach((element) {
+    if (element.firstname != null && element.firstname!.isNotEmpty) {
+      res += '${element.firstname}, ';
+    }
+  });
+
+  res = res.trimRight();
+  res = res.substring(0, res.length - 1);
+
+  return res;
 }

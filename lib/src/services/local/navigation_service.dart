@@ -8,6 +8,7 @@ import 'package:starter_app/src/base/enums/vehicle_registration_action.dart';
 import 'package:starter_app/src/configs/app_setup.locator.dart';
 import 'package:starter_app/src/configs/app_setup.router.dart';
 import 'package:starter_app/src/models/accessory.dart';
+import 'package:starter_app/src/models/group.dart';
 import 'package:starter_app/src/models/operating_cost.dart';
 import 'package:starter_app/src/models/vehicle.dart';
 import 'package:starter_app/src/views/groups/group_create/group_create_view_model.dart';
@@ -107,10 +108,10 @@ class NavService {
       _navigationService!.navigateTo(Routes.myGroupsView, arguments: arguments);
 
   static Future<dynamic>? navigateToGroupJoinScreen(
-          {required GroupJoin groupJoin, required String groupName}) =>
+          {required GroupJoin groupJoin, required Group group}) =>
       _navigationService!.navigateTo(Routes.groupJoinView,
-          arguments: GroupJoinViewArguments(
-              groupJoin: groupJoin, groupName: groupName));
+          arguments:
+              GroupJoinViewArguments(groupJoin: groupJoin, group: group));
 
   static Future<dynamic>? navigateToGroupJoinRequestsScreen(
           {dynamic arguments}) =>
@@ -118,10 +119,10 @@ class NavService {
           .navigateTo(Routes.groupJoinRequestsView, arguments: arguments);
 
   static Future<dynamic>? navigateToGroupHomeScreen({
-    required String groupName,
+    required Group group,
   }) =>
       _navigationService!.navigateTo(Routes.groupHomeView,
-          arguments: GroupHomeViewArguments(groupName: groupName));
+          arguments: GroupHomeViewArguments(group: group));
 
   static Future<dynamic>? navigateToGroupMembersProfileScreen(
           {dynamic arguments}) =>

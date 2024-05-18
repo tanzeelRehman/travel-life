@@ -4,18 +4,22 @@ import 'package:starter_app/src/models/app_user.dart';
 import 'package:starter_app/src/models/group.dart';
 
 class InvitedGroup {
+  final int? groupMemberId;
   final Group? group;
   final List<AppUser>? invitedBy;
   InvitedGroup({
+    this.groupMemberId,
     this.group,
     this.invitedBy,
   });
 
   InvitedGroup copyWith({
+    int? groupMemberId,
     Group? group,
     List<AppUser>? invitedBy,
   }) {
     return InvitedGroup(
+      groupMemberId: groupMemberId ?? this.groupMemberId,
       group: group ?? this.group,
       invitedBy: invitedBy ?? this.invitedBy,
     );
@@ -24,12 +28,14 @@ class InvitedGroup {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'group': group?.toMap(),
-      'invitedBy': invitedBy?.map((x) => x?.toMap()).toList(),
+      'invitedBy': invitedBy?.map((x) => x.toMap()).toList(),
+      'id': groupMemberId,
     };
   }
 
   factory InvitedGroup.fromMap(Map<String, dynamic> map) {
     return InvitedGroup(
+      groupMemberId: map['id'] != null ? map['id'] as int : null,
       group: map['group'] != null
           ? Group.fromMap(map['group'] as Map<String, dynamic>)
           : null,
@@ -50,15 +56,19 @@ class InvitedGroup {
   }
 
   @override
-  String toString() => 'InvitedGroup(group: $group, invitedBy: $invitedBy)';
+  String toString() =>
+      'InvitedGroup(group: $group, invitedBy: $invitedBy, id: $groupMemberId)';
 
   @override
   bool operator ==(covariant InvitedGroup other) {
     if (identical(this, other)) return true;
 
-    return other.group == group && listEquals(other.invitedBy, invitedBy);
+    return other.groupMemberId == groupMemberId &&
+        other.group == group &&
+        listEquals(other.invitedBy, invitedBy);
   }
 
   @override
-  int get hashCode => group.hashCode ^ invitedBy.hashCode;
+  int get hashCode =>
+      groupMemberId.hashCode ^ group.hashCode ^ invitedBy.hashCode;
 }

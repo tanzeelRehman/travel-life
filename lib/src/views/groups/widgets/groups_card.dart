@@ -1,16 +1,15 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:starter_app/generated/assets.dart';
+import 'package:starter_app/src/models/group.dart';
 import 'package:starter_app/src/styles/app_colors.dart';
 import 'package:starter_app/src/styles/text_theme.dart';
 
 class Groupscard extends StatelessWidget {
-  final DateTime dateCreated;
-  final String groupName;
-  final String adminName;
-  final String imagepath;
+  final Group group;
   final Function() onDelete;
   final Function() onMoreIconTap;
   final Function() onEditDetailstap;
@@ -18,10 +17,7 @@ class Groupscard extends StatelessWidget {
   final Function() onTap;
   const Groupscard({
     Key? key,
-    required this.dateCreated,
-    required this.groupName,
-    required this.adminName,
-    required this.imagepath,
+    required this.group,
     required this.onDelete,
     required this.onMoreIconTap,
     required this.onEditDetailstap,
@@ -46,18 +42,29 @@ class Groupscard extends StatelessWidget {
                   child: Opacity(
                     opacity: 0.8,
                     child: Container(
-                        color: Colors.black,
                         width: MediaQuery.of(context).size.width,
                         height: MediaQuery.of(context).size.height * 0.2,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(15.r),
+                            topRight: Radius.circular(15.r),
+                          ),
+                          color: Colors.black,
+                        ),
                         child: ClipRRect(
                           borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(15.r),
                             topRight: Radius.circular(15.r),
                           ),
-                          child: Image.asset(
-                            imagepath,
-                            fit: BoxFit.fitWidth,
-                          ),
+                          child: group.groupImage != null
+                              ? CachedNetworkImage(
+                                  imageUrl: group.groupImage!,
+                                  fit: BoxFit.cover,
+                                )
+                              : Image.asset(
+                                  AssetImages.defaultImage,
+                                  fit: BoxFit.fitHeight,
+                                ),
                         )),
                   ),
                 ),
@@ -75,14 +82,17 @@ class Groupscard extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  DateFormat.yMMMd().format(dateCreated),
+                                  group.createdAt != null
+                                      ? DateFormat.yMMMd()
+                                          .format(group.createdAt!)
+                                      : '----',
                                   style: TextStyling.thin,
                                 ),
                                 SizedBox(
                                   height: 5.h,
                                 ),
                                 Text(
-                                  groupName,
+                                  group.name ?? '----',
                                   style: TextStyling.bold
                                       .copyWith(fontSize: 25.sp),
                                 ),
@@ -145,7 +155,7 @@ class Groupscard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        groupName,
+                        group.name ?? '----',
                         style: TextStyling.semiBold.copyWith(fontSize: 18.sp),
                       ),
                       SizedBox(
@@ -157,7 +167,7 @@ class Groupscard extends StatelessWidget {
                               style: TextStyling.thin.copyWith(fontSize: 15.sp),
                             ),
                             Text(
-                              adminName,
+                              group.admin?.firstname ?? '----',
                               style: TextStyling.semiBold
                                   .copyWith(fontSize: 15.sp),
                             ),

@@ -38,7 +38,7 @@ class GroupsTile extends StatelessWidget {
               borderRadius: BorderRadius.circular(15.r),
               child: group.groupImage != null && group.groupImage!.isNotEmpty
                   ? CachedNetworkImage(imageUrl: group.groupImage ?? "")
-                  : Image.asset(AssetImages.logo),
+                  : Image.asset(AssetImages.defaultImage),
             ),
           ),
           SizedBox(

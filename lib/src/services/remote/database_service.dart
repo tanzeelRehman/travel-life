@@ -963,9 +963,9 @@ class DatabaseService with ListenableServiceMixin {
           .eq('joined', true)
           .eq('user', '${_authService.user?.id}');
 
-      print(res);
+      print('res in getJoinedGroups $res');
 
-      return Group.fromJsonList(res);
+      return Group.fromJoinedGroupJsonList(res);
     } catch (e) {
       print(e);
       Constants.customErrorSnack(e.toString());
@@ -1003,11 +1003,14 @@ class DatabaseService with ListenableServiceMixin {
           }
 
           allGroups.add(InvitedGroup(
+            groupMemberId: e['id'],
             group: invitedGroup,
             invitedBy: invitedByUsers,
           ));
         }
       }
+
+      print(res);
 
       return allGroups;
     } catch (e) {
@@ -1462,6 +1465,7 @@ const String vehicleModelsQuery = '''
         ''';
 
 const String groupsQuery = '''
+        *,
         admin(*)
         ''';
 
@@ -1470,6 +1474,7 @@ const String joinedGroupsQuery = '''
         ''';
 
 const String invitedGroupsQuery = '''
+        id,
         invited_by,
         group($groupsQuery)
         ''';
@@ -1483,7 +1488,6 @@ const String seeAllMembersQuery = '''
         date_joined
         ''';
 
-//TODO: not used for now but will be useful hopefully
 const String groupMembersQuery = '''
         *,
         user(*),
