@@ -101,7 +101,9 @@ class GroupsMainView extends StackedView<GroupsMainViewModel> {
                                       onAddIconTap: () {},
                                       onArrowIconTap: () {
                                         model.navigateToGroupJoin(
-                                          GroupJoin.join,
+                                          (grp.isPublic ?? true)
+                                              ? GroupJoin.join
+                                              : GroupJoin.requestJoin,
                                           grp,
                                         );
                                       },

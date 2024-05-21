@@ -119,11 +119,16 @@ class AllMembersView extends StackedView<AllMembersViewModel> {
                                     final member = model.members[index];
 
                                     return GroupMemberTile(
-                                      isAdmin: member.user?.id ==
+                                      isAdmin:
+                                          member.user?.id == group.admin?.id,
+                                      isMe: member.user?.id ==
                                           model.supabaseAuthService.user?.id,
                                       member: member,
                                       onTap: () {
-                                        model.navigateToMemberProfile(member);
+                                        model.navigateToMemberProfile(
+                                          member,
+                                          member.user?.id == group.admin?.id,
+                                        );
                                       },
                                     );
                                   },
@@ -223,18 +228,20 @@ class GroupMemberTile extends StatelessWidget {
   const GroupMemberTile({
     Key? key,
     required this.isAdmin,
+    required this.isMe,
     required this.member,
     required this.onTap,
   }) : super(key: key);
 
   final bool isAdmin;
+  final bool isMe;
   final SeeAllMembersUser member;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: isAdmin ? null : onTap,
+      onTap: isMe ? null : onTap,
       child: Column(
         children: [
           Container(
@@ -296,11 +303,24 @@ class GroupMemberTile extends StatelessWidget {
                         style: TextStyling.bold,
                       ),
                     )
-                  : Icon(
-                      Icons.arrow_forward_ios,
-                      color: Colors.white,
-                      size: 20.sp,
-                    )
+                  : isMe
+                      ? Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 12.sp, vertical: 8.h),
+                          decoration: BoxDecoration(
+                            gradient: AppColors.secondaryButtonGradient,
+                            borderRadius: BorderRadius.circular(25.r),
+                          ),
+                          child: Text(
+                            'You',
+                            style: TextStyling.bold,
+                          ),
+                        )
+                      : Icon(
+                          Icons.arrow_forward_ios,
+                          color: Colors.white,
+                          size: 20.sp,
+                        ),
             ],
           ),
           SizedBox(

@@ -40,76 +40,93 @@ class GroupsListsView extends StackedView<GroupsListsViewModel> {
             CustomAppBar(
               titleText: '${getReadableGroupType(groupType)} Groups',
             ),
-            model.isBusy
-                ? Expanded(
-                    child: Center(
-                      child: LoadingIndicator(
-                        color: AppColors.appSkyBlue,
-                      ),
-                    ),
-                  )
-                : model.groups.isEmpty
-                    ? Expanded(
-                        child: Center(
-                          child: EmptyStateWidget(
-                            text:
-                                'No ${getReadableGroupType(groupType)} Groups Available',
-                          ),
-                        ),
-                      )
-                    : Expanded(
-                        child: ListView.builder(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 27.w,
-                            vertical: 20.h,
-                          ),
-                          itemCount: model.groups.length,
-                          itemBuilder: (context, index) {
-                            final grp = model.groups[index];
-                            return GroupsTile(
-                              group: grp,
-                              onAddIconTap: () {},
-                              onArrowIconTap: () {
-                                NavService.navigateToGroupJoinScreen(
-                                  groupJoin: groupType == GroupType.public
-                                      ? GroupJoin.join
-                                      : GroupJoin.requestJoin,
-                                  group: grp,
-                                );
-                              },
-                              onMoreIconTap: () {},
-                            );
-                          },
+            if (groupType == GroupType.private)
+              model.isBusy
+                  ? Expanded(
+                      child: Center(
+                        child: LoadingIndicator(
+                          color: AppColors.appSkyBlue,
                         ),
                       ),
-            // if (groupType == GroupType.private)
-            //   Expanded(
-            //     child: ListView.builder(
-            //       padding: EdgeInsets.symmetric(
-            //         horizontal: 27.w,
-            //         vertical: 20.h,
-            //       ),
-            //       itemCount: 8,
-            //       itemBuilder: (context, index) {
-            //         return GroupsTile(
-            //           // adminName: "Tanzeel",
-            //           // createdate: DateTime.now(),
-            //           // groupName: "Scouts",
-            //           // imagepath: AssetImages.sampleGroupImage,
-            //           group: Group.dummyGroup,
-
-            //           onAddIconTap: () {},
-            //           onArrowIconTap: () {
-            //             NavService.navigateToGroupJoinScreen(
-            //               groupJoin: GroupJoin.requestJoin,
-            //               group: Group.dummyGroup,
-            //             );
-            //           },
-            //           onMoreIconTap: () {},
-            //         );
-            //       },
-            //     ),
-            //   )
+                    )
+                  : model.dataService.privateGroups.isEmpty
+                      ? Expanded(
+                          child: Center(
+                            child: EmptyStateWidget(
+                              text:
+                                  'No ${getReadableGroupType(groupType)} Groups Available',
+                            ),
+                          ),
+                        )
+                      : Expanded(
+                          child: ListView.builder(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 27.w,
+                              vertical: 20.h,
+                            ),
+                            itemCount: model.dataService.privateGroups.length,
+                            itemBuilder: (context, index) {
+                              final grp =
+                                  model.dataService.privateGroups[index];
+                              return GroupsTile(
+                                group: grp,
+                                onAddIconTap: () {},
+                                onArrowIconTap: () {
+                                  NavService.navigateToGroupJoinScreen(
+                                    groupJoin: groupType == GroupType.public
+                                        ? GroupJoin.join
+                                        : GroupJoin.requestJoin,
+                                    group: grp,
+                                  );
+                                },
+                                onMoreIconTap: () {},
+                              );
+                            },
+                          ),
+                        ),
+            if (groupType == GroupType.public)
+              model.isBusy
+                  ? Expanded(
+                      child: Center(
+                        child: LoadingIndicator(
+                          color: AppColors.appSkyBlue,
+                        ),
+                      ),
+                    )
+                  : model.dataService.publicGroups.isEmpty
+                      ? Expanded(
+                          child: Center(
+                            child: EmptyStateWidget(
+                              text:
+                                  'No ${getReadableGroupType(groupType)} Groups Available',
+                            ),
+                          ),
+                        )
+                      : Expanded(
+                          child: ListView.builder(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 27.w,
+                              vertical: 20.h,
+                            ),
+                            itemCount: model.dataService.publicGroups.length,
+                            itemBuilder: (context, index) {
+                              final grp = model.dataService.publicGroups[index];
+                              return GroupsTile(
+                                group: grp,
+                                onAddIconTap: () {},
+                                onArrowIconTap: () {
+                                  NavService.navigateToGroupJoinScreen(
+                                    groupJoin: groupType == GroupType.public
+                                        ? GroupJoin.join
+                                        : GroupJoin.requestJoin,
+                                    group: grp,
+                                  );
+                                },
+                                onMoreIconTap: () {},
+                              );
+                            },
+                          ),
+                        ),
           ],
         ),
       ),

@@ -1,10 +1,13 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:stacked/stacked.dart';
 
 import 'package:starter_app/generated/assets.dart';
 import 'package:starter_app/src/base/utils/utils.dart';
 import 'package:starter_app/src/models/group.dart';
+import 'package:starter_app/src/models/group_member.dart';
 import 'package:starter_app/src/shared/custom_app_bar.dart';
 import 'package:starter_app/src/shared/empty_state_widget.dart';
 import 'package:starter_app/src/shared/loading_indicator.dart';
@@ -100,13 +103,18 @@ class GroupJoinRequestsView extends StackedView<GroupJoinRequestsViewModel> {
                                         ),
                                       )
                                     : ListView.builder(
+                                        itemCount: model.joinRequests.length,
                                         itemBuilder: (context, index) {
+                                          final request =
+                                              model.joinRequests[index];
                                           return JoinRequestTile(
-                                            imagepath: AssetImages.sampleUser,
-                                            days: '3',
-                                            name: 'Muazzam',
-                                            onAccept: () {},
-                                            onreject: () {},
+                                            groupMember: request,
+                                            onAccept: () {
+                                              model.acceptJoinRequest(request);
+                                            },
+                                            onreject: () {
+                                              model.rejectJoinRequest(request);
+                                            },
                                           );
                                         },
                                       ),
@@ -133,20 +141,16 @@ class GroupJoinRequestsView extends StackedView<GroupJoinRequestsViewModel> {
 }
 
 class JoinRequestTile extends StatelessWidget {
-  final String imagepath;
-  final String name;
-  final String days;
-  final Function() onreject;
-  final Function() onAccept;
+  final GroupMember groupMember;
+  final VoidCallback onreject;
+  final VoidCallback onAccept;
 
-  const JoinRequestTile(
-      {Key? key,
-      required this.imagepath,
-      required this.name,
-      required this.days,
-      required this.onreject,
-      required this.onAccept})
-      : super(key: key);
+  const JoinRequestTile({
+    Key? key,
+    required this.groupMember,
+    required this.onreject,
+    required this.onAccept,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -162,9 +166,23 @@ class JoinRequestTile extends StatelessWidget {
         ),
         Row(
           children: [
-            CircleAvatar(
-              radius: 35.r,
-              backgroundImage: AssetImage(imagepath),
+            // CircleAvatar(
+            //   radius: 35.r,
+            //   backgroundImage: AssetImage(imagepath),
+            // ),
+            Container(
+              height: 55.h,
+              width: 55.h,
+              clipBehavior: Clip.hardEdge,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                image: DecorationImage(
+                  image: groupMember.group?.groupImage != null
+                      ? CachedNetworkImageProvider(
+                          groupMember.group!.groupImage!)
+                      : Image.asset(AssetImages.defaultImage).image,
+                ),
+              ),
             ),
             SizedBox(
               width: 20.w,
@@ -173,11 +191,13 @@ class JoinRequestTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  name,
+                  groupMember.user?.firstname ?? '',
                   style: TextStyling.semiBold,
                 ),
                 Text(
-                  '$days days ago',
+                  groupMember.joinRequestTime != null
+                      ? 'Requested on ${DateFormat('yMMMd').format(groupMember.joinRequestTime!)}'
+                      : '----',
                   style: TextStyling.thin,
                 ),
               ],

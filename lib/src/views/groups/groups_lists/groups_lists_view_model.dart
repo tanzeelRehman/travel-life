@@ -7,19 +7,12 @@ import 'package:starter_app/src/services/remote/base/database_view_model.dart';
 
 class GroupsListsViewModel extends ReactiveViewModel
     with DatabaseViewModel, DataViewModel {
-  List<Group> groups = [];
   init(GroupType type) async {
     if (type == GroupType.public) {
-      groups = dataService.publicGroups;
       await loadPublicGroups();
     } else {
-      groups = dataService.privateGroups;
       await loadPrivateGroups();
     }
-  }
-
-  navigateToGroupHome(Group group) {
-    NavService.navigateToGroupHomeScreen(group: group);
   }
 
   loadPublicGroups() async {

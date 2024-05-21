@@ -12,11 +12,15 @@ class GroupJoinViewModel extends ReactiveViewModel
     with DatabaseViewModel, SupabaseAuthViewModel, DataViewModel {
   TextEditingController? groupDescription;
 
+  int totalMembers = 0;
+
   late final Group group;
 
   init(Group g) {
     group = g;
+
     notifyListeners();
+    getTotalMembersCount();
     groupDescription = TextEditingController(
       text: group.description ?? '-----',
     );
@@ -69,6 +73,11 @@ class GroupJoinViewModel extends ReactiveViewModel
       Constants.customSuccessSnack('Join request sent successfully');
     }
     setBusy(false);
+  }
+
+  getTotalMembersCount() async {
+    totalMembers = await databaseService.getTotalGroupMembers(group.id!);
+    notifyListeners();
   }
 
   getGroupsForYou() async {

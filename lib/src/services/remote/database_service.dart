@@ -1450,8 +1450,7 @@ class DatabaseService with ListenableServiceMixin {
           .from(SupabaseTables.groupMemebers)
           .select(groupMembersQuery)
           .eq('group', groupId)
-          .eq('user', userId)
-          .single();
+          .eq('user', userId);
 
       if (doesExist.isEmpty) {
         final res = await _supabase
@@ -1470,7 +1469,7 @@ class DatabaseService with ListenableServiceMixin {
       }
 
       //TODO: update the invited_by field
-      List<dynamic>? invitedBy = doesExist['invited_by'];
+      List<dynamic>? invitedBy = doesExist.first['invited_by'];
 
       List<dynamic> newInvitedBy = [];
 
@@ -1485,7 +1484,7 @@ class DatabaseService with ListenableServiceMixin {
             'invited': 'true',
             'invited_by': newInvitedBy,
           })
-          .eq('id', doesExist['id'])
+          .eq('id', doesExist.first['id'])
           .select(groupMembersQuery)
           .single();
 
@@ -1519,6 +1518,29 @@ class DatabaseService with ListenableServiceMixin {
     }
   }
 
+  //TODO: leave group / remove user from group
+  Future<bool> leaveOrRemoveUserFromGroupByGroudMemberId(
+      int groupMemberId) async {
+    try {
+      if (!_isConnected()) {
+        return false;
+      }
+
+      final res = await _supabase
+          .from(SupabaseTables.groupMemebers)
+          .delete()
+          .eq('id', groupMemberId)
+          .select(groupMembersQuery)
+          .single();
+
+      return res['id'] != null;
+    } catch (e) {
+      print(e);
+      Constants.customErrorSnack(e.toString());
+      return false;
+    }
+  }
+
   //TODO: request to join group
   Future<bool> requestToJoinGroup(String userId, int groupId) async {
     try {
@@ -1530,12 +1552,21 @@ class DatabaseService with ListenableServiceMixin {
           .from(SupabaseTables.groupMemebers)
           .select(groupMembersQuery)
           .eq('group', groupId)
-          .eq('user', userId)
-          .single();
+          .eq('user', userId);
 
       if (doesExist.isEmpty) {
-        final res = await joinPublicGroup(userId, groupId);
-        return res;
+        final res = await _supabase
+            .from(SupabaseTables.groupMemebers)
+            .insert({
+              'user': userId,
+              'group': groupId,
+              'join_request_time': DateTime.now().toIso8601String(),
+              'joined': false,
+              'requested_to_join': true,
+            })
+            .select(groupMembersQuery)
+            .single();
+        return res['id'] != null;
       }
 
       final res = await _supabase
@@ -1544,7 +1575,7 @@ class DatabaseService with ListenableServiceMixin {
             'join_request_time': DateTime.now().toIso8601String(),
             'requested_to_join': true,
           })
-          .eq('id', doesExist['id'])
+          .eq('id', doesExist.first['id'])
           .select(groupMembersQuery)
           .single();
 
@@ -1603,24 +1634,26 @@ class DatabaseService with ListenableServiceMixin {
       final res = await _supabase.from(SupabaseTables.appUsers).select('*');
 
       //TODO: filter the users that are not invited yet or requested to join
-      final alreadyInvited = await _supabase
+      final alreadyInvitedOrJoinedUsers = await _supabase
           .from(SupabaseTables.groupMemebers)
           .select('user')
           .eq('group', groupId)
-          .eq('invited', true);
+          .or('invited.eq.true, joined.eq.true');
+      // .eq('invited', true);
 
-      final alreadyJoined = await _supabase
-          .from(SupabaseTables.groupMemebers)
-          .select('user')
-          .eq('group', groupId)
-          .eq('joined', true);
+      // final alreadyJoined = await _supabase
+      //     .from(SupabaseTables.groupMemebers)
+      //     .select('user')
+      //     .eq('group', groupId)
+      //     .eq('joined', true);
 
       final filteredRes = res
-          .where((user) => !alreadyInvited.any((u) => u['user'] == user['id']))
+          .where((user) =>
+              !alreadyInvitedOrJoinedUsers.any((u) => u['user'] == user['id']))
           .toList();
 
-      filteredRes.removeWhere(
-          (user) => alreadyJoined.any((u) => u['user'] == user['id']));
+      // filteredRes.removeWhere(
+      //     (user) => alreadyJoined.any((u) => u['user'] == user['id']));
 
       return AppUser.fromJsonList(filteredRes);
     } catch (e) {
@@ -1711,6 +1744,7 @@ const String joinRequestsQuery = '''
         ''';
 
 const String seeAllMembersQuery = '''
+        id,
         user(*),
         date_joined
         ''';

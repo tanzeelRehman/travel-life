@@ -37,7 +37,7 @@ class GroupJoinRequestsViewModel extends ReactiveViewModel
     if (res) {
       setJoinRequestLoading(false);
       getJoinRequests();
-      Constants.customWarningSnack('Join request rejected');
+      Constants.customSuccessSnack('Join request rejected');
     }
     setJoinRequestLoading(false);
   }
@@ -48,7 +48,7 @@ class GroupJoinRequestsViewModel extends ReactiveViewModel
     final res = await databaseService.rejectJoinRequest(member.id!);
     if (res) {
       setJoinRequestLoading(false);
-      Constants.customWarningSnack('Join request rejected');
+      Constants.customSuccessSnack('Join request rejected');
       getJoinRequests();
     }
     setJoinRequestLoading(false);

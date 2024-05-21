@@ -72,7 +72,7 @@ class GroupHomeView extends StackedView<GroupHomeViewModel> {
                       bottom: 20.h,
                       child: seeMembersTile(
                         context,
-                        group.totalMembers ?? 0,
+                        model.totalMembers,
                         (() {
                           model.navigateToSeeAllMembers();
                         }),

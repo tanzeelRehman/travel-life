@@ -18,8 +18,9 @@ class AllMembersViewModel extends ReactiveViewModel
     getSeeAllMembers();
   }
 
-  navigateToMemberProfile(SeeAllMembersUser member) {
-    NavService.navigateToGroupMembersProfileScreen(member: member);
+  navigateToMemberProfile(SeeAllMembersUser member, bool isGroupAdmin) {
+    NavService.navigateToGroupMembersProfileScreen(
+        member: member, isGroupAdmin: isGroupAdmin);
   }
 
   getSeeAllMembers() async {

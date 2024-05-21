@@ -126,10 +126,13 @@ class NavService {
           arguments: GroupHomeViewArguments(group: group));
 
   static Future<dynamic>? navigateToGroupMembersProfileScreen(
-          {required SeeAllMembersUser member}) =>
+          {required SeeAllMembersUser member, required bool isGroupAdmin}) =>
       _navigationService!.navigateTo(
         Routes.groupMemberProfileView,
-        arguments: GroupMemberProfileViewArguments(member: member),
+        arguments: GroupMemberProfileViewArguments(
+          member: member,
+          isGroupAdmin: isGroupAdmin,
+        ),
       );
 
   static Future<dynamic>? navigateToAddMemberScreen({required Group group}) =>

@@ -122,7 +122,8 @@ class GroupJoinView extends StackedView<GroupJoinViewModel> {
                       children: [
                         Row(
                           children: [
-                            Text('13', style: TextStyling.thin),
+                            Text(model.totalMembers.toString(),
+                                style: TextStyling.thin),
                             Text(' Total Members', style: TextStyling.thin)
                           ],
                         ),

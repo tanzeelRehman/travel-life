@@ -342,8 +342,10 @@ class StackedRouter extends _i1.RouterBase {
     _i19.GroupMemberProfileView: (data) {
       final args = data.getArgs<GroupMemberProfileViewArguments>(nullOk: false);
       return _i24.MaterialPageRoute<dynamic>(
-        builder: (context) =>
-            _i19.GroupMemberProfileView(key: args.key, member: args.member),
+        builder: (context) => _i19.GroupMemberProfileView(
+            key: args.key,
+            member: args.member,
+            isGroupAdmin: args.isGroupAdmin),
         settings: data,
       );
     },
@@ -573,26 +575,31 @@ class GroupMemberProfileViewArguments {
   const GroupMemberProfileViewArguments({
     this.key,
     required this.member,
+    required this.isGroupAdmin,
   });
 
   final _i24.Key? key;
 
   final _i32.SeeAllMembersUser member;
 
+  final bool isGroupAdmin;
+
   @override
   String toString() {
-    return '{"key": "$key", "member": "$member"}';
+    return '{"key": "$key", "member": "$member", "isGroupAdmin": "$isGroupAdmin"}';
   }
 
   @override
   bool operator ==(covariant GroupMemberProfileViewArguments other) {
     if (identical(this, other)) return true;
-    return other.key == key && other.member == member;
+    return other.key == key &&
+        other.member == member &&
+        other.isGroupAdmin == isGroupAdmin;
   }
 
   @override
   int get hashCode {
-    return key.hashCode ^ member.hashCode;
+    return key.hashCode ^ member.hashCode ^ isGroupAdmin.hashCode;
   }
 }
 
@@ -953,6 +960,7 @@ extension NavigatorStateExtension on _i34.NavigationService {
   Future<dynamic> navigateToGroupMemberProfileView({
     _i24.Key? key,
     required _i32.SeeAllMembersUser member,
+    required bool isGroupAdmin,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -960,7 +968,8 @@ extension NavigatorStateExtension on _i34.NavigationService {
         transition,
   }) async {
     return navigateTo<dynamic>(Routes.groupMemberProfileView,
-        arguments: GroupMemberProfileViewArguments(key: key, member: member),
+        arguments: GroupMemberProfileViewArguments(
+            key: key, member: member, isGroupAdmin: isGroupAdmin),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
@@ -1295,6 +1304,7 @@ extension NavigatorStateExtension on _i34.NavigationService {
   Future<dynamic> replaceWithGroupMemberProfileView({
     _i24.Key? key,
     required _i32.SeeAllMembersUser member,
+    required bool isGroupAdmin,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1302,7 +1312,8 @@ extension NavigatorStateExtension on _i34.NavigationService {
         transition,
   }) async {
     return replaceWith<dynamic>(Routes.groupMemberProfileView,
-        arguments: GroupMemberProfileViewArguments(key: key, member: member),
+        arguments: GroupMemberProfileViewArguments(
+            key: key, member: member, isGroupAdmin: isGroupAdmin),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,

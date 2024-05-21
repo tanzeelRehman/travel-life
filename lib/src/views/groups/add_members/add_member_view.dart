@@ -96,7 +96,7 @@ class AddMemberView extends StackedView<AddMemberViewModel> {
                       SizedBox(height: 15.h),
                       GestureDetector(
                         onTap: () {
-                          model.sendInvite();
+                          model.onClickSendInvites();
                         },
                         child: Container(
                           height: 56.h,

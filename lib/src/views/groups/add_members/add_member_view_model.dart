@@ -67,7 +67,7 @@ class AddMemberViewModel extends ReactiveViewModel
     notifyListeners();
 
     await Future.delayed(Duration(seconds: 2));
-    NavService.navigateToGroupHomeScreen(group: group);
+    NavService.back();
 
     Constants.customSuccessSnack('Invitation sent to the selected users');
   }
@@ -82,11 +82,12 @@ class AddMemberViewModel extends ReactiveViewModel
     notifyListeners();
   }
 
-  void sendInvite() async {
-    selectedMembersList.clear();
-    notifyListeners();
-    Constants.customSuccessSnack('Invitation sent to all users');
-    await Future.delayed(Duration(seconds: 2));
-    NavService.navigateToGroupHomeScreen(group: group);
-  }
+  // void sendInvite() async {
+  //   selectedMembersList.clear();
+  //   notifyListeners();
+  //   Constants.customSuccessSnack('Invitation sent to all users');
+  //   await Future.delayed(Duration(seconds: 2));
+  //   // NavService.navigateToGroupHomeScreen(group: group);
+  //   NavService.back();
+  // }
 }
