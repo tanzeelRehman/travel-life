@@ -103,7 +103,10 @@ class MyGroupsView extends StackedView<MyGroupsViewModel> {
                         )
                       : Expanded(
                           child: ListView.builder(
-                            padding: EdgeInsets.symmetric(horizontal: 20.w),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 20.w,
+                              vertical: 10.h,
+                            ),
                             itemCount: model.dataService.myGroups.length,
                             itemBuilder: (context, index) {
                               final grp = model.dataService.myGroups[index];
@@ -194,7 +197,10 @@ class MyGroupsView extends StackedView<MyGroupsViewModel> {
                         )
                       : Expanded(
                           child: ListView.builder(
-                            padding: EdgeInsets.symmetric(horizontal: 20.w),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 20.w,
+                              vertical: 24.h,
+                            ),
                             itemCount: model.dataService.joinedGroups.length,
                             itemBuilder: (context, index) {
                               final grp = model.dataService.joinedGroups[index];
@@ -231,7 +237,11 @@ class MyGroupsView extends StackedView<MyGroupsViewModel> {
                         )
                       : Expanded(
                           child: ListView.builder(
-                            padding: EdgeInsets.symmetric(horizontal: 20.w),
+                            // padding: EdgeInsets.symmetric(horizontal: 20.w),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 20.w,
+                              vertical: 24.h,
+                            ),
                             itemCount: model.dataService.invites.length,
                             itemBuilder: (context, index) {
                               final invitedGroup =

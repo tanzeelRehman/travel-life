@@ -6,17 +6,19 @@ class MainFloatingActionButton extends StatelessWidget {
   const MainFloatingActionButton({
     Key? key,
     required this.onTap,
+    this.heightAndWidth,
   }) : super(key: key);
 
   final VoidCallback onTap;
+  final double? heightAndWidth;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: 55.w,
-        width: 55.w,
+        height: heightAndWidth ?? 55.w,
+        width: heightAndWidth ?? 55.w,
         decoration: BoxDecoration(
           gradient: AppColors.mainButtonGradient,
           shape: BoxShape.circle,
