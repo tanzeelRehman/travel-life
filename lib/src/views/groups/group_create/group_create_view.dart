@@ -184,7 +184,9 @@ class GroupCreateView extends StackedView<GroupCreateViewModel> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   CustomAppBar(
-                    titleText: 'Create Group',
+                    titleText: action == GroupAction.add
+                        ? 'Create Group'
+                        : 'Edit Group',
                   ),
                   VerticalSpacing(context.screenSize().height * 0.23),
                   Expanded(
@@ -216,138 +218,144 @@ class GroupCreateView extends StackedView<GroupCreateViewModel> {
                             controller: model.descriptionController,
                           ),
                           VerticalSpacing(20.h),
-                          // VehicleRegistrationField(
-                          //   decoration: BoxDecoration(),
-                          //   child: Column(
-                          //     mainAxisSize: MainAxisSize.min,
-                          //     children: [
-                          //       Row(
-                          //         mainAxisSize: MainAxisSize.max,
-                          //         mainAxisAlignment:
-                          //             MainAxisAlignment.spaceBetween,
-                          //         children: [
-                          //           Expanded(
-                          //             child: Container(
-                          //               decoration: BoxDecoration(
-                          //                 borderRadius:
-                          //                     BorderRadius.circular(8.r),
-                          //                 boxShadow: AppColors
-                          //                     .vehicleRegTextFieldBoxShadows,
-                          //               ),
-                          //               height: 50.h,
-                          //               padding: EdgeInsets.symmetric(
-                          //                 horizontal: 10.w,
-                          //               ),
-                          //               child: Row(
-                          //                 children: [
-                          //                   Text(
-                          //                     'Private',
-                          //                     style:
-                          //                         TextStyling.medium.copyWith(
-                          //                       fontSize: 12.sp,
-                          //                     ),
-                          //                   ),
-                          //                 ],
-                          //               ),
-                          //             ),
-                          //           ),
-                          //           HorizontalSpacing(10.w),
-                          //           Checkbox(
-                          //             value: !model.isPublic,
-                          //             onChanged: (v) {},
-                          //             activeColor: AppColors.appSkyBlue,
-                          //             side: BorderSide(
-                          //               color: AppColors.appSkyBlue,
-                          //             ),
-                          //           ),
-                          //         ],
-                          //       ),
-                          //       VerticalSpacing(10.h),
-                          //       Row(
-                          //         mainAxisSize: MainAxisSize.max,
-                          //         mainAxisAlignment:
-                          //             MainAxisAlignment.spaceBetween,
-                          //         children: [
-                          //           Expanded(
-                          //             child: Container(
-                          //               decoration: BoxDecoration(
-                          //                 borderRadius:
-                          //                     BorderRadius.circular(8.r),
-                          //                 boxShadow: AppColors
-                          //                     .vehicleRegTextFieldBoxShadows,
-                          //               ),
-                          //               height: 50.h,
-                          //               padding: EdgeInsets.symmetric(
-                          //                 horizontal: 10.w,
-                          //               ),
-                          //               child: Row(
-                          //                 children: [
-                          //                   Text(
-                          //                     'Public',
-                          //                     style:
-                          //                         TextStyling.medium.copyWith(
-                          //                       fontSize: 12.sp,
-                          //                     ),
-                          //                   ),
-                          //                 ],
-                          //               ),
-                          //             ),
-                          //           ),
-                          //           HorizontalSpacing(10.w),
-                          //           Checkbox(
-                          //             value: model.isPublic,
-                          //             onChanged: (v) {},
-                          //             activeColor: AppColors.appSkyBlue,
-                          //             side: BorderSide(
-                          //               color: AppColors.appSkyBlue,
-                          //             ),
-                          //           ),
-                          //         ],
-                          //       ),
-                          //     ],
-                          //   ),
-                          // ),
                           VehicleRegistrationField(
                             decoration: BoxDecoration(),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
                               children: [
-                                Expanded(
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8.r),
-                                      boxShadow: AppColors
-                                          .vehicleRegTextFieldBoxShadows,
-                                    ),
-                                    height: 50.h,
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 10.w,
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          'Private',
-                                          style: TextStyling.medium.copyWith(
-                                            fontSize: 12.sp,
-                                          ),
+                                Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(8.r),
+                                          boxShadow: AppColors
+                                              .vehicleRegTextFieldBoxShadows,
                                         ),
-                                      ],
+                                        height: 50.h,
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 10.w,
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              'Private',
+                                              style:
+                                                  TextStyling.medium.copyWith(
+                                                fontSize: 12.sp,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                                     ),
-                                  ),
+                                    HorizontalSpacing(10.w),
+                                    Checkbox(
+                                      value: !model.isPublic,
+                                      onChanged: (v) {
+                                        model.isPublic = false;
+                                        model.notifyListeners();
+                                      },
+                                      activeColor: AppColors.appSkyBlue,
+                                      side: BorderSide(
+                                        color: AppColors.appSkyBlue,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                HorizontalSpacing(10.w),
-                                Switch(
-                                  value: !model.isPublic,
-                                  onChanged: (v) {
-                                    model.isPublic = !model.isPublic;
-                                    model.notifyListeners();
-                                  },
-                                  activeColor: AppColors.appSkyBlue,
+                                VerticalSpacing(10.h),
+                                Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(8.r),
+                                          boxShadow: AppColors
+                                              .vehicleRegTextFieldBoxShadows,
+                                        ),
+                                        height: 50.h,
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 10.w,
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              'Public',
+                                              style:
+                                                  TextStyling.medium.copyWith(
+                                                fontSize: 12.sp,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    HorizontalSpacing(10.w),
+                                    Checkbox(
+                                      value: model.isPublic,
+                                      onChanged: (v) {
+                                        model.isPublic = true;
+                                        model.notifyListeners();
+                                      },
+                                      activeColor: AppColors.appSkyBlue,
+                                      side: BorderSide(
+                                        color: AppColors.appSkyBlue,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
                           ),
+                          // VehicleRegistrationField(
+                          //   decoration: BoxDecoration(),
+                          //   child: Row(
+                          //     mainAxisSize: MainAxisSize.max,
+                          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          //     children: [
+                          //       Expanded(
+                          //         child: Container(
+                          //           decoration: BoxDecoration(
+                          //             borderRadius: BorderRadius.circular(8.r),
+                          //             boxShadow: AppColors
+                          //                 .vehicleRegTextFieldBoxShadows,
+                          //           ),
+                          //           height: 50.h,
+                          //           padding: EdgeInsets.symmetric(
+                          //             horizontal: 10.w,
+                          //           ),
+                          //           child: Row(
+                          //             children: [
+                          //               Text(
+                          //                 'Private',
+                          //                 style: TextStyling.medium.copyWith(
+                          //                   fontSize: 12.sp,
+                          //                 ),
+                          //               ),
+                          //             ],
+                          //           ),
+                          //         ),
+                          //       ),
+                          //       HorizontalSpacing(10.w),
+                          //       Switch(
+                          //         value: !model.isPublic,
+                          //         onChanged: (v) {
+                          //           model.isPublic = !model.isPublic;
+                          //           model.notifyListeners();
+                          //         },
+                          //         activeColor: AppColors.appSkyBlue,
+                          //       ),
+                          //     ],
+                          //   ),
+                          // ),
                           VerticalSpacing(20.h),
                           VehicleRegistrationTextField(
                             svgIconPath: AssetIcons.groupNameIcon,

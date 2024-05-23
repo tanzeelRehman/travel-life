@@ -9,6 +9,7 @@ import 'package:starter_app/src/configs/app_setup.locator.dart';
 import 'package:starter_app/src/configs/app_setup.router.dart';
 import 'package:starter_app/src/models/accessory.dart';
 import 'package:starter_app/src/models/group.dart';
+import 'package:starter_app/src/models/invited_group.dart';
 import 'package:starter_app/src/models/operating_cost.dart';
 import 'package:starter_app/src/models/see_all_members_user.dart';
 import 'package:starter_app/src/models/vehicle.dart';
@@ -109,10 +110,15 @@ class NavService {
       _navigationService!.navigateTo(Routes.myGroupsView, arguments: arguments);
 
   static Future<dynamic>? navigateToGroupJoinScreen(
-          {required GroupJoin groupJoin, required Group group}) =>
+          {required GroupJoin groupJoin,
+          required Group group,
+          InvitedGroup? invitedGroup}) =>
       _navigationService!.navigateTo(Routes.groupJoinView,
-          arguments:
-              GroupJoinViewArguments(groupJoin: groupJoin, group: group));
+          arguments: GroupJoinViewArguments(
+            groupJoin: groupJoin,
+            group: group,
+            invitedGroup: invitedGroup,
+          ));
 
   static Future<dynamic>? navigateToGroupJoinRequestsScreen(
           {required Group group}) =>

@@ -32,6 +32,8 @@ class GroupJoinViewModel extends ReactiveViewModel
       joinGroup();
     } else if (groupJoinMode == GroupJoin.requestJoin) {
       requestToJoinGroup();
+    } else if (groupJoinMode == GroupJoin.accept) {
+      //TODO: accept the invitation
     }
   }
 
@@ -75,9 +77,36 @@ class GroupJoinViewModel extends ReactiveViewModel
     setBusy(false);
   }
 
+  onClickAcceptInvite(int groupMemberId) async {
+    setBusy(true);
+
+    final res = await databaseService.acceptInviteRequest(groupMemberId);
+
+    print('res in accept invite in group join view model $res');
+    if (res == true) {
+      setBusy(false);
+
+      getJoinedGroups();
+      getInvites();
+
+      NavService.back();
+      Constants.customSuccessSnack('Invitation accepted');
+    }
+
+    setBusy(false);
+  }
+
   getTotalMembersCount() async {
     totalMembers = await databaseService.getTotalGroupMembers(group.id!);
     notifyListeners();
+  }
+
+  getJoinedGroups() async {
+    dataService.joinedGroups = await databaseService.getJoinedGroups() ?? [];
+  }
+
+  getInvites() async {
+    dataService.invites = await databaseService.getInvitedGroups() ?? [];
   }
 
   getGroupsForYou() async {

@@ -18,9 +18,12 @@ class AllMembersViewModel extends ReactiveViewModel
     getSeeAllMembers();
   }
 
-  navigateToMemberProfile(SeeAllMembersUser member, bool isGroupAdmin) {
+  navigateToMemberProfile(SeeAllMembersUser member) {
     NavService.navigateToGroupMembersProfileScreen(
-        member: member, isGroupAdmin: isGroupAdmin);
+      member: member,
+      isGroupAdmin: supabaseAuthService.user?.id ==
+          group.admin?.id, //this means if the CURRENT user is admin
+    );
   }
 
   getSeeAllMembers() async {

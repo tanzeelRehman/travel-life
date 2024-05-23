@@ -12,8 +12,10 @@ import 'package:starter_app/src/shared/custom_tab.dart';
 import 'package:starter_app/src/shared/empty_state_widget.dart';
 import 'package:starter_app/src/shared/loading_indicator.dart';
 import 'package:starter_app/src/shared/main_floating_action_button.dart';
+import 'package:starter_app/src/shared/spacing.dart';
 import 'package:starter_app/src/shared/tab_switcher_widget.dart';
 import 'package:starter_app/src/styles/app_colors.dart';
+import 'package:starter_app/src/styles/text_theme.dart';
 import 'package:starter_app/src/views/groups/my_groups/my_groups_view_model.dart';
 import 'package:starter_app/src/views/groups/widgets/group_tile_widget.dart';
 import 'package:starter_app/src/views/groups/widgets/groups_card.dart';
@@ -110,7 +112,25 @@ class MyGroupsView extends StackedView<MyGroupsViewModel> {
                                 onTap: () {
                                   model.navigateToGroupsHome(grp);
                                 },
-                                onDelete: () {},
+                                onDelete: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      // print(grp.isEnabled);
+                                      return DisableGroupDialog(
+                                        // isVehicleEnabled: grp.isEnabled,
+                                        isGroupEnabled: grp.isEnabled,
+                                        onClickYes: () {
+                                          print(grp.isEnabled);
+                                          model.onDisableGroup(
+                                            grp.id!,
+                                            !(grp.isEnabled!),
+                                          );
+                                        },
+                                      );
+                                    },
+                                  );
+                                },
                                 onEditDetailstap: () {
                                   model.navigateToGroupEditPage(grp);
                                 },
@@ -220,7 +240,9 @@ class MyGroupsView extends StackedView<MyGroupsViewModel> {
                                 isButtonLoading: model.isBusy,
                                 invitedGroup: invitedGroup,
                                 onAddIconTap: () {},
-                                onArrowIconTap: () {},
+                                onArrowIconTap: () {
+                                  model.onOpenInviteGroupDetail(invitedGroup);
+                                },
                                 onMoreIconTap: () {},
                                 onAccept: () {
                                   print('id is: ${invitedGroup.groupMemberId}');
@@ -252,4 +274,97 @@ class MyGroupsView extends StackedView<MyGroupsViewModel> {
 
   @override
   void onViewModelReady(MyGroupsViewModel model) => model.init();
+}
+
+class DisableGroupDialog extends StatelessWidget {
+  const DisableGroupDialog({
+    Key? key,
+    required this.isGroupEnabled,
+    required this.onClickYes,
+  }) : super(key: key);
+
+  final bool? isGroupEnabled;
+  final VoidCallback onClickYes;
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      backgroundColor: AppColors.appDarkBlue,
+      insetPadding: EdgeInsets.only(left: 10.0, right: 10.0),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0.r),
+      ),
+      title: Text(
+        (isGroupEnabled ?? true) ? 'Disable Group' : 'Enable Group',
+        textAlign: TextAlign.center,
+        style: TextStyling.medium.copyWith(
+          fontSize: 16.sp,
+        ),
+      ),
+      content: Text(
+        (isGroupEnabled ?? true)
+            ? 'Are you sure you want to disable group?'
+            : 'Are you sure you want to enable group?',
+        style: TextStyling.thin.copyWith(fontSize: 12.sp),
+      ),
+      actions: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            GestureDetector(
+              onTap: () {
+                onClickYes();
+                if (context.mounted) {
+                  Navigator.pop(context);
+                }
+              },
+              child: Container(
+                height: 40.0.h,
+                width: 70.0.w,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12.0),
+                  color: AppColors.appSkyBlue,
+                ),
+                child: Center(
+                  child: Text(
+                    "Yes",
+                    style: TextStyling.regular.copyWith(
+                      fontSize: 12.sp,
+                      color: AppColors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            HorizontalSpacing(15.w),
+            GestureDetector(
+              onTap: () {
+                if (context.mounted) {
+                  Navigator.pop(context);
+                }
+              },
+              child: Container(
+                height: 40.0.h,
+                width: 70.0.w,
+                decoration: BoxDecoration(
+                  color: AppColors.appFaddedBlue,
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                child: Center(
+                  child: Text(
+                    "No",
+                    style: TextStyling.regular.copyWith(
+                      fontSize: 12.sp,
+                      color: AppColors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        VerticalSpacing(10),
+      ],
+    );
+  }
 }

@@ -7,6 +7,8 @@ import 'package:starter_app/generated/assets.dart';
 import 'package:starter_app/src/base/utils/utils.dart';
 import 'package:starter_app/src/models/group.dart';
 import 'package:starter_app/src/shared/custom_app_bar.dart';
+import 'package:starter_app/src/shared/empty_state_widget.dart';
+import 'package:starter_app/src/shared/loading_indicator.dart';
 import 'package:starter_app/src/shared/spacing.dart';
 import 'package:starter_app/src/styles/app_colors.dart';
 import 'package:starter_app/src/styles/text_theme.dart';
@@ -65,54 +67,68 @@ class AddMemberView extends StackedView<AddMemberViewModel> {
                         model.filterMembersList(query);
                       },
                     ),
-                    if (model.selectedMembersList.isNotEmpty) ...[
-                      VerticalSpacing(20.h),
-                      SizedBox(
-                        height: 35,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: model.selectedMembersList.length,
-                          itemBuilder: (context, index) {
-                            return selectedMemberChip(model, index);
+                    if (model.isBusy)
+                      Expanded(
+                        child: Center(
+                          child: LoadingIndicator(
+                            color: AppColors.appSkyBlue,
+                          ),
+                        ),
+                      ),
+                    if (!model.isBusy) ...[
+                      if (model.selectedMembersList.isNotEmpty) ...[
+                        VerticalSpacing(20.h),
+                        SizedBox(
+                          height: 35,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: model.selectedMembersList.length,
+                            itemBuilder: (context, index) {
+                              return selectedMemberChip(model, index);
+                            },
+                          ),
+                        ),
+                        VerticalSpacing(10.h),
+                      ],
+                      if (model.selectedMembersList.isEmpty)
+                        VerticalSpacing(10.h),
+                      Expanded(
+                        child: model.allMembersList.isEmpty
+                            ? EmptyStateWidget(
+                                text: 'No users available to invite',
+                              )
+                            : ListView.builder(
+                                itemCount: model.filterdMembersList.length,
+                                itemBuilder: (context, index) {
+                                  return AddMemberTile(
+                                    user: model.filterdMembersList[index],
+                                    model: model,
+                                  );
+                                },
+                              ),
+                      ),
+                      if (model.selectedMembersList.isNotEmpty) ...[
+                        SizedBox(height: 15.h),
+                        GestureDetector(
+                          onTap: () {
+                            model.onClickSendInvites();
                           },
-                        ),
-                      ),
-                      VerticalSpacing(10.h),
-                    ],
-                    if (model.selectedMembersList.isEmpty)
-                      VerticalSpacing(10.h),
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: model.filterdMembersList.length,
-                        itemBuilder: (context, index) {
-                          return AddMemberTile(
-                            user: model.filterdMembersList[index],
-                            model: model,
-                          );
-                        },
-                      ),
-                    ),
-                    if (model.selectedMembersList.isNotEmpty) ...[
-                      SizedBox(height: 15.h),
-                      GestureDetector(
-                        onTap: () {
-                          model.onClickSendInvites();
-                        },
-                        child: Container(
-                          height: 56.h,
-                          alignment: Alignment.center,
-                          width: context.width * 0.88,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15.r),
-                            gradient: AppColors.mainButtonGradient,
-                          ),
-                          child: Text(
-                            'Send',
-                            style: TextStyling.bold,
+                          child: Container(
+                            height: 56.h,
+                            alignment: Alignment.center,
+                            width: context.width * 0.88,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15.r),
+                              gradient: AppColors.mainButtonGradient,
+                            ),
+                            child: Text(
+                              'Send',
+                              style: TextStyling.bold,
+                            ),
                           ),
                         ),
-                      ),
-                      SizedBox(height: 15.h),
+                        SizedBox(height: 15.h),
+                      ],
                     ],
                   ],
                 ),

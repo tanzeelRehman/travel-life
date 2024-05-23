@@ -41,7 +41,7 @@ class AddMemberViewModel extends ReactiveViewModel
     setBusy(true);
     allMembersList = await databaseService.getUsersForInvite(group.id!) ?? [];
     filterdMembersList = allMembersList;
-    setBusy(true);
+    setBusy(false);
     notifyListeners();
   }
 
@@ -56,20 +56,21 @@ class AddMemberViewModel extends ReactiveViewModel
   }
 
   onClickSendInvites() async {
-    // sendInvite();
-
     if (selectedMembersList.isNotEmpty) {
+      setBusy(true);
       selectedMembersList.forEach((element) {
         databaseService.inviteUserToGroup(element.id!, group.id!);
       });
+
+      selectedMembersList.clear();
+      notifyListeners();
+
+      await Future.delayed(Duration(seconds: 2));
+      setBusy(false);
+      NavService.back();
+
+      Constants.customSuccessSnack('Invitation sent to the selected users');
     }
-    selectedMembersList.clear();
-    notifyListeners();
-
-    await Future.delayed(Duration(seconds: 2));
-    NavService.back();
-
-    Constants.customSuccessSnack('Invitation sent to the selected users');
   }
 
   void addMemberToList(AppUser member) {

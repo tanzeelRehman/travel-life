@@ -1,7 +1,9 @@
 import 'package:stacked/stacked.dart';
 import 'package:starter_app/src/base/enums/group_action.dart';
+import 'package:starter_app/src/base/enums/group_join.dart';
 import 'package:starter_app/src/base/utils/constants.dart';
 import 'package:starter_app/src/models/group.dart';
+import 'package:starter_app/src/models/invited_group.dart';
 import 'package:starter_app/src/services/local/base/data_view_model.dart';
 import 'package:starter_app/src/services/local/navigation_service.dart';
 import 'package:starter_app/src/services/remote/base/database_view_model.dart';
@@ -56,6 +58,14 @@ class MyGroupsViewModel extends ReactiveViewModel
     NavService.navigateToGroupHomeScreen(group: group);
   }
 
+  onOpenInviteGroupDetail(InvitedGroup group) {
+    NavService.navigateToGroupJoinScreen(
+      groupJoin: GroupJoin.accept,
+      group: group.group!,
+      invitedGroup: group,
+    );
+  }
+
   getInvites() async {
     setInvitesLoading(true);
     dataService.invites = await databaseService.getInvitedGroups() ?? [];
@@ -82,6 +92,7 @@ class MyGroupsViewModel extends ReactiveViewModel
       Constants.customSuccessSnack('Invitation accepted');
       getJoinedGroups();
       getInvites();
+      setBusy(false);
     }
     setBusy(false);
   }
@@ -95,5 +106,14 @@ class MyGroupsViewModel extends ReactiveViewModel
       getInvites();
     }
     setBusy(false);
+  }
+
+  onDisableGroup(int groupId, bool isEnabled) async {
+    final res = await databaseService.disableGroup(groupId, isEnabled);
+    getMyGroups();
+    if (res) {
+      getMyGroups();
+      getJoinedGroups();
+    }
   }
 }

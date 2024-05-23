@@ -90,7 +90,7 @@ class GroupJoinRequestsView extends StackedView<GroupJoinRequestsViewModel> {
                           ),
                           SizedBox(height: 15.h),
                           Expanded(
-                            child: model.isBusy
+                            child: model.isBusy || model.joinRequestLoading
                                 ? Center(
                                     child: LoadingIndicator(
                                       color: AppColors.appSkyBlue,
@@ -177,9 +177,8 @@ class JoinRequestTile extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 image: DecorationImage(
-                  image: groupMember.group?.groupImage != null
-                      ? CachedNetworkImageProvider(
-                          groupMember.group!.groupImage!)
+                  image: groupMember.user?.avatar != null
+                      ? CachedNetworkImageProvider(groupMember.user!.avatar!)
                       : Image.asset(AssetImages.defaultImage).image,
                 ),
               ),

@@ -7,21 +7,25 @@ class InvitedGroup {
   final int? groupMemberId;
   final Group? group;
   final List<AppUser>? invitedBy;
+  final int? groupTotalMembers;
   InvitedGroup({
     this.groupMemberId,
     this.group,
     this.invitedBy,
+    this.groupTotalMembers,
   });
 
   InvitedGroup copyWith({
     int? groupMemberId,
     Group? group,
     List<AppUser>? invitedBy,
+    int? groupTotalMembers,
   }) {
     return InvitedGroup(
       groupMemberId: groupMemberId ?? this.groupMemberId,
       group: group ?? this.group,
       invitedBy: invitedBy ?? this.invitedBy,
+      groupTotalMembers: groupTotalMembers ?? this.groupTotalMembers,
     );
   }
 
@@ -65,10 +69,14 @@ class InvitedGroup {
 
     return other.groupMemberId == groupMemberId &&
         other.group == group &&
+        other.groupTotalMembers == groupTotalMembers &&
         listEquals(other.invitedBy, invitedBy);
   }
 
   @override
   int get hashCode =>
-      groupMemberId.hashCode ^ group.hashCode ^ invitedBy.hashCode;
+      groupMemberId.hashCode ^
+      group.hashCode ^
+      invitedBy.hashCode ^
+      groupTotalMembers.hashCode;
 }

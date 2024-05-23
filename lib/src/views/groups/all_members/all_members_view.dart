@@ -55,16 +55,16 @@ class AllMembersView extends StackedView<AllMembersViewModel> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    if (model.isGroupAdmin() && !(group.isPublic ?? true))
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 15.w),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Members',
-                              style: TextStyling.bold,
-                            ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 15.w),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Members',
+                            style: TextStyling.bold,
+                          ),
+                          if (model.isGroupAdmin() && !(group.isPublic ?? true))
                             GestureDetector(
                               onTap: () {
                                 model.navigateToInviteMiddleScreen();
@@ -93,9 +93,9 @@ class AllMembersView extends StackedView<AllMembersViewModel> {
                                 ],
                               ),
                             )
-                          ],
-                        ),
+                        ],
                       ),
+                    ),
                     if (model.isGroupAdmin() && !(group.isPublic ?? true))
                       SizedBox(
                         height: 15.h,
@@ -125,10 +125,7 @@ class AllMembersView extends StackedView<AllMembersViewModel> {
                                           model.supabaseAuthService.user?.id,
                                       member: member,
                                       onTap: () {
-                                        model.navigateToMemberProfile(
-                                          member,
-                                          member.user?.id == group.admin?.id,
-                                        );
+                                        model.navigateToMemberProfile(member);
                                       },
                                     );
                                   },

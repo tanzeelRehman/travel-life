@@ -8,16 +8,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart' as _i24;
 import 'package:stacked/stacked.dart' as _i1;
-import 'package:stacked_services/stacked_services.dart' as _i34;
-import 'package:starter_app/src/base/enums/group_action.dart' as _i33;
+import 'package:stacked_services/stacked_services.dart' as _i35;
+import 'package:starter_app/src/base/enums/group_action.dart' as _i34;
 import 'package:starter_app/src/base/enums/group_join.dart' as _i30;
 import 'package:starter_app/src/base/enums/group_type.dart' as _i29;
 import 'package:starter_app/src/base/enums/vehicle_registration_action.dart'
     as _i25;
 import 'package:starter_app/src/models/accessory.dart' as _i28;
 import 'package:starter_app/src/models/group.dart' as _i31;
+import 'package:starter_app/src/models/invited_group.dart' as _i32;
 import 'package:starter_app/src/models/operating_cost.dart' as _i27;
-import 'package:starter_app/src/models/see_all_members_user.dart' as _i32;
+import 'package:starter_app/src/models/see_all_members_user.dart' as _i33;
 import 'package:starter_app/src/models/vehicle.dart' as _i26;
 import 'package:starter_app/src/views/email_confirmation/email_confirmation_view.dart'
     as _i8;
@@ -321,7 +322,8 @@ class StackedRouter extends _i1.RouterBase {
     _i16.GroupJoinView: (data) {
       final args = data.getArgs<GroupJoinViewArguments>(nullOk: false);
       return _i24.MaterialPageRoute<dynamic>(
-        builder: (context) => _i16.GroupJoinView(args.groupJoin, args.group),
+        builder: (context) =>
+            _i16.GroupJoinView(args.groupJoin, args.group, args.invitedGroup),
         settings: data,
       );
     },
@@ -504,26 +506,31 @@ class GroupJoinViewArguments {
   const GroupJoinViewArguments({
     required this.groupJoin,
     required this.group,
+    required this.invitedGroup,
   });
 
   final _i30.GroupJoin groupJoin;
 
   final _i31.Group group;
 
+  final _i32.InvitedGroup? invitedGroup;
+
   @override
   String toString() {
-    return '{"groupJoin": "$groupJoin", "group": "$group"}';
+    return '{"groupJoin": "$groupJoin", "group": "$group", "invitedGroup": "$invitedGroup"}';
   }
 
   @override
   bool operator ==(covariant GroupJoinViewArguments other) {
     if (identical(this, other)) return true;
-    return other.groupJoin == groupJoin && other.group == group;
+    return other.groupJoin == groupJoin &&
+        other.group == group &&
+        other.invitedGroup == invitedGroup;
   }
 
   @override
   int get hashCode {
-    return groupJoin.hashCode ^ group.hashCode;
+    return groupJoin.hashCode ^ group.hashCode ^ invitedGroup.hashCode;
   }
 }
 
@@ -580,7 +587,7 @@ class GroupMemberProfileViewArguments {
 
   final _i24.Key? key;
 
-  final _i32.SeeAllMembersUser member;
+  final _i33.SeeAllMembersUser member;
 
   final bool isGroupAdmin;
 
@@ -609,7 +616,7 @@ class GroupCreateViewArguments {
     required this.group,
   });
 
-  final _i33.GroupAction action;
+  final _i34.GroupAction action;
 
   final _i31.Group? group;
 
@@ -696,7 +703,7 @@ class InviteMiddleScreenViewArguments {
   }
 }
 
-extension NavigatorStateExtension on _i34.NavigationService {
+extension NavigatorStateExtension on _i35.NavigationService {
   Future<dynamic> navigateToSplashView([
     int? routerId,
     bool preventDuplicates = true,
@@ -911,6 +918,7 @@ extension NavigatorStateExtension on _i34.NavigationService {
   Future<dynamic> navigateToGroupJoinView({
     required _i30.GroupJoin groupJoin,
     required _i31.Group group,
+    required _i32.InvitedGroup? invitedGroup,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -918,7 +926,8 @@ extension NavigatorStateExtension on _i34.NavigationService {
         transition,
   }) async {
     return navigateTo<dynamic>(Routes.groupJoinView,
-        arguments: GroupJoinViewArguments(groupJoin: groupJoin, group: group),
+        arguments: GroupJoinViewArguments(
+            groupJoin: groupJoin, group: group, invitedGroup: invitedGroup),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
@@ -959,7 +968,7 @@ extension NavigatorStateExtension on _i34.NavigationService {
 
   Future<dynamic> navigateToGroupMemberProfileView({
     _i24.Key? key,
-    required _i32.SeeAllMembersUser member,
+    required _i33.SeeAllMembersUser member,
     required bool isGroupAdmin,
     int? routerId,
     bool preventDuplicates = true,
@@ -977,7 +986,7 @@ extension NavigatorStateExtension on _i34.NavigationService {
   }
 
   Future<dynamic> navigateToGroupCreateView({
-    required _i33.GroupAction action,
+    required _i34.GroupAction action,
     required _i31.Group? group,
     int? routerId,
     bool preventDuplicates = true,
@@ -1255,6 +1264,7 @@ extension NavigatorStateExtension on _i34.NavigationService {
   Future<dynamic> replaceWithGroupJoinView({
     required _i30.GroupJoin groupJoin,
     required _i31.Group group,
+    required _i32.InvitedGroup? invitedGroup,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1262,7 +1272,8 @@ extension NavigatorStateExtension on _i34.NavigationService {
         transition,
   }) async {
     return replaceWith<dynamic>(Routes.groupJoinView,
-        arguments: GroupJoinViewArguments(groupJoin: groupJoin, group: group),
+        arguments: GroupJoinViewArguments(
+            groupJoin: groupJoin, group: group, invitedGroup: invitedGroup),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
@@ -1303,7 +1314,7 @@ extension NavigatorStateExtension on _i34.NavigationService {
 
   Future<dynamic> replaceWithGroupMemberProfileView({
     _i24.Key? key,
-    required _i32.SeeAllMembersUser member,
+    required _i33.SeeAllMembersUser member,
     required bool isGroupAdmin,
     int? routerId,
     bool preventDuplicates = true,
@@ -1321,7 +1332,7 @@ extension NavigatorStateExtension on _i34.NavigationService {
   }
 
   Future<dynamic> replaceWithGroupCreateView({
-    required _i33.GroupAction action,
+    required _i34.GroupAction action,
     required _i31.Group? group,
     int? routerId,
     bool preventDuplicates = true,

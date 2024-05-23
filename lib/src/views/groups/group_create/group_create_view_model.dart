@@ -18,6 +18,7 @@ class GroupCreateViewModel extends ReactiveViewModel
     with SupabaseAuthViewModel, DatabaseViewModel, DataViewModel {
   // final int maxGroupSize = 50;
   final int minGroupSize = 5;
+  final int defaultGroupSize = 20;
 
   Group? editGroup;
   late final GroupAction groupAction;
@@ -49,7 +50,7 @@ class GroupCreateViewModel extends ReactiveViewModel
       createdOnController.text = formatDate(DateTime.now());
       adminAndCreatedByController.text =
           supabaseAuthService.user?.firstname ?? '';
-      totalLimitController.text = '20';
+      totalLimitController.text = defaultGroupSize.toString();
       locationController.text = supabaseAuthService.user?.city ?? '';
     }
     notifyListeners();
@@ -171,7 +172,8 @@ class GroupCreateViewModel extends ReactiveViewModel
         if (updatedGroupWithImage != null) {
           getMyGroups();
           getJoinedGroups();
-          NavService.back();
+          // NavService.back();
+          clearFeilds();
           Constants.customSuccessSnack('Group created successfully');
         }
         return;
@@ -181,7 +183,8 @@ class GroupCreateViewModel extends ReactiveViewModel
       if (inserted != null) {
         getMyGroups();
         getJoinedGroups();
-        NavService.back();
+        // NavService.back();
+        clearFeilds();
         Constants.customSuccessSnack('Group created successfully');
       }
     } else {
@@ -199,7 +202,8 @@ class GroupCreateViewModel extends ReactiveViewModel
         if (updatedUserWithProfile != null) {
           getMyGroups();
           getJoinedGroups();
-          NavService.back();
+          // NavService.back();
+          // clearFeilds();
           Constants.customSuccessSnack('Group updated successfully');
         }
         return;
@@ -210,10 +214,22 @@ class GroupCreateViewModel extends ReactiveViewModel
       if (inserted != null) {
         getMyGroups();
         getJoinedGroups();
-        NavService.back();
+        // NavService.back();
+        // clearFeilds();
         Constants.customSuccessSnack('Group updated successfully');
       }
     }
+  }
+
+  //TODO: add this function in the future.
+  clearFeilds() {
+    selectedImage = null;
+    nameController.clear();
+    descriptionController.clear();
+    isPublic = true;
+    locationController.clear();
+    totalLimitController.text = defaultGroupSize.toString();
+    notifyListeners();
   }
 
   getMyGroups() async {

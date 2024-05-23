@@ -121,7 +121,7 @@ class GroupMemberProfileView extends StackedView<GroupMemberProfileViewModel> {
                               return Dialog(
                                 backgroundColor: Colors.transparent,
                                 child: RemovePersonDialog(
-                                  name: 'Tanzeel',
+                                  name: member.user?.firstname ?? '',
                                   no: () {
                                     Navigator.pop(context);
                                   },

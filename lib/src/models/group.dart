@@ -81,7 +81,7 @@ class Group {
       'is_public': isPublic,
       'max_members': maxMembers,
       'location_city': locationCity,
-      'is_enabled': isEnabled,
+      'is_enabled': true,
     };
   }
 
@@ -103,7 +103,7 @@ class Group {
       maxMembers: map['max_members'] != null ? map['max_members'] as int : null,
       locationCity:
           map['location_city'] != null ? map['location_city'] as String : null,
-      isEnabled: map['is_enabled'] != null ? map['is_enabled'] as bool : null,
+      isEnabled: map['is_enabled'] != null ? map['is_enabled'] as bool : true,
     );
   }
 

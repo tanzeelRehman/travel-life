@@ -884,7 +884,8 @@ class DatabaseService with ListenableServiceMixin {
       final joinedGroups = await _supabase
           .from(SupabaseTables.groupMemebers)
           .select('*')
-          .eq('joined', true)
+          // .eq('joined', true)
+          .or('requested_to_join.eq.true, joined.eq.true')
           .eq('user', '${_authService.user?.id}');
 
       final joinedGroupIds =
@@ -950,7 +951,8 @@ class DatabaseService with ListenableServiceMixin {
       final joinedGroups = await _supabase
           .from(SupabaseTables.groupMemebers)
           .select('*')
-          .eq('joined', true)
+          // .eq('joined', true)
+          .or('requested_to_join.eq.true, joined.eq.true')
           .eq('user', '${_authService.user?.id}');
 
       final joinedGroupIds =
@@ -1039,10 +1041,15 @@ class DatabaseService with ListenableServiceMixin {
                 await getListOfUsers(e['invited_by'] as List<dynamic>);
           }
 
+          final int totalMembers = invitedGroup?.id != null
+              ? await getTotalGroupMembers(invitedGroup!.id!)
+              : 0;
+
           allGroups.add(InvitedGroup(
             groupMemberId: e['id'],
             group: invitedGroup,
             invitedBy: invitedByUsers,
+            groupTotalMembers: totalMembers,
           ));
         }
       }
@@ -1428,6 +1435,7 @@ class DatabaseService with ListenableServiceMixin {
           .from(SupabaseTables.groupMemebers)
           .select(groupMembersQuery)
           .eq('group', groupId)
+          .eq('joined', true)
           .count(CountOption.exact);
 
       return res.count;

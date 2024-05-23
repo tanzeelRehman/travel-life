@@ -8,8 +8,10 @@ import 'package:starter_app/generated/assets.dart';
 import 'package:starter_app/src/base/enums/group_join.dart';
 import 'package:starter_app/src/base/utils/utils.dart';
 import 'package:starter_app/src/models/group.dart';
+import 'package:starter_app/src/models/invited_group.dart';
 import 'package:starter_app/src/services/local/navigation_service.dart';
 import 'package:starter_app/src/shared/custom_app_bar.dart';
+import 'package:starter_app/src/shared/main_button.dart';
 import 'package:starter_app/src/shared/vehicle_registration_textfield.dart';
 import 'package:starter_app/src/styles/app_colors.dart';
 import 'package:starter_app/src/styles/text_theme.dart';
@@ -19,8 +21,9 @@ import 'package:starter_app/src/views/groups/group_join/group_join_view_model.da
 class GroupJoinView extends StackedView<GroupJoinViewModel> {
   final GroupJoin groupJoin;
   final Group group;
+  final InvitedGroup? invitedGroup;
 
-  GroupJoinView(this.groupJoin, this.group);
+  GroupJoinView(this.groupJoin, this.group, this.invitedGroup);
   @override
   Widget builder(
     BuildContext context,
@@ -144,23 +147,43 @@ class GroupJoinView extends StackedView<GroupJoinViewModel> {
                       height: 20.h,
                     ),
                     if (groupJoin == GroupJoin.join ||
-                        groupJoin == GroupJoin.requestJoin)
-                      GestureDetector(
-                        onTap: () {
-                          model.onClickJoinOrRequestJoin(groupJoin);
-                        },
-                        child: Container(
-                          height: 55.h,
-                          alignment: Alignment.center,
-                          width: MediaQuery.of(context).size.width,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12.r),
-                              gradient: AppColors.mainButtonGradient),
-                          child: Text(
-                            getReadableGroupJoinType(groupJoin),
-                            style: TextStyling.semiBold,
-                          ),
-                        ),
+                        groupJoin == GroupJoin.requestJoin ||
+                        groupJoin == GroupJoin.accept)
+                      // GestureDetector(
+                      //   onTap: groupJoin == GroupJoin.accept &&
+                      //           invitedGroup != null
+                      //       ? () {
+                      //           model.onClickAcceptInvite(
+                      //               invitedGroup!.groupMemberId!);
+                      //         }
+                      //       : () {
+                      //           model.onClickJoinOrRequestJoin(groupJoin);
+                      //         },
+                      //   child: Container(
+                      //     height: 55.h,
+                      //     alignment: Alignment.center,
+                      //     width: MediaQuery.of(context).size.width,
+                      //     decoration: BoxDecoration(
+                      //         borderRadius: BorderRadius.circular(12.r),
+                      //         gradient: AppColors.mainButtonGradient),
+                      //     child: Text(
+                      //       getReadableGroupJoinType(groupJoin),
+                      //       style: TextStyling.semiBold,
+                      //     ),
+                      //   ),
+                      // ),
+                      MainButton(
+                        buttonText: getReadableGroupJoinType(groupJoin),
+                        onPressed: groupJoin == GroupJoin.accept &&
+                                invitedGroup != null
+                            ? () {
+                                model.onClickAcceptInvite(
+                                    invitedGroup!.groupMemberId!);
+                              }
+                            : () {
+                                model.onClickJoinOrRequestJoin(groupJoin);
+                              },
+                        isLoading: model.isBusy,
                       ),
                     if (groupJoin == GroupJoin.leave)
                       GestureDetector(
