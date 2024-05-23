@@ -37,6 +37,7 @@ class GroupMemberProfileViewModel extends ReactiveViewModel
     if (res) {
       setBusy(false);
       NavService.back();
+      NavService.back(); //might not be the best approach but eh
       Constants.customSuccessSnack(
           'Removed ${user.user?.firstname ?? '----'} from group');
       return;

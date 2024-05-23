@@ -7,6 +7,7 @@ import 'package:starter_app/generated/assets.dart';
 import 'package:starter_app/src/base/utils/utils.dart';
 import 'package:starter_app/src/models/see_all_members_user.dart';
 import 'package:starter_app/src/shared/custom_app_bar.dart';
+import 'package:starter_app/src/shared/main_button.dart';
 import 'package:starter_app/src/shared/profile_textfield.dart';
 import 'package:starter_app/src/shared/spacing.dart';
 import 'package:starter_app/src/styles/app_colors.dart';
@@ -113,8 +114,9 @@ class GroupMemberProfileView extends StackedView<GroupMemberProfileViewModel> {
                       SizedBox(
                         height: 50.h,
                       ),
-                      GestureDetector(
-                        onTap: () {
+                      MainButton(
+                        buttonText: 'Remove',
+                        onPressed: () {
                           showDialog(
                             context: context,
                             builder: (context) {
@@ -127,26 +129,50 @@ class GroupMemberProfileView extends StackedView<GroupMemberProfileViewModel> {
                                   },
                                   yes: () {
                                     model.onRemoveGroupMember();
+                                    Navigator.pop(context);
                                   },
                                 ),
                               );
                             },
                           );
                         },
-                        child: Container(
-                          height: 55.h,
-                          alignment: Alignment.center,
-                          width: MediaQuery.of(context).size.width,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12.r),
-                              color: Colors.red,
-                              border: AppColors.gradientBordersDecoration),
-                          child: Text(
-                            'Remove',
-                            style: TextStyling.semiBold,
-                          ),
-                        ),
+                        isLoading: model.isBusy,
+                        btnColor: Colors.red,
                       ),
+                      // GestureDetector(
+                      //   onTap: () {
+                      //     showDialog(
+                      //       context: context,
+                      //       builder: (context) {
+                      //         return Dialog(
+                      //           backgroundColor: Colors.transparent,
+                      //           child: RemovePersonDialog(
+                      //             name: member.user?.firstname ?? '',
+                      //             no: () {
+                      //               Navigator.pop(context);
+                      //             },
+                      //             yes: () {
+                      //               model.onRemoveGroupMember();
+                      //             },
+                      //           ),
+                      //         );
+                      //       },
+                      //     );
+                      //   },
+                      //   child: Container(
+                      //     height: 55.h,
+                      //     alignment: Alignment.center,
+                      //     width: MediaQuery.of(context).size.width,
+                      //     decoration: BoxDecoration(
+                      //         borderRadius: BorderRadius.circular(12.r),
+                      //         color: Colors.red,
+                      //         border: AppColors.gradientBordersDecoration),
+                      //     child: Text(
+                      //       'Remove',
+                      //       style: TextStyling.semiBold,
+                      //     ),
+                      //   ),
+                      // ),
                     ],
                   ],
                 ),

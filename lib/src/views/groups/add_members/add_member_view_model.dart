@@ -68,6 +68,7 @@ class AddMemberViewModel extends ReactiveViewModel
       await Future.delayed(Duration(seconds: 2));
       setBusy(false);
       NavService.back();
+      NavService.back(); //TODO: might not be the best approach but eh
 
       Constants.customSuccessSnack('Invitation sent to the selected users');
     }
