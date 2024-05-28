@@ -46,28 +46,36 @@ class GroupsMainView extends StackedView<GroupsMainViewModel> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        groupCard(
-                          () {
-                            model.navigateToGroupLists(GroupType.public);
-                          },
-                          'Public Groups',
-                          AssetImages.publicGroups,
+                        Expanded(
+                          child: groupCard(
+                            () {
+                              model.navigateToMyGroups();
+                            },
+                            'My Groups',
+                            AssetImages.myGroups,
+                          ),
                         ),
-                        groupCard(
-                          () {
-                            model.navigateToGroupLists(GroupType.private);
-                          },
-                          'Private Groups',
-                          AssetImages.privateGroups,
+                        HorizontalSpacing(10.w),
+                        Expanded(
+                          child: groupCard(
+                            () {
+                              model.navigateToGroupLists(GroupType.private);
+                            },
+                            'Private Groups',
+                            AssetImages.privateGroups,
+                          ),
                         ),
-                        groupCard(
-                          () {
-                            model.navigateToMyGroups();
-                          },
-                          'My Groups',
-                          AssetImages.myGroups,
+                        HorizontalSpacing(10.w),
+                        Expanded(
+                          child: groupCard(
+                            () {
+                              model.navigateToGroupLists(GroupType.public);
+                            },
+                            'Public Groups',
+                            AssetImages.publicGroups,
+                          ),
                         ),
                       ],
                     ),
@@ -148,6 +156,7 @@ class GroupsMainView extends StackedView<GroupsMainViewModel> {
         Text(
           title,
           style: TextStyling.semiBold.copyWith(fontSize: 15.sp),
+          textAlign: TextAlign.center,
         )
       ],
     );

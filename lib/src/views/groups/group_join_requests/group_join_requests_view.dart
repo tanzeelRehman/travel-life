@@ -63,29 +63,29 @@ class GroupJoinRequestsView extends StackedView<GroupJoinRequestsViewModel> {
                                 '${model.joinRequests.length} Requests',
                                 style: TextStyling.bold,
                               ),
-                              Row(
-                                children: [
-                                  Container(
-                                    height: 25.h,
-                                    width: 25.h,
-                                    decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        gradient: AppColors.mainButtonGradient),
-                                    child: Icon(
-                                      Icons.add,
-                                      color: Colors.white,
-                                      size: 17.sp,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 8.w,
-                                  ),
-                                  Text(
-                                    'Invite',
-                                    style: TextStyling.thin,
-                                  )
-                                ],
-                              )
+                              // Row(
+                              //   children: [
+                              //     Container(
+                              //       height: 25.h,
+                              //       width: 25.h,
+                              //       decoration: BoxDecoration(
+                              //           shape: BoxShape.circle,
+                              //           gradient: AppColors.mainButtonGradient),
+                              //       child: Icon(
+                              //         Icons.add,
+                              //         color: Colors.white,
+                              //         size: 17.sp,
+                              //       ),
+                              //     ),
+                              //     SizedBox(
+                              //       width: 8.w,
+                              //     ),
+                              //     Text(
+                              //       'Invite',
+                              //       style: TextStyling.thin,
+                              //     )
+                              //   ],
+                              // )
                             ],
                           ),
                           SizedBox(height: 15.h),

@@ -48,7 +48,7 @@ class InviteMiddleScreenView extends StackedView<InviteMiddleScreenViewModel> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
-                        height: Get.height * 0.6,
+                        // height: Get.height * 0.6,
                         width: Get.width * 0.8,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(25.r),

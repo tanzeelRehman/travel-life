@@ -25,9 +25,11 @@ class MyGroupsView extends StackedView<MyGroupsViewModel> {
   @override
   Widget builder(BuildContext context, MyGroupsViewModel model, Widget? child) {
     return Scaffold(
-      floatingActionButton: MainFloatingActionButton(
-        onTap: model.navigateToGroupAddPage,
-      ),
+      floatingActionButton: model.selectedTab == 0
+          ? MainFloatingActionButton(
+              onTap: model.navigateToGroupAddPage,
+            )
+          : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       body: Container(
         width: context.screenSize().width,

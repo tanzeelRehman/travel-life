@@ -25,7 +25,8 @@ class GroupsTile extends StatelessWidget {
       opacity: (group.isEnabled ?? true) ? 1 : 0.5,
       child: Container(
         margin: EdgeInsets.only(bottom: 20.h),
-        height: 155.h,
+        // height: 155.h,
+        constraints: BoxConstraints(minHeight: 155.h),
         padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 12.h),
         width: MediaQuery.of(context).size.width,
         decoration: AppColors.groupCardsDecoration,
@@ -35,7 +36,9 @@ class GroupsTile extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(15.r),
                 child: group.groupImage != null && group.groupImage!.isNotEmpty
-                    ? CachedNetworkImage(imageUrl: group.groupImage ?? "")
+                    ? CachedNetworkImage(
+                        imageUrl: group.groupImage ?? "",
+                      )
                     : Image.asset(AssetImages.defaultImage),
               ),
             ),

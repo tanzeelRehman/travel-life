@@ -35,6 +35,10 @@ class GroupHomeViewModel extends ReactiveViewModel
     NavService.navigateToGroupJoinRequestsScreen(group: group);
   }
 
+  navigateToInviteScreen() {
+    NavService.navigateToInviteMiddleScreen(group: group);
+  }
+
   getTotalMembersCount() async {
     totalMembers = await databaseService.getTotalGroupMembers(group.id!);
     notifyListeners();

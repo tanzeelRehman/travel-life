@@ -33,7 +33,7 @@ class Groupscard extends StatelessWidget {
         child: Container(
           margin: EdgeInsets.only(bottom: 20.h),
           decoration: AppColors.groupCardsDecoration2MoreTransparent,
-          height: MediaQuery.of(context).size.height * 0.35,
+          // height: MediaQuery.of(context).size.height * 0.35,
           width: MediaQuery.of(context).size.width,
           child: Column(
             children: [
@@ -44,98 +44,100 @@ class Groupscard extends StatelessWidget {
                     child: Opacity(
                       opacity: 0.8,
                       child: Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height * 0.2,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(15.r),
-                              topRight: Radius.circular(15.r),
-                            ),
-                            color: Colors.black,
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height * 0.2,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(15.r),
+                            topRight: Radius.circular(15.r),
                           ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(15.r),
-                              topRight: Radius.circular(15.r),
-                            ),
-                            child: group.groupImage != null
-                                ? CachedNetworkImage(
-                                    imageUrl: group.groupImage!,
-                                    fit: BoxFit.cover,
-                                  )
-                                : Image.asset(
-                                    AssetImages.defaultImage,
-                                    fit: BoxFit.fitHeight,
-                                  ),
-                          )),
+                          color: Colors.black,
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(15.r),
+                            topRight: Radius.circular(15.r),
+                          ),
+                          child: group.groupImage != null
+                              ? CachedNetworkImage(
+                                  imageUrl: group.groupImage!,
+                                  fit: BoxFit.cover,
+                                )
+                              : Image.asset(
+                                  AssetImages.defaultImage,
+                                  fit: BoxFit.fitHeight,
+                                ),
+                        ),
+                      ),
                     ),
                   ),
                   Positioned(
-                      top: 15.h,
-                      right: 7.w,
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 15.w),
-                        child: SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.8,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    group.createdAt != null
-                                        ? DateFormat.yMMMd()
-                                            .format(group.createdAt!)
-                                        : '----',
-                                    style: TextStyling.thin,
-                                  ),
-                                  SizedBox(
-                                    height: 5.h,
-                                  ),
-                                  Text(
-                                    group.name ?? '----',
-                                    style: TextStyling.bold
-                                        .copyWith(fontSize: 25.sp),
-                                  ),
-                                ],
-                              ),
-                              GestureDetector(
-                                onTap: onDelete,
-                                child: Container(
-                                  height: 40.h,
-                                  width: 40.w,
-                                  // decoration: BoxDecoration(
-                                  //   color: AppColors.red,
-                                  //   shape: BoxShape.circle,
-                                  // ),
-                                  // child: SvgPicture.asset(
-                                  //   AssetIcons.deleteIcon,
-                                  //   fit: BoxFit.none,
-                                  //   //height: 30.h,
-                                  // ),
-                                  decoration: BoxDecoration(
-                                    color: (group.isEnabled ?? true)
-                                        ? AppColors.red
-                                        : Colors.green,
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: (group.isEnabled ?? true)
-                                      ? SvgPicture.asset(
-                                          AssetIcons.deleteIcon,
-                                          fit: BoxFit.scaleDown,
-                                        )
-                                      : Icon(
-                                          Icons.check,
-                                          color: AppColors.white,
-                                          size: 20.sp,
-                                        ),
+                    top: 15.h,
+                    right: 7.w,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 15.w),
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  group.createdAt != null
+                                      ? DateFormat.yMMMd()
+                                          .format(group.createdAt!)
+                                      : '----',
+                                  style: TextStyling.thin,
                                 ),
-                              )
-                            ],
-                          ),
+                                SizedBox(
+                                  height: 5.h,
+                                ),
+                                Text(
+                                  group.name ?? '----',
+                                  style: TextStyling.bold
+                                      .copyWith(fontSize: 25.sp),
+                                ),
+                              ],
+                            ),
+                            GestureDetector(
+                              onTap: onDelete,
+                              child: Container(
+                                height: 40.h,
+                                width: 40.w,
+                                // decoration: BoxDecoration(
+                                //   color: AppColors.red,
+                                //   shape: BoxShape.circle,
+                                // ),
+                                // child: SvgPicture.asset(
+                                //   AssetIcons.deleteIcon,
+                                //   fit: BoxFit.none,
+                                //   //height: 30.h,
+                                // ),
+                                decoration: BoxDecoration(
+                                  color: (group.isEnabled ?? true)
+                                      ? AppColors.red
+                                      : Colors.green,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: (group.isEnabled ?? true)
+                                    ? SvgPicture.asset(
+                                        AssetIcons.deleteIcon,
+                                        fit: BoxFit.scaleDown,
+                                      )
+                                    : Icon(
+                                        Icons.check,
+                                        color: AppColors.white,
+                                        size: 20.sp,
+                                      ),
+                              ),
+                            )
+                          ],
                         ),
-                      ))
+                      ),
+                    ),
+                  )
                 ],
               ),
               SizedBox(
@@ -151,36 +153,41 @@ class Groupscard extends StatelessWidget {
                           (group.isEnabled ?? true) ? onSeeAllMembersTap : null,
                       child: Text(
                         "See all members",
-                        style: TextStyling.thin.copyWith(
-                            fontSize: 15.sp,
-                            decoration: TextDecoration.underline),
+                        style: TextStyling.medium.copyWith(
+                          fontSize: 15.sp,
+                          decoration: TextDecoration.underline,
+                          color: AppColors.appSkyBlueLight,
+                        ),
                       ),
                     ),
                     IconButton(
-                        onPressed:
-                            (group.isEnabled ?? true) ? onMoreIconTap : null,
-                        icon: Icon(
-                          Icons.more_vert,
-                          color: Colors.white,
-                        ))
+                      onPressed:
+                          (group.isEnabled ?? true) ? onMoreIconTap : null,
+                      icon: Icon(
+                        Icons.more_vert,
+                        color: Colors.white,
+                      ),
+                    ),
                   ],
                 ),
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 12.w),
+                padding: EdgeInsets.only(right: 12.w, left: 12.w, bottom: 12.h),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          group.name ?? '----',
-                          style: TextStyling.semiBold.copyWith(fontSize: 18.sp),
-                        ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.46,
-                          child: Row(
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            group.name ?? '----',
+                            style:
+                                TextStyling.semiBold.copyWith(fontSize: 18.sp),
+                            textAlign: TextAlign.left,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          Row(
                             children: [
                               Text(
                                 "Admin: ",
@@ -195,8 +202,8 @@ class Groupscard extends StatelessWidget {
                               Spacer(),
                             ],
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                     GestureDetector(
                       onTap:

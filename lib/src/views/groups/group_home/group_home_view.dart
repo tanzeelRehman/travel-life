@@ -111,12 +111,19 @@ class GroupHomeView extends StackedView<GroupHomeViewModel> {
                         height: 25.h,
                       ),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
+                          Spacer(),
+                          subMenuCard(
+                              AssetImages.groupJoinRequestsIcon, 'Invites', () {
+                            model.navigateToInviteScreen();
+                          }),
+                          Spacer(),
                           subMenuCard(AssetImages.groupSettingsIcon, 'Settings',
                               () {
                             model.navigateToEditGroupDetails();
                           }),
+                          Spacer(),
                         ],
                       ),
                     ],

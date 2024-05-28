@@ -27,7 +27,7 @@ class GroupCreateViewModel extends ReactiveViewModel
   final TextEditingController adminAndCreatedByController =
       TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
-  bool isPublic = true;
+  bool isPublic = false;
   final TextEditingController totalLimitController = TextEditingController();
   final TextEditingController createdOnController = TextEditingController();
   final TextEditingController locationController = TextEditingController();
