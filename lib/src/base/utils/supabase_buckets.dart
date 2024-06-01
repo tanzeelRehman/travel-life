@@ -12,4 +12,6 @@ class SupabaseBuckets {
   static const accessoryImagesBucket = 'accessory_images';
   static const operationalCostAttachmentsBucket =
       'operational_cost_attachments';
+
+  static const groupImagesBucket = 'group_images';
 }

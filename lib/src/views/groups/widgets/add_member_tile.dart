@@ -2,13 +2,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gradient_borders/box_borders/gradient_box_border.dart';
+import 'package:starter_app/src/models/app_user.dart';
 import 'package:starter_app/src/styles/text_theme.dart';
-import 'package:starter_app/src/views/groups/models/add_member_view_model.dart';
+import 'package:starter_app/src/views/groups/add_members/add_member_view_model.dart';
 
 class AddMemberTile extends StatelessWidget {
-  final String name;
+  final AppUser user;
   final AddMemberViewModel model;
-  const AddMemberTile({Key? key, required this.name, required this.model})
+  const AddMemberTile({Key? key, required this.user, required this.model})
       : super(key: key);
 
   @override
@@ -19,7 +20,7 @@ class AddMemberTile extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            name,
+            user.firstname ?? '',
             style: TextStyling.thin.copyWith(fontSize: 17.sp),
           ),
           customRadioButton()
@@ -34,17 +35,17 @@ class AddMemberTile extends StatelessWidget {
       width: 30,
       child: Column(
         children: [
-          model.membersIsInList(name)
+          model.membersIsInList(user)
               ? GestureDetector(
                   onTap: () {
-                    model.removeMemberToList(name);
+                    model.removeMemberToList(user);
                   },
                   child: Container(
                     height: 28,
                     width: 28,
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        gradient: model.membersIsInList(name)
+                        gradient: model.membersIsInList(user)
                             ? const LinearGradient(
                                 colors: [Color(0xff38acea), Color(0xff4378ee)])
                             : const LinearGradient(colors: [
@@ -55,7 +56,7 @@ class AddMemberTile extends StatelessWidget {
                 )
               : GestureDetector(
                   onTap: () {
-                    model.addMemberToList(name);
+                    model.addMemberToList(user);
                   },
                   child: Container(
                     height: 28,
@@ -63,7 +64,7 @@ class AddMemberTile extends StatelessWidget {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border: GradientBoxBorder(
-                        gradient: !model.membersIsInList(name)
+                        gradient: !model.membersIsInList(user)
                             ? const LinearGradient(
                                 colors: [Color(0xff38acea), Color(0xff4378ee)])
                             : const LinearGradient(

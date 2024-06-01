@@ -16,6 +16,7 @@ class MainButton extends StatelessWidget {
   final Gradient? gradient;
   final BorderRadiusGeometry? borderRadius;
   final Widget? child;
+  final Color? btnColor;
 
   const MainButton({
     Key? key,
@@ -31,6 +32,7 @@ class MainButton extends StatelessWidget {
     this.gradient,
     this.borderRadius,
     this.child,
+    this.btnColor,
   }) : super(key: key);
 
   @override
@@ -39,8 +41,10 @@ class MainButton extends StatelessWidget {
       height: height ?? 60.h,
       width: fullWidth ? double.infinity : width,
       decoration: BoxDecoration(
-        gradient: gradient ?? AppColors.mainButtonGradient,
+        gradient: gradient ??
+            (btnColor == null ? AppColors.mainButtonGradient : null),
         borderRadius: borderRadius ?? BorderRadius.circular(10.r),
+        color: btnColor,
       ),
       child: ElevatedButton(
         onPressed: isLoading ? null : onPressed,

@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:stacked/stacked.dart';
 import 'package:starter_app/generated/assets.dart';
 import 'package:starter_app/src/base/utils/utils.dart';
 import 'package:starter_app/src/shared/custom_app_bar.dart';
+import 'package:starter_app/src/shared/custom_bottom_navbar.dart';
 import 'package:starter_app/src/shared/empty_state_widget.dart';
 import 'package:starter_app/src/shared/loading_indicator.dart';
+import 'package:starter_app/src/shared/main_floating_action_button.dart';
 import 'package:starter_app/src/shared/main_outlined_button.dart';
 import 'package:starter_app/src/shared/quick_navigation_button.dart';
 import 'package:starter_app/src/shared/spacing.dart';
@@ -24,20 +28,71 @@ class VehicleRegistrationView
     Widget? child,
   ) {
     return Scaffold(
-      bottomNavigationBar: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: 27.w,
-          vertical: 10.h,
-        ),
-        child: MainOutlinedButton(
-          buttonText: 'Add Vehicle',
-          onPressed: model.onInsertVehicle,
-        ),
+      // bottomNavigationBar: Padding(
+      //   padding: EdgeInsets.symmetric(
+      //     horizontal: 27.w,
+      //     vertical: 10.h,
+      //   ),
+      //   child: MainOutlinedButton(
+      //     buttonText: 'Add Vehicle',
+      //     onPressed: model.onInsertVehicle,
+      //   ),
+      // ),
+      bottomNavigationBar: CustomBottomNavbar(
+        onChange: (value) {
+          model.onChangeBottomNavIndex(value);
+        },
+        selectedIndex: model.selectedBottomNavIndex,
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: QuickNavigationButton(
         openCloseDial: model.isFabOpen,
+        otherOptions: [
+          SpeedDialChild(
+            child: Container(
+              height: 41.w,
+              width: 41.w,
+              decoration: BoxDecoration(
+                gradient: AppColors.vehicleRegistrationGradient,
+                shape: BoxShape.circle,
+              ),
+              padding: EdgeInsets.all(10.w),
+              child: SvgPicture.asset(
+                AssetIcons.vehicleRegistrationButtonIcon,
+                fit: BoxFit.scaleDown,
+              ),
+            ),
+            foregroundColor: AppColors.white,
+            backgroundColor: Colors.transparent,
+            shape: CircleBorder(),
+            labelWidget: Container(
+              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.w),
+              decoration: BoxDecoration(
+                color: AppColors.appSkyBlue,
+                borderRadius: BorderRadius.circular(10.r),
+              ),
+              child: Text(
+                'Add Vehicle',
+                style: TextStyling.semiBold.copyWith(
+                  color: AppColors.white,
+                  fontSize: 12.sp,
+                ),
+              ),
+            ),
+            onTap: () {
+              Future.delayed(Duration(milliseconds: 150), () {
+                model.onInsertVehicle();
+              });
+            },
+          ),
+        ],
       ),
+      // floatingActionButton: MainFloatingActionButton(
+      //   onTap: () {
+      //     model.onInsertVehicle();
+      //   },
+      //   heightAndWidth: 65.w,
+      // ),
       body: Container(
         width: context.screenSize().width,
         height: context.screenSize().height,
