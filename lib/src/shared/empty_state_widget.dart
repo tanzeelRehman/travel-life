@@ -39,6 +39,7 @@ class EmptyStateWidget extends StatelessWidget {
                 fontSize: 14.sp,
                 color: color ?? AppColors.white,
               ),
+              textAlign: TextAlign.center,
             ),
           ],
         ),

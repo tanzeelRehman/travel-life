@@ -9,9 +9,11 @@ import 'package:starter_app/src/styles/text_theme.dart';
 class AddMemberSearchBar extends StatelessWidget {
   final TextEditingController seacrchController;
   final Function() onSearch;
+  final void Function(String)? onChanged;
   const AddMemberSearchBar({
     Key? key,
     required this.seacrchController,
+    required this.onChanged,
     required this.onSearch,
   }) : super(key: key);
 
@@ -31,19 +33,21 @@ class AddMemberSearchBar extends StatelessWidget {
             alignment: Alignment.center,
             width: context.width * 0.8,
             child: TextField(
-                controller: seacrchController,
-                decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: "Search user by name...",
-                    hintStyle: TextStyling.thin.copyWith(
-                      fontSize: 15.sp,
-                      color: AppColors.white.withOpacity(0.7),
-                    )),
-                style: TextStyling.thin.copyWith(
-                  fontSize: 15.sp,
-                  color: AppColors.white.withOpacity(0.7),
-                ),
-                cursorColor: AppColors.white),
+              controller: seacrchController,
+              decoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: "Search user by name...",
+                  hintStyle: TextStyling.thin.copyWith(
+                    fontSize: 15.sp,
+                    color: AppColors.white.withOpacity(0.7),
+                  )),
+              style: TextStyling.thin.copyWith(
+                fontSize: 15.sp,
+                color: AppColors.white.withOpacity(0.7),
+              ),
+              cursorColor: AppColors.white,
+              onChanged: onChanged,
+            ),
           ),
           Align(
             alignment: Alignment.centerRight,

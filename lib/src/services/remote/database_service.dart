@@ -8,9 +8,15 @@ import 'package:starter_app/src/base/utils/utils.dart';
 import 'package:starter_app/src/configs/app_setup.locator.dart';
 import 'package:starter_app/src/models/accessory.dart';
 import 'package:starter_app/src/models/accessory_category.dart';
+import 'package:starter_app/src/models/app_user.dart';
 import 'package:starter_app/src/models/cost_category.dart';
+import 'package:starter_app/src/models/group.dart';
+import 'package:starter_app/src/models/group_member.dart';
+import 'package:starter_app/src/models/invited_group.dart';
+// import 'package:starter_app/src/models/join_request_user.dart';
 import 'package:starter_app/src/models/manufacturor.dart';
 import 'package:starter_app/src/models/operating_cost.dart';
+import 'package:starter_app/src/models/see_all_members_user.dart';
 import 'package:starter_app/src/models/vehicle.dart';
 import 'package:starter_app/src/models/vehicle_model.dart';
 import 'package:starter_app/src/services/local/connectivity_service.dart';
@@ -232,6 +238,12 @@ class DatabaseService with ListenableServiceMixin {
       Constants.customErrorSnack(e.toString());
       return null;
     }
+  }
+
+  String getDefaultVehicleImage(int manufacturerID) {
+    return _supabase.storage
+        .from(SupabaseBuckets.avatarsBucket)
+        .getPublicUrl('BikeLogos/Logo$manufacturerID.png');
   }
 
 //////////////////////////////////////////////// ACCESSORIES //////////////////////////////////////////
@@ -731,49 +743,6 @@ class DatabaseService with ListenableServiceMixin {
     }
   }
 
-  // //ADD OPERATING COST ATTACHMENT
-  // Future<OperatingCost?> insertOrUpdateOperatingCostAttachment(
-  //     int operatingCostID, File image) async {
-  //   try {
-  //     if (!_isConnected()) {
-  //       return null;
-  //     }
-
-  //     final imageName = '${_authService.user?.id}/$operatingCostID';
-
-  //     final publicUrl = _supabase.storage
-  //         .from(SupabaseBuckets.operationalCostAttachmentsBucket)
-  //         .getPublicUrl(imageName);
-
-  //     final bool doesExists = await UtilFunctions.isResourceFound(publicUrl);
-
-  //     if (doesExists) {
-  //       final res = await _supabase.storage
-  //           .from(SupabaseBuckets.operationalCostAttachmentsBucket)
-  //           .update(imageName, image);
-  //       print('update res: $res');
-  //     } else {
-  //       final res = await _supabase.storage
-  //           .from(SupabaseBuckets.operationalCostAttachmentsBucket)
-  //           .upload(imageName, image);
-  //       print('upload res: $res');
-  //     }
-
-  //     final updatedUser = await _supabase
-  //         .from(SupabaseTables.operatingCosts)
-  //         .update({'attachment': publicUrl})
-  //         .eq('id', operatingCostID)
-  //         .select(operationalCostQuery)
-  //         .single();
-
-  //     return OperatingCost.fromMap(updatedUser);
-  //   } catch (e) {
-  //     print(e);
-  //     Constants.customErrorSnack(e.toString());
-  //     return null;
-  //   }
-  // }
-
   //ADD OPERATING COST ATTACHMENTS (Insert)
   Future<OperatingCost?> addOperatingCostAttachments(
     int operatingCostID,
@@ -899,17 +868,842 @@ class DatabaseService with ListenableServiceMixin {
         .getPublicUrl(attachmentPath);
   }
 
+  //////////////////////////////////// GROUP OPERATIONS /////////////////////////////
+
+  //TODO: view all suggested i.e for you groups (with some restrictions i.e for you groups etc)
+  Future<List<Group>?> getForYouGroups() async {
+    try {
+      if (!_isConnected()) {
+        return null;
+      }
+
+      final res =
+          await _supabase.from(SupabaseTables.groups).select(groupsQuery);
+
+      //filter out my joined groups
+      final joinedGroups = await _supabase
+          .from(SupabaseTables.groupMemebers)
+          .select('*')
+          // .eq('joined', true)
+          .or('requested_to_join.eq.true, joined.eq.true')
+          .eq('user', '${_authService.user?.id}');
+
+      final joinedGroupIds =
+          joinedGroups.map((group) => group['group']).toList();
+
+      final filteredGroups =
+          res.where((group) => !joinedGroupIds.contains(group['id'])).toList();
+
+      return Group.fromJsonList(filteredGroups);
+    } catch (e) {
+      print(e);
+      Constants.customErrorSnack(e.toString());
+      return null;
+    }
+  }
+
+  //TODO: view all public groups (decide on what basis these groups are going to be shown)
+  Future<List<Group>?> getPublicGroups() async {
+    try {
+      if (!_isConnected()) {
+        return null;
+      }
+
+      final res = await _supabase
+          .from(SupabaseTables.groups)
+          .select(groupsQuery)
+          .eq('is_public', true);
+
+      //filter out my joined groups
+      final joinedGroups = await _supabase
+          .from(SupabaseTables.groupMemebers)
+          .select('*')
+          .eq('joined', true)
+          .eq('user', '${_authService.user?.id}');
+
+      final joinedGroupIds =
+          joinedGroups.map((group) => group['group']).toList();
+
+      final filteredGroups =
+          res.where((group) => !joinedGroupIds.contains(group['id'])).toList();
+
+      return Group.fromJsonList(filteredGroups);
+    } catch (e) {
+      print(e);
+      Constants.customErrorSnack(e.toString());
+      return null;
+    }
+  }
+
+  //TODO: view all private groups (with some restrictions)
+  Future<List<Group>?> getPrivateGroups() async {
+    try {
+      if (!_isConnected()) {
+        return null;
+      }
+
+      final res = await _supabase
+          .from(SupabaseTables.groups)
+          .select(groupsQuery)
+          .eq('is_public', false);
+
+      //filter out my joined groups
+      final joinedGroups = await _supabase
+          .from(SupabaseTables.groupMemebers)
+          .select('*')
+          // .eq('joined', true)
+          .or('requested_to_join.eq.true, joined.eq.true')
+          .eq('user', '${_authService.user?.id}');
+
+      final joinedGroupIds =
+          joinedGroups.map((group) => group['group']).toList();
+
+      final filteredGroups =
+          res.where((group) => !joinedGroupIds.contains(group['id'])).toList();
+
+      return Group.fromJsonList(filteredGroups);
+    } catch (e) {
+      print(e);
+      Constants.customErrorSnack(e.toString());
+      return null;
+    }
+  }
+
+  //TODO: view all public groups (with some restrictions i.e for you groups etc)
+  Future<List<Group>?> getMyCreatedGroups() async {
+    try {
+      if (!_isConnected()) {
+        return null;
+      }
+
+      final res = await _supabase
+          .from(SupabaseTables.groups)
+          .select(groupsQuery)
+          .eq('admin', '${_authService.user?.id}');
+
+      return Group.fromJsonList(res);
+    } catch (e) {
+      print(e);
+      Constants.customErrorSnack(e.toString());
+      return null;
+    }
+  }
+
+  //TODO: view_joined_groups
+  Future<List<Group>?> getJoinedGroups() async {
+    try {
+      if (!_isConnected()) {
+        return null;
+      }
+
+      final res = await _supabase
+          .from(SupabaseTables.groupMemebers)
+          .select(joinedGroupsQuery)
+          .eq('joined', true)
+          .eq('user', '${_authService.user?.id}');
+
+      print('res in getJoinedGroups $res');
+
+      return Group.fromJoinedGroupJsonList(res);
+    } catch (e) {
+      print(e);
+      Constants.customErrorSnack(e.toString());
+      return null;
+    }
+  }
+
+  //TODO: view groups_in_which_you_are_invited
+  Future<List<InvitedGroup>?> getInvitedGroups() async {
+    try {
+      if (!_isConnected()) {
+        return null;
+      }
+
+      final List<InvitedGroup> allGroups = [];
+
+      final res = await _supabase
+          .from(SupabaseTables.groupMemebers)
+          .select(invitedGroupsQuery)
+          .eq('joined', false)
+          .eq('invited', true)
+          .eq('user', '${_authService.user?.id}');
+
+      if (res.length > 0) {
+        for (Map<String, dynamic> e in res) {
+          final Group? invitedGroup = e['group'] != null
+              ? Group.fromMap(e['group'] as Map<String, dynamic>)
+              : null;
+
+          List<AppUser>? invitedByUsers;
+
+          if (e['invited_by'] != null) {
+            invitedByUsers =
+                await getListOfUsers(e['invited_by'] as List<dynamic>);
+          }
+
+          final int totalMembers = invitedGroup?.id != null
+              ? await getTotalGroupMembers(invitedGroup!.id!)
+              : 0;
+
+          allGroups.add(InvitedGroup(
+            groupMemberId: e['id'],
+            group: invitedGroup,
+            invitedBy: invitedByUsers,
+            groupTotalMembers: totalMembers,
+          ));
+        }
+      }
+
+      print(res);
+
+      return allGroups;
+    } catch (e) {
+      print(e);
+      Constants.customErrorSnack(e.toString());
+      return null;
+    }
+  }
+
+  //TODO: view_all_join_requests (USERS basically)_of_a_group
+  Future<List<GroupMember>?> getJoinRequests(int groupId) async {
+    try {
+      if (!_isConnected()) {
+        return null;
+      }
+
+      final res = await _supabase
+          .from(SupabaseTables.groupMemebers)
+          .select(groupMembersQuery)
+          .eq('joined', false)
+          .eq('requested_to_join', true)
+          .eq('group', groupId);
+
+      print(res);
+
+      return GroupMember.fromJsonList(res);
+    } catch (e) {
+      print(e);
+      Constants.customErrorSnack(e.toString());
+      return null;
+    }
+  }
+
+  //TODO: see all members of a group
+  Future<List<SeeAllMembersUser>?> getAllMembers(int groupId) async {
+    try {
+      if (!_isConnected()) {
+        return null;
+      }
+
+      final res = await _supabase
+          .from(SupabaseTables.groupMemebers)
+          .select(seeAllMembersQuery)
+          .eq('joined', true)
+          .eq('requested_to_join', false)
+          .eq('invited', false)
+          .eq('group', groupId);
+
+      print(res);
+
+      return SeeAllMembersUser.fromJsonList(res);
+    } catch (e) {
+      print(e);
+      Constants.customErrorSnack(e.toString());
+      return null;
+    }
+  }
+
+  //TODO: insert group
+  Future<Group?> insertGroup(Group group) async {
+    try {
+      if (!_isConnected()) {
+        return null;
+      }
+
+      final res = await _supabase
+          .from(SupabaseTables.groups)
+          .insert(group.insertToMap())
+          .select(groupsQuery)
+          .single();
+
+      print(res);
+      if (res['id'] != null) {
+        final joined = await joinPublicGroup(
+            _authService.user?.id ?? '', res['id'] as int);
+
+        if (joined) {
+          return Group.fromMap(res);
+        }
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print(e);
+      Constants.customErrorSnack(e.toString());
+      return null;
+    }
+  }
+
+  //TODO: update group
+  Future<Group?> updateGroup(Group group) async {
+    try {
+      if (!_isConnected()) {
+        return null;
+      }
+
+      final res = await _supabase
+          .from(SupabaseTables.groups)
+          .update(group.toMap())
+          .eq('id', group.id!)
+          .select(groupsQuery)
+          .single();
+
+      print(res);
+
+      return Group.fromMap(res);
+    } catch (e) {
+      print(e);
+      Constants.customErrorSnack(e.toString());
+      return null;
+    }
+  }
+
+  //TODO: delete group
+  Future<Group?> deleteGroup(int groupId) async {
+    try {
+      if (!_isConnected()) {
+        return null;
+      }
+
+      final res = await _supabase
+          .from(SupabaseTables.groups)
+          .delete()
+          .eq('id', groupId)
+          .select(groupsQuery)
+          .single();
+
+      print(res);
+
+      return Group.fromMap(res);
+    } catch (e) {
+      print(e);
+      Constants.customErrorSnack(e.toString());
+      return null;
+    }
+  }
+
+  //TODO: disable group
+  Future<bool> disableGroup(int groupId, bool isEnabled) async {
+    try {
+      if (!_isConnected()) {
+        return false;
+      }
+
+      final res = await _supabase
+          .from(SupabaseTables.groups)
+          .update({'is_enabled': isEnabled})
+          .eq('id', groupId)
+          .select(groupsQuery)
+          .single();
+
+      print(res);
+
+      return true;
+    } catch (e) {
+      print(e);
+      Constants.customErrorSnack(e.toString());
+      return false;
+    }
+  }
+
+  //TODO: add or update group image/cover
+  Future<Group?> uploadGroupImage(int groupId, File image) async {
+    try {
+      if (!_isConnected()) {
+        return null;
+      }
+
+      final imageName = '${_authService.user?.id}/$groupId';
+
+      final publicUrl = _supabase.storage
+          .from(SupabaseBuckets.groupImagesBucket)
+          .getPublicUrl(imageName);
+
+      final bool doesExists = await UtilFunctions.isResourceFound(publicUrl);
+
+      if (doesExists) {
+        final res = await _supabase.storage
+            .from(SupabaseBuckets.groupImagesBucket)
+            .update(imageName, image);
+        print('update res: $res');
+      } else {
+        final res = await _supabase.storage
+            .from(SupabaseBuckets.groupImagesBucket)
+            .upload(imageName, image);
+        print('upload res: $res');
+      }
+
+      final updatedGroup = await _supabase
+          .from(SupabaseTables.groups)
+          .update({'group_image': publicUrl})
+          .eq('id', groupId)
+          .select(groupsQuery)
+          .single();
+
+      return Group.fromMap(updatedGroup);
+    } catch (e) {
+      print(e);
+      Constants.customErrorSnack(e.toString());
+      return null;
+    }
+  }
+
+  //TODO: approve join request (only used by admin of the group)
+  Future<bool> approveJoinRequest(int groupMemberId) async {
+    try {
+      if (!_isConnected()) {
+        return false;
+      }
+
+      final res = await _supabase
+          .from(SupabaseTables.groupMemebers)
+          .update({
+            'joined': true,
+            'date_joined': DateTime.now().toIso8601String(),
+            'requested_to_join': false,
+            'invited': false,
+            'invited_by': null,
+          })
+          .eq('id', groupMemberId)
+          .select(groupMembersQuery)
+          .single();
+
+      // print(res);
+      final member = GroupMember.fromMap(res);
+
+      return member.joined != null && member.joined!;
+    } catch (e) {
+      print(e);
+      Constants.customErrorSnack(e.toString());
+      return false;
+    }
+  }
+
+  //TODO: reject join request
+  Future<bool> rejectJoinRequest(int groupMemberId) async {
+    try {
+      if (!_isConnected()) {
+        return false;
+      }
+
+      final groupMember = await _supabase
+          .from(SupabaseTables.groupMemebers)
+          .select(groupMembersQuery)
+          .eq('id', groupMemberId)
+          .single();
+
+      final member = GroupMember.fromMap(groupMember);
+
+      if (member.invited == true &&
+          (member.invitedBy != null && member.invitedBy!.isNotEmpty)) {
+        final res = await _supabase
+            .from(SupabaseTables.groupMemebers)
+            .update({
+              'joined': false,
+              'requested_to_join': false,
+            })
+            .eq('id', groupMemberId)
+            .select(groupMembersQuery)
+            .single();
+
+        final result = GroupMember.fromMap(res);
+
+        return result.joined != null &&
+            result.joined! &&
+            result.requestedToJoin != null &&
+            result.requestedToJoin!;
+      } else {
+        final res = await _supabase
+            .from(SupabaseTables.groupMemebers)
+            .delete()
+            .eq('id', groupMemberId)
+            .select(groupMembersQuery)
+            .single();
+
+        final result = GroupMember.fromMap(res);
+
+        return result.id != null;
+      }
+    } catch (e) {
+      print(e);
+      Constants.customErrorSnack(e.toString());
+      return false;
+    }
+  }
+
+  //TODO: join a group by accepting an invite
+  Future<bool> acceptInviteRequest(int groupMemberId) async {
+    try {
+      if (!_isConnected()) {
+        return false;
+      }
+
+      final res = await _supabase
+          .from(SupabaseTables.groupMemebers)
+          .update({
+            'joined': true,
+            'date_joined': DateTime.now().toIso8601String(),
+            'requested_to_join': false,
+            'invited': false,
+            'invited_by': null,
+          })
+          .eq('id', groupMemberId)
+          .select(groupMembersQuery)
+          .single();
+
+      // print(res);
+      final member = GroupMember.fromMap(res);
+
+      return member.joined != null && member.joined!;
+    } catch (e) {
+      print(e);
+      Constants.customErrorSnack(e.toString());
+      return false;
+    }
+  }
+
+  //TODO: reject an group invite
+  Future<bool> rejectInviteRequest(int groupMemberId) async {
+    try {
+      if (!_isConnected()) {
+        return false;
+      }
+
+      final groupMember = await _supabase
+          .from(SupabaseTables.groupMemebers)
+          .select(groupMembersQuery)
+          .eq('id', groupMemberId)
+          .single();
+
+      final member = GroupMember.fromMap(groupMember);
+
+      if (member.requestedToJoin == true) {
+        final res = await _supabase
+            .from(SupabaseTables.groupMemebers)
+            .update({
+              'joined': false,
+              'invited': false,
+              'invited_by': null,
+            })
+            .eq('id', groupMemberId)
+            .select(groupMembersQuery)
+            .single();
+
+        final result = GroupMember.fromMap(res);
+
+        return result.joined != null &&
+            result.joined! &&
+            result.requestedToJoin != null &&
+            result.requestedToJoin!;
+      } else {
+        final res = await _supabase
+            .from(SupabaseTables.groupMemebers)
+            .delete()
+            .eq('id', groupMemberId)
+            .select(groupMembersQuery)
+            .single();
+
+        final result = GroupMember.fromMap(res);
+
+        return result.id != null;
+      }
+    } catch (e) {
+      print(e);
+      Constants.customErrorSnack(e.toString());
+      return false;
+    }
+  }
+
+  //TODO: get total members of a group
+  Future<int> getTotalGroupMembers(int groupId) async {
+    try {
+      if (!_isConnected()) {
+        return 0;
+      }
+
+      final res = await _supabase
+          .from(SupabaseTables.groupMemebers)
+          .select(groupMembersQuery)
+          .eq('group', groupId)
+          .eq('joined', true)
+          .count(CountOption.exact);
+
+      return res.count;
+    } catch (e) {
+      print(e);
+      Constants.customErrorSnack(e.toString());
+      return 0;
+    }
+  }
+
+  //TODO: invite user to group
+  Future<bool> inviteUserToGroup(String userId, int groupId,
+      {bool showSnackbar = false}) async {
+    try {
+      if (!_isConnected()) {
+        return false;
+      }
+
+      final doesExist = await _supabase
+          .from(SupabaseTables.groupMemebers)
+          .select(groupMembersQuery)
+          .eq('group', groupId)
+          .eq('user', userId);
+
+      if (doesExist.isEmpty) {
+        final res = await _supabase
+            .from(SupabaseTables.groupMemebers)
+            .insert({
+              'user': userId,
+              'group': groupId,
+              'joined': false,
+              'requested_to_join': false,
+              'invited': true,
+              'invited_by': [_authService.user!.id!],
+            })
+            .select(groupMembersQuery)
+            .single();
+        return res['id'] != null;
+      }
+
+      //TODO: update the invited_by field
+      List<dynamic>? invitedBy = doesExist.first['invited_by'];
+
+      List<dynamic> newInvitedBy = [];
+
+      if (invitedBy != null && invitedBy.isNotEmpty) {
+        newInvitedBy.addAll(invitedBy);
+      }
+      newInvitedBy.add(_authService.user!.id!);
+
+      final res = await _supabase
+          .from(SupabaseTables.groupMemebers)
+          .update({
+            'invited': 'true',
+            'invited_by': newInvitedBy,
+          })
+          .eq('id', doesExist.first['id'])
+          .select(groupMembersQuery)
+          .single();
+
+      return res['id'] != null;
+    } catch (e) {
+      print(e);
+      Constants.customErrorSnack(e.toString());
+      return false;
+    }
+  }
+
+  //TODO: leave group / remove user from group
+  Future<bool> leaveOrRemoveUserFromGroup(String userId, int groupId) async {
+    try {
+      if (!_isConnected()) {
+        return false;
+      }
+
+      final res = await _supabase
+          .from(SupabaseTables.groupMemebers)
+          .delete()
+          .eq('user', userId)
+          .eq('group', groupId)
+          .select(groupMembersQuery)
+          .single();
+      return res['id'] != null;
+    } catch (e) {
+      print(e);
+      Constants.customErrorSnack(e.toString());
+      return false;
+    }
+  }
+
+  //TODO: leave group / remove user from group
+  Future<bool> leaveOrRemoveUserFromGroupByGroudMemberId(
+      int groupMemberId) async {
+    try {
+      if (!_isConnected()) {
+        return false;
+      }
+
+      final res = await _supabase
+          .from(SupabaseTables.groupMemebers)
+          .delete()
+          .eq('id', groupMemberId)
+          .select(groupMembersQuery)
+          .single();
+
+      return res['id'] != null;
+    } catch (e) {
+      print(e);
+      Constants.customErrorSnack(e.toString());
+      return false;
+    }
+  }
+
+  //TODO: request to join group
+  Future<bool> requestToJoinGroup(String userId, int groupId) async {
+    try {
+      if (!_isConnected()) {
+        return false;
+      }
+
+      final doesExist = await _supabase
+          .from(SupabaseTables.groupMemebers)
+          .select(groupMembersQuery)
+          .eq('group', groupId)
+          .eq('user', userId);
+
+      if (doesExist.isEmpty) {
+        final res = await _supabase
+            .from(SupabaseTables.groupMemebers)
+            .insert({
+              'user': userId,
+              'group': groupId,
+              'join_request_time': DateTime.now().toIso8601String(),
+              'joined': false,
+              'requested_to_join': true,
+            })
+            .select(groupMembersQuery)
+            .single();
+        return res['id'] != null;
+      }
+
+      final res = await _supabase
+          .from(SupabaseTables.groupMemebers)
+          .update({
+            'join_request_time': DateTime.now().toIso8601String(),
+            'requested_to_join': true,
+          })
+          .eq('id', doesExist.first['id'])
+          .select(groupMembersQuery)
+          .single();
+
+      return res['id'] != null;
+    } catch (e) {
+      print(e);
+      Constants.customErrorSnack(e.toString());
+      return false;
+    }
+  }
+
+  //TODO: join group
+  Future<bool> joinPublicGroup(String userId, int groupId) async {
+    try {
+      if (!_isConnected()) {
+        return false;
+      }
+
+      final groupMembers = await _supabase
+          .from(SupabaseTables.groupMemebers)
+          .select(groupMembersQuery)
+          .eq('group', groupId)
+          .eq('user', userId);
+
+      if (groupMembers.isNotEmpty) {
+        Constants.customWarningSnack('You are already a member of this group');
+        return false;
+      }
+
+      final res = await _supabase
+          .from(SupabaseTables.groupMemebers)
+          .insert({
+            'user': userId,
+            'group': groupId,
+            'date_joined': DateTime.now().toIso8601String(),
+            'joined': true,
+          })
+          .select(groupMembersQuery)
+          .single();
+
+      return res['id'] != null;
+    } catch (e) {
+      print(e);
+      Constants.customErrorSnack(e.toString());
+      return false;
+    }
+  }
+
+  // get the list of users for inviting
+  Future<List<AppUser>?> getUsersForInvite(int groupId) async {
+    try {
+      if (!_isConnected()) {
+        return null;
+      }
+
+      final res = await _supabase.from(SupabaseTables.appUsers).select('*');
+
+      //TODO: filter the users that are not invited yet or requested to join
+      final alreadyInvitedOrJoinedUsers = await _supabase
+          .from(SupabaseTables.groupMemebers)
+          .select('user')
+          .eq('group', groupId)
+          .or('invited.eq.true, joined.eq.true');
+      // .eq('invited', true);
+
+      // final alreadyJoined = await _supabase
+      //     .from(SupabaseTables.groupMemebers)
+      //     .select('user')
+      //     .eq('group', groupId)
+      //     .eq('joined', true);
+
+      final filteredRes = res
+          .where((user) =>
+              !alreadyInvitedOrJoinedUsers.any((u) => u['user'] == user['id']))
+          .toList();
+
+      // filteredRes.removeWhere(
+      //     (user) => alreadyJoined.any((u) => u['user'] == user['id']));
+
+      return AppUser.fromJsonList(filteredRes);
+    } catch (e) {
+      print(e);
+      Constants.customErrorSnack(e.toString());
+      return null;
+    }
+  }
+
+  //TODO: important: when a user joins a group joined will be true baki sab false and join date will also be updated
+
+  ///////////////////////////////HELPER FUNCTIONS///////////////////////////////////
+
+  // get the list of users with userIds
+  Future<List<AppUser>?> getListOfUsers(List<dynamic> userIds) async {
+    try {
+      if (!_isConnected()) {
+        return null;
+      }
+
+      final res = await _supabase
+          .from(SupabaseTables.appUsers)
+          .select('*')
+          .inFilter('id', userIds);
+
+      print('list of users: $res');
+
+      return AppUser.fromJsonList(res);
+    } catch (e) {
+      print(e);
+      Constants.customErrorSnack(e.toString());
+      return null;
+    }
+  }
+
+  //////////////////////////////////////////////////////////////////////////////////
+
   bool _isConnected() {
     if (!_connectivityService.isInternetConnected) {
       Constants.customWarningSnack('No Internet Connection Found');
     }
     return _connectivityService.isInternetConnected;
-  }
-
-  String getDefaultVehicleImage(int manufacturerID) {
-    return _supabase.storage
-        .from(SupabaseBuckets.avatarsBucket)
-        .getPublicUrl('BikeLogos/Logo$manufacturerID.png');
   }
 }
 
@@ -936,4 +1730,35 @@ const String operationalCostQuery = '''
 const String vehicleModelsQuery = '''
         *,
         manufacturer(*)
+        ''';
+
+const String groupsQuery = '''
+        *,
+        admin(*)
+        ''';
+
+const String joinedGroupsQuery = '''
+        group($groupsQuery)
+        ''';
+
+const String invitedGroupsQuery = '''
+        id,
+        invited_by,
+        group($groupsQuery)
+        ''';
+const String joinRequestsQuery = '''
+        user(*),
+        join_request_time
+        ''';
+
+const String seeAllMembersQuery = '''
+        id,
+        user(*),
+        date_joined
+        ''';
+
+const String groupMembersQuery = '''
+        *,
+        user(*),
+        group($groupsQuery)
         ''';

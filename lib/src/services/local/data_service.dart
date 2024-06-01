@@ -2,6 +2,8 @@ import 'package:stacked/stacked.dart';
 import 'package:starter_app/src/models/accessory.dart';
 import 'package:starter_app/src/models/accessory_category.dart';
 import 'package:starter_app/src/models/cost_category.dart';
+import 'package:starter_app/src/models/group.dart';
+import 'package:starter_app/src/models/invited_group.dart';
 import 'package:starter_app/src/models/manufacturor.dart';
 import 'package:starter_app/src/models/operating_cost.dart';
 import 'package:starter_app/src/models/vehicle.dart';
@@ -76,6 +78,51 @@ class DataService with ListenableServiceMixin {
 
   set operatingCosts(List<OperatingCost> v) {
     _operatingCosts.value = v;
+    notifyListeners();
+  }
+
+  //////////////////////////////////////////FOR GROUPS//////////////////////////////////////////////////////
+
+  ReactiveValue<List<Group>> _forYouGroups = ReactiveValue<List<Group>>([]);
+  List<Group> get forYouGroups => _forYouGroups.value;
+  set forYouGroups(List<Group> v) {
+    _forYouGroups.value = v;
+    notifyListeners();
+  }
+
+  ReactiveValue<List<Group>> _publicGroups = ReactiveValue<List<Group>>([]);
+  List<Group> get publicGroups => _publicGroups.value;
+  set publicGroups(List<Group> v) {
+    _publicGroups.value = v;
+    notifyListeners();
+  }
+
+  ReactiveValue<List<Group>> _privateGroups = ReactiveValue<List<Group>>([]);
+  List<Group> get privateGroups => _privateGroups.value;
+  set privateGroups(List<Group> v) {
+    _privateGroups.value = v;
+    notifyListeners();
+  }
+
+  ReactiveValue<List<InvitedGroup>> _invites =
+      ReactiveValue<List<InvitedGroup>>([]);
+  List<InvitedGroup> get invites => _invites.value;
+  set invites(List<InvitedGroup> v) {
+    _invites.value = v;
+    notifyListeners();
+  }
+
+  ReactiveValue<List<Group>> _myGroups = ReactiveValue<List<Group>>([]);
+  List<Group> get myGroups => _myGroups.value;
+  set myGroups(List<Group> v) {
+    _myGroups.value = v;
+    notifyListeners();
+  }
+
+  ReactiveValue<List<Group>> _joinedGroups = ReactiveValue<List<Group>>([]);
+  List<Group> get joinedGroups => _joinedGroups.value;
+  set joinedGroups(List<Group> v) {
+    _joinedGroups.value = v;
     notifyListeners();
   }
 

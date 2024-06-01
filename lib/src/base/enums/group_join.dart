@@ -1,4 +1,4 @@
-enum GroupJoin { join, leave, requestJoin }
+enum GroupJoin { join, leave, requestJoin, accept }
 
 String getReadableGroupJoinType(GroupJoin type) {
   switch (type) {
@@ -8,6 +8,8 @@ String getReadableGroupJoinType(GroupJoin type) {
       return 'Leave';
     case GroupJoin.requestJoin:
       return 'Request to join';
+    case GroupJoin.accept:
+      return 'Accept';
 
     default:
       throw ArgumentError('Invalid groupJoin: $type');

@@ -38,6 +38,12 @@ class AppColors {
   static Color blueGrayShade = Color(0xff444E65);
   static Color appSkyBlueLight = Color(0xff34C8E8);
 
+  static Color bottomNavBarColor = HexColor('#353F54');
+
+  static Color success = HexColor("#64EDB2");
+  static Color error = HexColor("#FF5757");
+  static Color warning = HexColor("#FFD643");
+
   static Gradient mainButtonGradient = LinearGradient(
     colors: [
       HexColor("#34C8E8"),

@@ -15,6 +15,13 @@ class VehicleRegistrationViewModel extends ReactiveViewModel
     getAllVehicles();
   }
 
+  int selectedBottomNavIndex = 0;
+
+  onChangeBottomNavIndex(int index) {
+    selectedBottomNavIndex = index;
+    notifyListeners();
+  }
+
   bool vehiclesLoading = false;
 
   setVehiclesLoading(bool v) {
