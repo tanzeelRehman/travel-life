@@ -13,7 +13,6 @@ import 'package:starter_app/src/models/invited_group.dart';
 import 'package:starter_app/src/models/operating_cost.dart';
 import 'package:starter_app/src/models/see_all_members_user.dart';
 import 'package:starter_app/src/models/vehicle.dart';
-import 'package:starter_app/src/views/groups/group_create/group_create_view_model.dart';
 
 class NavService {
   static NavigationService? _navigationService = locator<NavigationService>();

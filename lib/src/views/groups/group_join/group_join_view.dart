@@ -9,7 +9,6 @@ import 'package:starter_app/src/base/enums/group_join.dart';
 import 'package:starter_app/src/base/utils/utils.dart';
 import 'package:starter_app/src/models/group.dart';
 import 'package:starter_app/src/models/invited_group.dart';
-import 'package:starter_app/src/services/local/navigation_service.dart';
 import 'package:starter_app/src/shared/custom_app_bar.dart';
 import 'package:starter_app/src/shared/main_button.dart';
 import 'package:starter_app/src/shared/vehicle_registration_textfield.dart';

@@ -9,8 +9,6 @@ import 'package:starter_app/src/shared/custom_app_bar.dart';
 import 'package:starter_app/src/shared/custom_bottom_navbar.dart';
 import 'package:starter_app/src/shared/empty_state_widget.dart';
 import 'package:starter_app/src/shared/loading_indicator.dart';
-import 'package:starter_app/src/shared/main_floating_action_button.dart';
-import 'package:starter_app/src/shared/main_outlined_button.dart';
 import 'package:starter_app/src/shared/quick_navigation_button.dart';
 import 'package:starter_app/src/shared/spacing.dart';
 import 'package:starter_app/src/shared/vehicle_card.dart';

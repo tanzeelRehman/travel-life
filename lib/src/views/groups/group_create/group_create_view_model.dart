@@ -10,7 +10,6 @@ import 'package:starter_app/src/base/utils/constants.dart';
 import 'package:starter_app/src/models/group.dart';
 import 'package:starter_app/src/services/local/base/data_view_model.dart';
 import 'package:starter_app/src/services/local/bottom_sheet_service.dart';
-import 'package:starter_app/src/services/local/navigation_service.dart';
 import 'package:starter_app/src/services/remote/base/database_view_model.dart';
 import 'package:starter_app/src/services/remote/base/supabase_auth_view_model.dart';
 

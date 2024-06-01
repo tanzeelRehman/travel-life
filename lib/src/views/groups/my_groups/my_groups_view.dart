@@ -6,7 +6,6 @@ import 'package:stacked/stacked.dart';
 
 import 'package:starter_app/generated/assets.dart';
 import 'package:starter_app/src/base/utils/utils.dart';
-import 'package:starter_app/src/models/group.dart';
 import 'package:starter_app/src/shared/custom_app_bar.dart';
 import 'package:starter_app/src/shared/custom_tab.dart';
 import 'package:starter_app/src/shared/empty_state_widget.dart';

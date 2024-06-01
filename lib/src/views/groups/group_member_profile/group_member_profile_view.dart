@@ -10,8 +10,6 @@ import 'package:starter_app/src/shared/custom_app_bar.dart';
 import 'package:starter_app/src/shared/main_button.dart';
 import 'package:starter_app/src/shared/profile_textfield.dart';
 import 'package:starter_app/src/shared/spacing.dart';
-import 'package:starter_app/src/styles/app_colors.dart';
-import 'package:starter_app/src/styles/text_theme.dart';
 import 'package:starter_app/src/views/dialogs/groups_dialog/remove_person_dialog.dart';
 import 'package:starter_app/src/views/groups/group_member_profile/group_member_profile_view_model.dart';
 
