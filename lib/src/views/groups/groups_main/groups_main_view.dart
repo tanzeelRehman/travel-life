@@ -63,7 +63,7 @@ class GroupsMainView extends StackedView<GroupsMainViewModel> {
                             () {
                               model.navigateToGroupLists(GroupType.private);
                             },
-                            'Private Groups',
+                            'Private',
                             AssetImages.privateGroups,
                           ),
                         ),
@@ -73,7 +73,7 @@ class GroupsMainView extends StackedView<GroupsMainViewModel> {
                             () {
                               model.navigateToGroupLists(GroupType.public);
                             },
-                            'Public Groups',
+                            'Public',
                             AssetImages.publicGroups,
                           ),
                         ),
