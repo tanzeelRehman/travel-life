@@ -9,11 +9,13 @@ class ProfileAvatar extends StatelessWidget {
     Key? key,
     required this.onClickProfile,
     this.avatarUrl,
+    this.heightAndWidth,
   }) : super(key: key);
 
   final VoidCallback onClickProfile;
 
   final String? avatarUrl;
+  final double? heightAndWidth;
 
   @override
   Widget build(BuildContext context) {
@@ -38,8 +40,8 @@ class ProfileAvatar extends StatelessWidget {
             shape: BoxShape.circle,
           ),
           child: SizedBox(
-            height: 70.w,
-            width: 70.w,
+            height: heightAndWidth ?? 70.w,
+            width: heightAndWidth ?? 70.w,
             child: CircleAvatar(
               backgroundImage: avatarUrl != null
                   ? CachedNetworkImageProvider(avatarUrl!)

@@ -4,6 +4,7 @@ import 'package:stacked/stacked.dart';
 import 'package:starter_app/generated/assets.dart';
 import 'package:starter_app/src/base/utils/utils.dart';
 import 'package:starter_app/src/shared/home_action_button.dart';
+import 'package:starter_app/src/shared/home_drawer.dart';
 import 'package:starter_app/src/shared/profile_avatar.dart';
 import 'package:starter_app/src/shared/spacing.dart';
 import 'package:starter_app/src/styles/app_colors.dart';
@@ -14,6 +15,8 @@ class HomeView extends StackedView<HomeViewModel> {
   @override
   Widget builder(BuildContext context, HomeViewModel model, Widget? child) {
     return Scaffold(
+      key: model.scaffoldKey,
+      drawer: HomeDrawer(model),
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
@@ -72,9 +75,39 @@ class HomeView extends StackedView<HomeViewModel> {
                         ],
                       ),
                     ),
-                    ProfileAvatar(
-                      onClickProfile: model.onClickProfile,
-                      avatarUrl: model.supabaseAuthService.user?.avatar,
+                    // ProfileAvatar(
+                    //   onClickProfile: model.onClickProfile,
+                    //   avatarUrl: model.supabaseAuthService.user?.avatar,
+                    // ),
+                    Stack(
+                      children: [
+                        ProfileAvatar(
+                          onClickProfile: model.onClickProfile,
+                          avatarUrl: model.supabaseAuthService.user?.avatar,
+                        ),
+                        Positioned(
+                          bottom: 2,
+                          right: 2,
+                          child: GestureDetector(
+                            onTap: () {
+                              // Scaffold.maybeOf(context)?.openDrawer();
+                              model.scaffoldKey.currentState!.openDrawer();
+                            },
+                            child: Container(
+                              height: 26.h,
+                              width: 26.h,
+                              decoration: BoxDecoration(
+                                color: AppColors.white,
+                                // borderRadius: BorderRadius.circular(10.r),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Center(
+                                child: Icon(Icons.menu, size: 16.sp),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),

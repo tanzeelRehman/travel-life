@@ -116,4 +116,16 @@ class MyGroupsViewModel extends ReactiveViewModel
       getJoinedGroups();
     }
   }
+
+  onClickInvite(Group group) {
+    NavService.navigateToInviteMiddleScreen(group: group);
+  }
+
+  onClickExplore() {
+    NavService.navigateToGroupsMainScreen();
+  }
+
+  onClickGroupActivities() {
+    NavService.navigateToGroupActivitesScreen();
+  }
 }

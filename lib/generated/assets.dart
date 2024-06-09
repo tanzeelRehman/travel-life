@@ -183,4 +183,7 @@ class AssetIcons {
 
   static const profileButtonIcon = 'assets/icons/profile_button_icon.svg';
   static const settingsButtonIcon = 'assets/icons/setting_button_icon.svg';
+
+  //DRAWER ICONS
+  static const drawerFeedbackIcon = 'assets/icons/feedback_icon.svg';
 }

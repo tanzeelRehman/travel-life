@@ -162,6 +162,10 @@ class NavService {
             action: groupAction,
             group: group,
           ));
+
+  static Future<dynamic>? navigateToGroupActivitesScreen({dynamic arguments}) =>
+      _navigationService!
+          .navigateTo(Routes.groupActivitiesView, arguments: arguments);
   //TO GO BACK
   static bool back({dynamic arguments}) => _navigationService!.back();
 }

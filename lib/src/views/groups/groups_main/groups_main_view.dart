@@ -35,7 +35,8 @@ class GroupsMainView extends StackedView<GroupsMainViewModel> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CustomAppBar(
-              titleText: 'Groups',
+              // titleText: 'Groups',
+              titleText: "Explore Groups",
             ),
             VerticalSpacing(20.h),
             Expanded(
@@ -46,17 +47,18 @@ class GroupsMainView extends StackedView<GroupsMainViewModel> {
                   children: [
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Expanded(
-                          child: groupCard(
-                            () {
-                              model.navigateToMyGroups();
-                            },
-                            'My Groups',
-                            AssetImages.myGroups,
-                          ),
-                        ),
-                        HorizontalSpacing(10.w),
+                        // Expanded(
+                        //   child: groupCard(
+                        //     () {
+                        //       model.navigateToMyGroups();
+                        //     },
+                        //     'My Groups',
+                        //     AssetImages.myGroups,
+                        //   ),
+                        // ),
+                        // HorizontalSpacing(10.w),
                         Expanded(
                           child: groupCard(
                             () {
@@ -66,7 +68,7 @@ class GroupsMainView extends StackedView<GroupsMainViewModel> {
                             AssetImages.privateGroups,
                           ),
                         ),
-                        HorizontalSpacing(10.w),
+                        // HorizontalSpacing(10.w),
                         Expanded(
                           child: groupCard(
                             () {

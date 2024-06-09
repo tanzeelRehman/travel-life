@@ -86,7 +86,7 @@ class VehicleRegistrationTextField extends StatelessWidget {
                       // readOnly: readOnly,
                       style: TextStyling.thin.copyWith(
                         fontSize: 13.sp,
-                        color: AppColors.white.withOpacity(0.7),
+                        color: AppColors.white,
                       ),
                       cursorColor: AppColors.white,
                     ),

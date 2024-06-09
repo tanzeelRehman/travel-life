@@ -30,6 +30,7 @@ class CustomAppBar extends StatelessWidget {
           EdgeInsets.only(top: 60.h, left: 27.w, right: 27.w, bottom: 10.h),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           if (showBackButton)
             GestureDetector(
@@ -52,15 +53,17 @@ class CustomAppBar extends StatelessWidget {
                 ),
               ),
             ),
-          Spacer(),
+          if (trailingWidget == null) Spacer(),
           title ??
               Text(
                 titleText ?? '',
                 style: titleTextStyle ??
                     TextStyling.semiBold.copyWith(fontSize: 17.sp),
+                // textAlign: TextAlign.center,
               ),
-          Spacer(),
+          if (trailingWidget == null) Spacer(),
           Row(
+            mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.end,
             children: [if (trailingWidget != null) trailingWidget!],
           ),

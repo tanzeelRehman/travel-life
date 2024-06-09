@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:stacked/stacked.dart';
+import 'package:starter_app/src/base/enums/group_log_type.dart';
+import 'package:starter_app/src/base/enums/group_type.dart';
 import 'package:starter_app/src/base/utils/constants.dart';
 import 'package:starter_app/src/base/utils/supabase_buckets.dart';
 import 'package:starter_app/src/base/utils/supabase_tables.dart';
@@ -11,6 +13,7 @@ import 'package:starter_app/src/models/accessory_category.dart';
 import 'package:starter_app/src/models/app_user.dart';
 import 'package:starter_app/src/models/cost_category.dart';
 import 'package:starter_app/src/models/group.dart';
+import 'package:starter_app/src/models/group_log.dart';
 import 'package:starter_app/src/models/group_member.dart';
 import 'package:starter_app/src/models/invited_group.dart';
 // import 'package:starter_app/src/models/join_request_user.dart';
@@ -1128,10 +1131,24 @@ class DatabaseService with ListenableServiceMixin {
 
       print(res);
       if (res['id'] != null) {
+        insertGroupLog(
+          GroupLog(
+            user: _authService.user,
+            group: Group.fromMap(res),
+            type: GroupLogType.group_create,
+          ),
+        );
         final joined = await joinPublicGroup(
             _authService.user?.id ?? '', res['id'] as int);
 
         if (joined) {
+          // insertGroupLog(
+          //   GroupLog(
+          //     user: _authService.user,
+          //     group: Group.fromMap(res),
+          //     type: GroupLogType.group_join,
+          //   ),
+          // );
           return Group.fromMap(res);
         }
       } else {
@@ -1159,6 +1176,13 @@ class DatabaseService with ListenableServiceMixin {
           .single();
 
       print(res);
+      insertGroupLog(
+        GroupLog(
+          user: _authService.user,
+          group: Group.fromMap(res),
+          type: GroupLogType.group_edit,
+        ),
+      );
 
       return Group.fromMap(res);
     } catch (e) {
@@ -1250,6 +1274,13 @@ class DatabaseService with ListenableServiceMixin {
           .select(groupsQuery)
           .single();
 
+      insertGroupLog(
+        GroupLog(
+          user: _authService.user,
+          group: Group.fromMap(updatedGroup),
+          type: GroupLogType.group_edit,
+        ),
+      );
       return Group.fromMap(updatedGroup);
     } catch (e) {
       print(e);
@@ -1280,6 +1311,21 @@ class DatabaseService with ListenableServiceMixin {
 
       // print(res);
       final member = GroupMember.fromMap(res);
+      insertGroupLog(
+        GroupLog(
+          user: member.user,
+          group: member.group,
+          type: GroupLogType.request_join_accept,
+        ),
+      );
+
+      insertGroupLog(
+        GroupLog(
+          user: member.user,
+          group: member.group,
+          type: GroupLogType.group_join,
+        ),
+      );
 
       return member.joined != null && member.joined!;
     } catch (e) {
@@ -1318,6 +1364,14 @@ class DatabaseService with ListenableServiceMixin {
 
         final result = GroupMember.fromMap(res);
 
+        insertGroupLog(
+          GroupLog(
+            user: member.user,
+            group: member.group,
+            type: GroupLogType.request_join_reject,
+          ),
+        );
+
         return result.joined != null &&
             result.joined! &&
             result.requestedToJoin != null &&
@@ -1331,6 +1385,14 @@ class DatabaseService with ListenableServiceMixin {
             .single();
 
         final result = GroupMember.fromMap(res);
+
+        insertGroupLog(
+          GroupLog(
+            user: member.user,
+            group: member.group,
+            type: GroupLogType.request_join_reject,
+          ),
+        );
 
         return result.id != null;
       }
@@ -1363,6 +1425,24 @@ class DatabaseService with ListenableServiceMixin {
 
       // print(res);
       final member = GroupMember.fromMap(res);
+
+      //TODO: log problem
+      insertGroupLog(
+        GroupLog(
+          user: member.user,
+          group: member.group,
+          type: GroupLogType.invite_accept,
+        ),
+      );
+
+      //TODO: log problem
+      insertGroupLog(
+        GroupLog(
+          user: member.user,
+          group: member.group,
+          type: GroupLogType.group_join,
+        ),
+      );
 
       return member.joined != null && member.joined!;
     } catch (e) {
@@ -1401,6 +1481,15 @@ class DatabaseService with ListenableServiceMixin {
 
         final result = GroupMember.fromMap(res);
 
+        //TODO: log problem
+        insertGroupLog(
+          GroupLog(
+            user: member.user,
+            group: member.group,
+            type: GroupLogType.invite_reject,
+          ),
+        );
+
         return result.joined != null &&
             result.joined! &&
             result.requestedToJoin != null &&
@@ -1414,6 +1503,15 @@ class DatabaseService with ListenableServiceMixin {
             .single();
 
         final result = GroupMember.fromMap(res);
+
+        //TODO: log problem
+        insertGroupLog(
+          GroupLog(
+            user: member.user,
+            group: member.group,
+            type: GroupLogType.invite_reject,
+          ),
+        );
 
         return result.id != null;
       }
@@ -1495,6 +1593,14 @@ class DatabaseService with ListenableServiceMixin {
           .eq('id', doesExist.first['id'])
           .select(groupMembersQuery)
           .single();
+
+      insertGroupLog(
+        GroupLog(
+          user: GroupMember.fromMap(res).user,
+          group: GroupMember.fromMap(res).group,
+          type: GroupLogType.invite,
+        ),
+      );
 
       return res['id'] != null;
     } catch (e) {
@@ -1587,6 +1693,14 @@ class DatabaseService with ListenableServiceMixin {
           .select(groupMembersQuery)
           .single();
 
+      //TODO: log problem
+      insertGroupLog(
+        GroupLog(
+          user: GroupMember.fromMap(res).user,
+          group: GroupMember.fromMap(res).group,
+          type: GroupLogType.request_join,
+        ),
+      );
       return res['id'] != null;
     } catch (e) {
       print(e);
@@ -1623,6 +1737,14 @@ class DatabaseService with ListenableServiceMixin {
           })
           .select(groupMembersQuery)
           .single();
+
+      insertGroupLog(
+        GroupLog(
+          user: GroupMember.fromMap(res).user,
+          group: GroupMember.fromMap(res).group,
+          type: GroupLogType.group_join,
+        ),
+      );
 
       return res['id'] != null;
     } catch (e) {
@@ -1664,6 +1786,49 @@ class DatabaseService with ListenableServiceMixin {
       //     (user) => alreadyJoined.any((u) => u['user'] == user['id']));
 
       return AppUser.fromJsonList(filteredRes);
+    } catch (e) {
+      print(e);
+      Constants.customErrorSnack(e.toString());
+      return null;
+    }
+  }
+
+  //////////////////////////////////////////GROUP LOGS/////////////////////////////////////////////////////////////
+  Future<List<GroupLog>?> getGroupLogs() async {
+    try {
+      if (!_isConnected()) {
+        return null;
+      }
+
+      final res = await _supabase
+          .from(SupabaseTables.groupLogs)
+          .select(groupMembersQuery)
+          .eq('user', '${_authService.user?.id}');
+
+      print('res in getGroupLogs $res');
+
+      return GroupLog.fromJsonList(res);
+    } catch (e) {
+      print(e);
+      Constants.customErrorSnack(e.toString());
+      return null;
+    }
+  }
+
+  Future<GroupLog?> insertGroupLog(GroupLog log) async {
+    try {
+      if (!_isConnected()) {
+        return null;
+      }
+
+      final res = await _supabase
+          .from(SupabaseTables.groupLogs)
+          .insert(log.toMap())
+          .select(groupMembersQuery)
+          .single();
+
+      print(res);
+      return GroupLog.fromMap(res);
     } catch (e) {
       print(e);
       Constants.customErrorSnack(e.toString());

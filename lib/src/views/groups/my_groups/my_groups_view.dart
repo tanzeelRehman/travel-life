@@ -11,6 +11,7 @@ import 'package:starter_app/src/shared/custom_tab.dart';
 import 'package:starter_app/src/shared/empty_state_widget.dart';
 import 'package:starter_app/src/shared/loading_indicator.dart';
 import 'package:starter_app/src/shared/main_floating_action_button.dart';
+import 'package:starter_app/src/shared/main_outlined_button.dart';
 import 'package:starter_app/src/shared/spacing.dart';
 import 'package:starter_app/src/shared/tab_switcher_widget.dart';
 import 'package:starter_app/src/styles/app_colors.dart';
@@ -45,8 +46,46 @@ class MyGroupsView extends StackedView<MyGroupsViewModel> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CustomAppBar(
-              titleText: 'My Groups',
+              // titleText: 'My Groups',
+              titleText: "Groups",
+              // trailingWidget: GestureDetector(
+              //   onTap: model.onClickExplore,
+              //   child: Icon(
+              //     Icons.search,
+              //     color: AppColors.white,
+              //   ),
+              // ),
             ),
+            SizedBox(
+              height: 20.h,
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: MainOutlinedButton(
+                      onPressed: () {
+                        model.onClickExplore();
+                      },
+                      buttonText: "Explore groups",
+                      height: 50.h,
+                    ),
+                  ),
+                  HorizontalSpacing(10.w),
+                  Expanded(
+                    child: MainOutlinedButton(
+                      onPressed: () {
+                        model.onClickGroupActivities();
+                      },
+                      buttonText: "Group Activites",
+                      height: 50.h,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
             SizedBox(
               height: 20.h,
             ),
@@ -139,7 +178,9 @@ class MyGroupsView extends StackedView<MyGroupsViewModel> {
                                   model.navigateToGroupEditPage(grp);
                                 },
                                 onMoreIconTap: () {},
-                                onSeeAllMembersTap: () {},
+                                onInviteMemberTap: () {
+                                  model.onClickInvite(grp);
+                                },
                               );
                             },
                           ),

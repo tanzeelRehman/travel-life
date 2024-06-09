@@ -14,4 +14,5 @@ class SupabaseTables {
 
   static const groups = 'groups';
   static const groupMemebers = 'group_members';
+  static const groupLogs = 'group_logs';
 }

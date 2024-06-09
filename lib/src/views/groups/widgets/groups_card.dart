@@ -13,7 +13,7 @@ class Groupscard extends StatelessWidget {
   final VoidCallback onDelete;
   final VoidCallback onMoreIconTap;
   final VoidCallback onEditDetailstap;
-  final VoidCallback onSeeAllMembersTap;
+  final VoidCallback onInviteMemberTap;
   final VoidCallback onTap;
   const Groupscard({
     Key? key,
@@ -21,7 +21,7 @@ class Groupscard extends StatelessWidget {
     required this.onDelete,
     required this.onMoreIconTap,
     required this.onEditDetailstap,
-    required this.onSeeAllMembersTap,
+    required this.onInviteMemberTap,
     required this.onTap,
   }) : super(key: key);
   @override
@@ -150,12 +150,13 @@ class Groupscard extends StatelessWidget {
                   children: [
                     GestureDetector(
                       onTap:
-                          (group.isEnabled ?? true) ? onSeeAllMembersTap : null,
+                          (group.isEnabled ?? true) ? onInviteMemberTap : null,
                       child: Text(
-                        "See all members",
+                        "Invite members",
                         style: TextStyling.medium.copyWith(
                           fontSize: 15.sp,
                           decoration: TextDecoration.underline,
+                          decorationColor: AppColors.appSkyBlueLight,
                           color: AppColors.appSkyBlueLight,
                         ),
                       ),
