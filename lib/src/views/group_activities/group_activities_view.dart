@@ -75,6 +75,7 @@ class GroupActivitiesView extends StackedView<GroupActivitiesViewModel> {
                                   style: TextStyling.bold.copyWith(
                                     fontSize: 14.sp,
                                   ),
+                                  textAlign: TextAlign.center,
                                 ),
                               ),
                             );
