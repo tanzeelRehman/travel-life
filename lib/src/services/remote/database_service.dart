@@ -880,8 +880,11 @@ class DatabaseService with ListenableServiceMixin {
         return null;
       }
 
-      final res =
-          await _supabase.from(SupabaseTables.groups).select(groupsQuery);
+      final res = await _supabase
+          .from(SupabaseTables.groups)
+          .select(groupsQuery)
+          .neq('admin', '${_authService.user?.id}')
+          .select(groupsQuery);
 
       //filter out my joined groups
       final joinedGroups = await _supabase
@@ -915,7 +918,9 @@ class DatabaseService with ListenableServiceMixin {
       final res = await _supabase
           .from(SupabaseTables.groups)
           .select(groupsQuery)
-          .eq('is_public', true);
+          .eq('is_public', true)
+          .neq('admin', '${_authService.user?.id}')
+          .select(groupsQuery);
 
       //filter out my joined groups
       final joinedGroups = await _supabase
@@ -948,7 +953,9 @@ class DatabaseService with ListenableServiceMixin {
       final res = await _supabase
           .from(SupabaseTables.groups)
           .select(groupsQuery)
-          .eq('is_public', false);
+          .eq('is_public', false)
+          .neq('admin', '${_authService.user?.id}')
+          .select(groupsQuery);
 
       //filter out my joined groups
       final joinedGroups = await _supabase
@@ -984,7 +991,23 @@ class DatabaseService with ListenableServiceMixin {
           .select(groupsQuery)
           .eq('admin', '${_authService.user?.id}');
 
-      return Group.fromJsonList(res);
+      final createdGroups = Group.fromJsonList(res);
+
+      final joinedGroups = await _supabase
+          .from(SupabaseTables.groupMemebers)
+          .select('*')
+          .eq('joined', true)
+          .eq('user', '${_authService.user?.id}');
+
+      // Extract group IDs from joined groups
+      final joinedGroupIds = joinedGroups.map((row) => row['group']).toList();
+
+      // Filter created groups that are in the joined group IDs
+      final filteredGroups = createdGroups!
+          .where((group) => joinedGroupIds.contains(group.id))
+          .toList();
+
+      return filteredGroups;
     } catch (e) {
       print(e);
       Constants.customErrorSnack(e.toString());
@@ -1533,10 +1556,9 @@ class DatabaseService with ListenableServiceMixin {
           .from(SupabaseTables.groupMemebers)
           .select(groupMembersQuery)
           .eq('group', groupId)
-          .eq('joined', true)
-          .count(CountOption.exact);
+          .eq('joined', true);
 
-      return res.count;
+      return res.length;
     } catch (e) {
       print(e);
       Constants.customErrorSnack(e.toString());
@@ -1571,6 +1593,14 @@ class DatabaseService with ListenableServiceMixin {
             })
             .select(groupMembersQuery)
             .single();
+
+        insertGroupLog(
+          GroupLog(
+            user: GroupMember.fromMap(res).user,
+            group: GroupMember.fromMap(res).group,
+            type: GroupLogType.invite,
+          ),
+        );
         return res['id'] != null;
       }
 
@@ -1611,7 +1641,7 @@ class DatabaseService with ListenableServiceMixin {
   }
 
   //TODO: leave group / remove user from group
-  Future<bool> leaveOrRemoveUserFromGroup(String userId, int groupId) async {
+  Future<bool> leaveGroup(String userId, int groupId) async {
     try {
       if (!_isConnected()) {
         return false;
@@ -1624,6 +1654,14 @@ class DatabaseService with ListenableServiceMixin {
           .eq('group', groupId)
           .select(groupMembersQuery)
           .single();
+
+      insertGroupLog(
+        GroupLog(
+          user: GroupMember.fromMap(res).user,
+          group: GroupMember.fromMap(res).group,
+          type: GroupLogType.leave,
+        ),
+      );
       return res['id'] != null;
     } catch (e) {
       print(e);
@@ -1633,8 +1671,7 @@ class DatabaseService with ListenableServiceMixin {
   }
 
   //TODO: leave group / remove user from group
-  Future<bool> leaveOrRemoveUserFromGroupByGroudMemberId(
-      int groupMemberId) async {
+  Future<bool> removeUserFromGroupByGroudMemberId(int groupMemberId) async {
     try {
       if (!_isConnected()) {
         return false;
@@ -1646,6 +1683,16 @@ class DatabaseService with ListenableServiceMixin {
           .eq('id', groupMemberId)
           .select(groupMembersQuery)
           .single();
+
+      print('res in leave or remove is : ${res}');
+
+      insertGroupLog(
+        GroupLog(
+          user: GroupMember.fromMap(res).user,
+          group: GroupMember.fromMap(res).group,
+          type: GroupLogType.remove,
+        ),
+      );
 
       return res['id'] != null;
     } catch (e) {

@@ -8,6 +8,8 @@ enum GroupLogType {
   request_join,
   request_join_accept,
   request_join_reject,
+  leave,
+  remove,
 }
 
 String getReadableGroupLogType(GroupLogType type) {
@@ -30,6 +32,10 @@ String getReadableGroupLogType(GroupLogType type) {
       return 'Request Join Accept';
     case GroupLogType.request_join_reject:
       return 'Request Join Reject';
+    case GroupLogType.leave:
+      return 'Leave';
+    case GroupLogType.remove:
+      return 'Remove';
     default:
       throw ArgumentError('Invalid GroupLogType: $type');
   }
@@ -55,6 +61,10 @@ GroupLogType getGroupLogTypeFromReadable(String text) {
       return GroupLogType.request_join_accept;
     case 'request join reject':
       return GroupLogType.request_join_reject;
+    case 'leave':
+      return GroupLogType.leave;
+    case 'remove':
+      return GroupLogType.remove;
     default:
       throw ArgumentError('Invalid GroupLogType text: $text');
   }

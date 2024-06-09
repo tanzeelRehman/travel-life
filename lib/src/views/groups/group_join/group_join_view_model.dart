@@ -126,7 +126,7 @@ class GroupJoinViewModel extends ReactiveViewModel
 
   onGroupLeave() async {
     setBusy(true);
-    final res = await databaseService.leaveOrRemoveUserFromGroup(
+    final res = await databaseService.leaveGroup(
       supabaseAuthService.user!.id!,
       group.id!,
     );

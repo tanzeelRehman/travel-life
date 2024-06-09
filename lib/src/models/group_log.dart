@@ -145,6 +145,15 @@ String generateLogMessage(GroupLog log, AppUser currentUser) {
       return (log.user?.id == currentUser.id)
           ? 'Your request to join $groupName was rejected.'
           : '$username\'s request to join $groupName was rejected.';
+    case GroupLogType.leave:
+      return (log.user?.id == currentUser.id)
+          ? 'You left $groupName.'
+          : '$username left $groupName';
+    case GroupLogType.remove:
+      return (log.user?.id == currentUser.id)
+          ? 'You have been removed from $groupName.'
+          : '$username have been removed from $groupName';
+
     default:
       return 'Unknown log type';
   }

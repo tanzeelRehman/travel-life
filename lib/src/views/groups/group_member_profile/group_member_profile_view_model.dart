@@ -32,7 +32,7 @@ class GroupMemberProfileViewModel extends ReactiveViewModel
     setBusy(true);
 
     final res = await databaseService
-        .leaveOrRemoveUserFromGroupByGroudMemberId(user.groupMemberId!);
+        .removeUserFromGroupByGroudMemberId(user.groupMemberId!);
 
     if (res) {
       setBusy(false);
