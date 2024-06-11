@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:grouped_list/grouped_list.dart';
+import 'package:intl/intl.dart';
 import 'package:stacked/stacked.dart';
 import 'package:starter_app/generated/assets.dart';
 import 'package:starter_app/src/base/utils/utils.dart';
@@ -52,14 +54,78 @@ class GroupActivitiesView extends StackedView<GroupActivitiesViewModel> {
                         ),
                       )
                     : Expanded(
-                        child: ListView.separated(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 27.w,
-                            vertical: 20.h,
+                        //   child: ListView.separated(
+                        //     padding: EdgeInsets.symmetric(
+                        //       horizontal: 27.w,
+                        //       vertical: 20.h,
+                        //     ),
+                        //     itemCount: model.logs.length,
+                        //     itemBuilder: (context, index) {
+                        //       final log = model.logs[index];
+                        //       return Container(
+                        //         decoration: BoxDecoration(
+                        //           color: AppColors.appFaddedBlue,
+                        //           borderRadius: BorderRadius.circular(10.r),
+                        //         ),
+                        //         padding: EdgeInsets.symmetric(
+                        //           vertical: 6.h,
+                        //           horizontal: 12.w,
+                        //         ),
+                        //         child: Center(
+                        //           child: Text(
+                        //             GroupLog.getLogMessage(log),
+                        //             style: TextStyling.bold.copyWith(
+                        //               fontSize: 14.sp,
+                        //             ),
+                        //             textAlign: TextAlign.center,
+                        //           ),
+                        //         ),
+                        //       );
+                        //     },
+                        //     separatorBuilder: (context, index) =>
+                        //         VerticalSpacing(10.h),
+                        //   ),
+                        // ),
+                        child: GroupedListView<GroupLog, DateTime>(
+                          elements: model.logs,
+                          groupBy: (log) => DateTime(
+                            log.createdAt!.toLocal().year,
+                            log.createdAt!.toLocal().month,
+                            log.createdAt!.toLocal().day,
+                            log.createdAt!.toLocal().minute,
                           ),
-                          itemCount: model.logs.length,
-                          itemBuilder: (context, index) {
-                            final log = model.logs[index];
+                          reverse: true,
+                          order: GroupedListOrder.DESC,
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 24.w, vertical: 10.h),
+                          groupHeaderBuilder: (element) => Center(
+                            child: Container(
+                              margin: EdgeInsets.symmetric(vertical: 10.h),
+                              child: Card(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.r),
+                                ),
+                                color: AppColors.darkGrey,
+                                child: Padding(
+                                  padding: EdgeInsets.all(8.w),
+                                  child: Text(
+                                    element.createdAt!.day == DateTime.now().day
+                                        ? DateFormat('HH:mm')
+                                            .format(element.createdAt!)
+                                        : DateFormat.yMMMMEEEEd()
+                                            .format(element.createdAt!),
+                                    style: TextStyling.thin
+                                        .copyWith(fontSize: 10.sp),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          separator: SizedBox(
+                            height: 10.h,
+                          ),
+                          floatingHeader: true,
+                          itemBuilder: (context, element) {
                             return Container(
                               decoration: BoxDecoration(
                                 color: AppColors.appFaddedBlue,
@@ -70,20 +136,42 @@ class GroupActivitiesView extends StackedView<GroupActivitiesViewModel> {
                                 horizontal: 12.w,
                               ),
                               child: Center(
-                                child: Text(
-                                  GroupLog.getLogMessage(log),
-                                  style: TextStyling.bold.copyWith(
-                                    fontSize: 14.sp,
-                                  ),
-                                  textAlign: TextAlign.center,
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      GroupLog.getLogMessage(element),
+                                      style: TextStyling.bold.copyWith(
+                                        fontSize: 14.sp,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    Align(
+                                      alignment: Alignment.bottomRight,
+                                      // child: Text(
+                                      //   GroupLog.getLogMessage(element),
+                                      //   style: TextStyling.bold.copyWith(
+                                      //     fontSize: 14.sp,
+                                      //   ),
+                                      //   textAlign: TextAlign.center,
+                                      // ),
+                                      child: Text(
+                                        // element.createdAt!.day == DateTime.now().day
+                                        //     ?
+                                        DateFormat('hh:mm a').format(
+                                            element.createdAt!.toLocal()),
+                                        // : DateFormat.yMMMMEEEEd()
+                                        //     .format(element.createdAt!),
+                                        style: TextStyling.thin
+                                            .copyWith(fontSize: 8.sp),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             );
                           },
-                          separatorBuilder: (context, index) =>
-                              VerticalSpacing(10.h),
                         ),
-                      ),
+                      )
           ],
         ),
       ),
