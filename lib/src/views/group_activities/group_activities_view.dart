@@ -92,7 +92,6 @@ class GroupActivitiesView extends StackedView<GroupActivitiesViewModel> {
                             log.createdAt!.toLocal().year,
                             log.createdAt!.toLocal().month,
                             log.createdAt!.toLocal().day,
-                            log.createdAt!.toLocal().minute,
                           ),
                           reverse: true,
                           order: GroupedListOrder.DESC,
