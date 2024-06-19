@@ -2,6 +2,7 @@ import 'package:stacked/stacked.dart';
 import 'package:starter_app/src/models/accessory.dart';
 import 'package:starter_app/src/models/accessory_category.dart';
 import 'package:starter_app/src/models/cost_category.dart';
+import 'package:starter_app/src/models/event.dart';
 import 'package:starter_app/src/models/group.dart';
 import 'package:starter_app/src/models/invited_group.dart';
 import 'package:starter_app/src/models/manufacturor.dart';
@@ -123,6 +124,13 @@ class DataService with ListenableServiceMixin {
   List<Group> get joinedGroups => _joinedGroups.value;
   set joinedGroups(List<Group> v) {
     _joinedGroups.value = v;
+    notifyListeners();
+  }
+
+  ReactiveValue<List<Event>> _allEvents = ReactiveValue<List<Event>>([]);
+  List<Event> get allEvents => _allEvents.value;
+  set allEvents(List<Event> v) {
+    _allEvents.value = v;
     notifyListeners();
   }
 

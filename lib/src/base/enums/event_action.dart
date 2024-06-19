@@ -1,0 +1,1 @@
+enum EventAction { add, edit }

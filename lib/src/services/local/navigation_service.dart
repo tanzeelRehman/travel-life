@@ -166,6 +166,21 @@ class NavService {
   static Future<dynamic>? navigateToGroupActivitesScreen({dynamic arguments}) =>
       _navigationService!
           .navigateTo(Routes.groupActivitiesView, arguments: arguments);
+
+  /////////////////////////// EVENTS ///////////////////////////
+  static Future<dynamic>? navigateToEventsMainScreen({dynamic arguments}) =>
+      _navigationService!
+          .navigateTo(Routes.eventsMainView, arguments: arguments);
+
+  static Future<dynamic>? navigateToEventCreateScreen({
+    required GroupAction groupAction,
+    required Group? group,
+  }) =>
+      _navigationService!.navigateTo(Routes.eventCreateView,
+          arguments: EventCreateViewArguments(
+            action: groupAction,
+            group: group,
+          ));
   //TO GO BACK
   static bool back({dynamic arguments}) => _navigationService!.back();
 }
