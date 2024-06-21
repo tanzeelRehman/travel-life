@@ -9,6 +9,7 @@ import 'package:starter_app/src/base/utils/utils.dart';
 import 'package:starter_app/src/shared/custom_app_bar.dart';
 import 'package:starter_app/src/shared/empty_state_widget.dart';
 import 'package:starter_app/src/shared/loading_indicator.dart';
+import 'package:starter_app/src/shared/main_button.dart';
 import 'package:starter_app/src/shared/spacing.dart';
 import 'package:starter_app/src/styles/app_colors.dart';
 import 'package:starter_app/src/styles/text_theme.dart';
@@ -44,34 +45,42 @@ class EventsMainView extends StackedView<EventsMainViewModel> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                      child: model.isBusy
-                          ? Center(
-                              child: LoadingIndicator(
-                                color: AppColors.appSkyBlue,
-                              ),
-                            )
-                          : model.dataService.allEvents.isNotEmpty
-                              ? ListView.builder(
-                                  itemCount: model.dataService.allEvents.length,
-                                  itemBuilder: (context, index) {
-                                    final grp =
-                                        model.dataService.allEvents[index];
-                                    print('grp: ${grp.toString()}');
-                                    // return GroupsTile(
-                                    //   group: grp,
-                                    //   onAddIconTap: () {},
-                                    //   onArrowIconTap: () {},
-                                    //   onMoreIconTap: () {},
-                                    // );
-                                  },
-                                )
-                              : Center(
-                                  child: EmptyStateWidget(
-                                    text: 'No events currently',
-                                  ),
-                                ),
-                    )
+                    // Expanded(
+                    //   child: model.isBusy
+                    //       ? Center(
+                    //           child: LoadingIndicator(
+                    //             color: AppColors.appSkyBlue,
+                    //           ),
+                    //         )
+                    //       : model.dataService.allEvents.isNotEmpty
+                    //           ? ListView.builder(
+                    //               itemCount: model.dataService.allEvents.length,
+                    //               itemBuilder: (context, index) {
+                    //                 final grp =
+                    //                     model.dataService.allEvents[index];
+                    //                 print('grp: ${grp.toString()}');
+                    //                 // return GroupsTile(
+                    //                 //   group: grp,
+                    //                 //   onAddIconTap: () {},
+                    //                 //   onArrowIconTap: () {},
+                    //                 //   onMoreIconTap: () {},
+                    //                 // );
+                    //               },
+                    //             )
+                    //           : Center(
+                    //               child: EmptyStateWidget(
+                    //                 text: 'No events currently',
+                    //               ),
+                    //             ),
+                    // )
+                    Center(
+                      child: MainButton(
+                          buttonText: 'test',
+                          onPressed: () {
+                            model.searchAutocomplete('test');
+                          },
+                          isLoading: false),
+                    ),
                   ],
                 ),
               ),
