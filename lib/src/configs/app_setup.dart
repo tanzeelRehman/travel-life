@@ -10,6 +10,7 @@ import 'package:starter_app/src/services/remote/ors/ors_service.dart';
 import 'package:starter_app/src/services/remote/supabase_auth_service.dart';
 import 'package:starter_app/src/views/email_confirmation/email_confirmation_view.dart';
 import 'package:starter_app/src/views/events/event_create/event_create_view.dart';
+import 'package:starter_app/src/views/events/event_detail/event_detail_view.dart';
 import 'package:starter_app/src/views/events/events_main/events_main_view.dart';
 import 'package:starter_app/src/views/groups/group_activities/group_activities_view.dart';
 import 'package:starter_app/src/views/groups/add_members/add_member_view.dart';
@@ -65,6 +66,7 @@ import 'package:starter_app/src/views/welcome/welcome_view.dart';
     MaterialRoute(page: GroupActivitiesView),
     MaterialRoute(page: EventCreateView),
     MaterialRoute(page: EventsMainView),
+    MaterialRoute(page: EventDetailView),
   ],
   dependencies: [
     // Lazy singletons

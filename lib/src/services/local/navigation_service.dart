@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:starter_app/src/base/enums/event_action.dart';
 import 'package:starter_app/src/base/enums/group_action.dart';
 import 'package:starter_app/src/base/enums/group_join.dart';
 import 'package:starter_app/src/base/enums/group_type.dart';
@@ -8,6 +9,7 @@ import 'package:starter_app/src/base/enums/vehicle_registration_action.dart';
 import 'package:starter_app/src/configs/app_setup.locator.dart';
 import 'package:starter_app/src/configs/app_setup.router.dart';
 import 'package:starter_app/src/models/accessory.dart';
+import 'package:starter_app/src/models/event.dart';
 import 'package:starter_app/src/models/group.dart';
 import 'package:starter_app/src/models/invited_group.dart';
 import 'package:starter_app/src/models/operating_cost.dart';
@@ -173,13 +175,21 @@ class NavService {
           .navigateTo(Routes.eventsMainView, arguments: arguments);
 
   static Future<dynamic>? navigateToEventCreateScreen({
-    required GroupAction groupAction,
-    required Group? group,
+    required EventAction action,
+    required Event? event,
   }) =>
       _navigationService!.navigateTo(Routes.eventCreateView,
           arguments: EventCreateViewArguments(
-            action: groupAction,
-            group: group,
+            action: action,
+            event: event,
+          ));
+
+  static Future<dynamic>? navigateToEventDetailScreen({
+    required Event event,
+  }) =>
+      _navigationService!.navigateTo(Routes.eventDetailView,
+          arguments: EventDetailViewArguments(
+            event: event,
           ));
   //TO GO BACK
   static bool back({dynamic arguments}) => _navigationService!.back();

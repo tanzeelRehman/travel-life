@@ -186,4 +186,8 @@ class AssetIcons {
 
   //DRAWER ICONS
   static const drawerFeedbackIcon = 'assets/icons/feedback_icon.svg';
+
+  //EVENT
+  static const locationIcon = 'assets/icons/location_icon.svg';
+  static const locationMarker = 'assets/icons/location_marker.svg';
 }

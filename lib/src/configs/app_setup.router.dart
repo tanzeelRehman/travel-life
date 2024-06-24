@@ -5,25 +5,29 @@
 // **************************************************************************
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:flutter/material.dart' as _i27;
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as _i28;
 import 'package:stacked/stacked.dart' as _i1;
-import 'package:stacked_services/stacked_services.dart' as _i38;
-import 'package:starter_app/src/base/enums/group_action.dart' as _i37;
-import 'package:starter_app/src/base/enums/group_join.dart' as _i33;
-import 'package:starter_app/src/base/enums/group_type.dart' as _i32;
+import 'package:stacked_services/stacked_services.dart' as _i41;
+import 'package:starter_app/src/base/enums/event_action.dart' as _i39;
+import 'package:starter_app/src/base/enums/group_action.dart' as _i38;
+import 'package:starter_app/src/base/enums/group_join.dart' as _i34;
+import 'package:starter_app/src/base/enums/group_type.dart' as _i33;
 import 'package:starter_app/src/base/enums/vehicle_registration_action.dart'
-    as _i28;
-import 'package:starter_app/src/models/accessory.dart' as _i31;
-import 'package:starter_app/src/models/group.dart' as _i34;
-import 'package:starter_app/src/models/invited_group.dart' as _i35;
-import 'package:starter_app/src/models/operating_cost.dart' as _i30;
-import 'package:starter_app/src/models/see_all_members_user.dart' as _i36;
-import 'package:starter_app/src/models/vehicle.dart' as _i29;
+    as _i29;
+import 'package:starter_app/src/models/accessory.dart' as _i32;
+import 'package:starter_app/src/models/event.dart' as _i40;
+import 'package:starter_app/src/models/group.dart' as _i35;
+import 'package:starter_app/src/models/invited_group.dart' as _i36;
+import 'package:starter_app/src/models/operating_cost.dart' as _i31;
+import 'package:starter_app/src/models/see_all_members_user.dart' as _i37;
+import 'package:starter_app/src/models/vehicle.dart' as _i30;
 import 'package:starter_app/src/views/email_confirmation/email_confirmation_view.dart'
     as _i8;
 import 'package:starter_app/src/views/events/event_create/event_create_view.dart'
     as _i25;
+import 'package:starter_app/src/views/events/event_detail/event_detail_view.dart'
+    as _i27;
 import 'package:starter_app/src/views/events/events_main/events_main_view.dart'
     as _i26;
 import 'package:starter_app/src/views/groups/add_members/add_member_view.dart'
@@ -116,6 +120,8 @@ class Routes {
 
   static const eventsMainView = '/events-main-view';
 
+  static const eventDetailView = '/event-detail-view';
+
   static const all = <String>{
     splashView,
     welcomeView,
@@ -142,6 +148,7 @@ class Routes {
     groupActivitiesView,
     eventCreateView,
     eventsMainView,
+    eventDetailView,
   };
 }
 
@@ -247,60 +254,64 @@ class StackedRouter extends _i1.RouterBase {
       Routes.eventsMainView,
       page: _i26.EventsMainView,
     ),
+    _i1.RouteDef(
+      Routes.eventDetailView,
+      page: _i27.EventDetailView,
+    ),
   ];
 
   final _pagesMap = <Type, _i1.StackedRouteFactory>{
     _i2.SplashView: (data) {
-      return _i27.MaterialPageRoute<dynamic>(
+      return _i28.MaterialPageRoute<dynamic>(
         builder: (context) => _i2.SplashView(),
         settings: data,
       );
     },
     _i3.WelcomeView: (data) {
-      return _i27.MaterialPageRoute<dynamic>(
+      return _i28.MaterialPageRoute<dynamic>(
         builder: (context) => _i3.WelcomeView(),
         settings: data,
       );
     },
     _i4.RegisterView: (data) {
-      return _i27.MaterialPageRoute<dynamic>(
+      return _i28.MaterialPageRoute<dynamic>(
         builder: (context) => _i4.RegisterView(),
         settings: data,
       );
     },
     _i5.LoginView: (data) {
-      return _i27.MaterialPageRoute<dynamic>(
+      return _i28.MaterialPageRoute<dynamic>(
         builder: (context) => _i5.LoginView(),
         settings: data,
       );
     },
     _i6.HomeView: (data) {
-      return _i27.MaterialPageRoute<dynamic>(
+      return _i28.MaterialPageRoute<dynamic>(
         builder: (context) => _i6.HomeView(),
         settings: data,
       );
     },
     _i7.ProfileView: (data) {
-      return _i27.MaterialPageRoute<dynamic>(
+      return _i28.MaterialPageRoute<dynamic>(
         builder: (context) => _i7.ProfileView(),
         settings: data,
       );
     },
     _i8.EmailConfrimationView: (data) {
-      return _i27.MaterialPageRoute<dynamic>(
+      return _i28.MaterialPageRoute<dynamic>(
         builder: (context) => _i8.EmailConfrimationView(),
         settings: data,
       );
     },
     _i9.VehicleRegistrationView: (data) {
-      return _i27.MaterialPageRoute<dynamic>(
+      return _i28.MaterialPageRoute<dynamic>(
         builder: (context) => _i9.VehicleRegistrationView(),
         settings: data,
       );
     },
     _i10.VehicleDetailView: (data) {
       final args = data.getArgs<VehicleDetailViewArguments>(nullOk: false);
-      return _i27.MaterialPageRoute<dynamic>(
+      return _i28.MaterialPageRoute<dynamic>(
         builder: (context) =>
             _i10.VehicleDetailView(action: args.action, vehicle: args.vehicle),
         settings: data,
@@ -309,7 +320,7 @@ class StackedRouter extends _i1.RouterBase {
     _i11.OperationalCostDetailView: (data) {
       final args =
           data.getArgs<OperationalCostDetailViewArguments>(nullOk: false);
-      return _i27.MaterialPageRoute<dynamic>(
+      return _i28.MaterialPageRoute<dynamic>(
         builder: (context) => _i11.OperationalCostDetailView(
             action: args.action,
             operatingCost: args.operatingCost,
@@ -319,7 +330,7 @@ class StackedRouter extends _i1.RouterBase {
     },
     _i12.AccessoryDetailView: (data) {
       final args = data.getArgs<AccessoryDetailViewArguments>(nullOk: false);
-      return _i27.MaterialPageRoute<dynamic>(
+      return _i28.MaterialPageRoute<dynamic>(
         builder: (context) => _i12.AccessoryDetailView(
             action: args.action,
             accessory: args.accessory,
@@ -328,27 +339,27 @@ class StackedRouter extends _i1.RouterBase {
       );
     },
     _i13.GroupsMainView: (data) {
-      return _i27.MaterialPageRoute<dynamic>(
+      return _i28.MaterialPageRoute<dynamic>(
         builder: (context) => _i13.GroupsMainView(),
         settings: data,
       );
     },
     _i14.GroupsListsView: (data) {
       final args = data.getArgs<GroupsListsViewArguments>(nullOk: false);
-      return _i27.MaterialPageRoute<dynamic>(
+      return _i28.MaterialPageRoute<dynamic>(
         builder: (context) => _i14.GroupsListsView(args.groupType),
         settings: data,
       );
     },
     _i15.MyGroupsView: (data) {
-      return _i27.MaterialPageRoute<dynamic>(
+      return _i28.MaterialPageRoute<dynamic>(
         builder: (context) => _i15.MyGroupsView(),
         settings: data,
       );
     },
     _i16.GroupJoinView: (data) {
       final args = data.getArgs<GroupJoinViewArguments>(nullOk: false);
-      return _i27.MaterialPageRoute<dynamic>(
+      return _i28.MaterialPageRoute<dynamic>(
         builder: (context) =>
             _i16.GroupJoinView(args.groupJoin, args.group, args.invitedGroup),
         settings: data,
@@ -356,21 +367,21 @@ class StackedRouter extends _i1.RouterBase {
     },
     _i17.GroupJoinRequestsView: (data) {
       final args = data.getArgs<GroupJoinRequestsViewArguments>(nullOk: false);
-      return _i27.MaterialPageRoute<dynamic>(
+      return _i28.MaterialPageRoute<dynamic>(
         builder: (context) => _i17.GroupJoinRequestsView(group: args.group),
         settings: data,
       );
     },
     _i18.GroupHomeView: (data) {
       final args = data.getArgs<GroupHomeViewArguments>(nullOk: false);
-      return _i27.MaterialPageRoute<dynamic>(
+      return _i28.MaterialPageRoute<dynamic>(
         builder: (context) => _i18.GroupHomeView(group: args.group),
         settings: data,
       );
     },
     _i19.GroupMemberProfileView: (data) {
       final args = data.getArgs<GroupMemberProfileViewArguments>(nullOk: false);
-      return _i27.MaterialPageRoute<dynamic>(
+      return _i28.MaterialPageRoute<dynamic>(
         builder: (context) => _i19.GroupMemberProfileView(
             key: args.key,
             member: args.member,
@@ -380,7 +391,7 @@ class StackedRouter extends _i1.RouterBase {
     },
     _i20.GroupCreateView: (data) {
       final args = data.getArgs<GroupCreateViewArguments>(nullOk: false);
-      return _i27.MaterialPageRoute<dynamic>(
+      return _i28.MaterialPageRoute<dynamic>(
         builder: (context) =>
             _i20.GroupCreateView(action: args.action, group: args.group),
         settings: data,
@@ -388,42 +399,49 @@ class StackedRouter extends _i1.RouterBase {
     },
     _i21.AddMemberView: (data) {
       final args = data.getArgs<AddMemberViewArguments>(nullOk: false);
-      return _i27.MaterialPageRoute<dynamic>(
+      return _i28.MaterialPageRoute<dynamic>(
         builder: (context) => _i21.AddMemberView(group: args.group),
         settings: data,
       );
     },
     _i22.AllMembersView: (data) {
       final args = data.getArgs<AllMembersViewArguments>(nullOk: false);
-      return _i27.MaterialPageRoute<dynamic>(
+      return _i28.MaterialPageRoute<dynamic>(
         builder: (context) => _i22.AllMembersView(group: args.group),
         settings: data,
       );
     },
     _i23.InviteMiddleScreenView: (data) {
       final args = data.getArgs<InviteMiddleScreenViewArguments>(nullOk: false);
-      return _i27.MaterialPageRoute<dynamic>(
+      return _i28.MaterialPageRoute<dynamic>(
         builder: (context) => _i23.InviteMiddleScreenView(group: args.group),
         settings: data,
       );
     },
     _i24.GroupActivitiesView: (data) {
-      return _i27.MaterialPageRoute<dynamic>(
+      return _i28.MaterialPageRoute<dynamic>(
         builder: (context) => _i24.GroupActivitiesView(),
         settings: data,
       );
     },
     _i25.EventCreateView: (data) {
       final args = data.getArgs<EventCreateViewArguments>(nullOk: false);
-      return _i27.MaterialPageRoute<dynamic>(
+      return _i28.MaterialPageRoute<dynamic>(
         builder: (context) =>
-            _i25.EventCreateView(action: args.action, group: args.group),
+            _i25.EventCreateView(action: args.action, event: args.event),
         settings: data,
       );
     },
     _i26.EventsMainView: (data) {
-      return _i27.MaterialPageRoute<dynamic>(
+      return _i28.MaterialPageRoute<dynamic>(
         builder: (context) => _i26.EventsMainView(),
+        settings: data,
+      );
+    },
+    _i27.EventDetailView: (data) {
+      final args = data.getArgs<EventDetailViewArguments>(nullOk: false);
+      return _i28.MaterialPageRoute<dynamic>(
+        builder: (context) => _i27.EventDetailView(event: args.event),
         settings: data,
       );
     },
@@ -442,9 +460,9 @@ class VehicleDetailViewArguments {
     required this.vehicle,
   });
 
-  final _i28.VehicleRegistrationAction action;
+  final _i29.VehicleRegistrationAction action;
 
-  final _i29.Vehicle? vehicle;
+  final _i30.Vehicle? vehicle;
 
   @override
   String toString() {
@@ -470,11 +488,11 @@ class OperationalCostDetailViewArguments {
     this.vehicle,
   });
 
-  final _i28.VehicleRegistrationAction action;
+  final _i29.VehicleRegistrationAction action;
 
-  final _i30.OperatingCost? operatingCost;
+  final _i31.OperatingCost? operatingCost;
 
-  final _i29.Vehicle? vehicle;
+  final _i30.Vehicle? vehicle;
 
   @override
   String toString() {
@@ -502,11 +520,11 @@ class AccessoryDetailViewArguments {
     this.vehicle,
   });
 
-  final _i28.VehicleRegistrationAction action;
+  final _i29.VehicleRegistrationAction action;
 
-  final _i31.Accessory? accessory;
+  final _i32.Accessory? accessory;
 
-  final _i29.Vehicle? vehicle;
+  final _i30.Vehicle? vehicle;
 
   @override
   String toString() {
@@ -530,7 +548,7 @@ class AccessoryDetailViewArguments {
 class GroupsListsViewArguments {
   const GroupsListsViewArguments({required this.groupType});
 
-  final _i32.GroupType groupType;
+  final _i33.GroupType groupType;
 
   @override
   String toString() {
@@ -556,11 +574,11 @@ class GroupJoinViewArguments {
     required this.invitedGroup,
   });
 
-  final _i33.GroupJoin groupJoin;
+  final _i34.GroupJoin groupJoin;
 
-  final _i34.Group group;
+  final _i35.Group group;
 
-  final _i35.InvitedGroup? invitedGroup;
+  final _i36.InvitedGroup? invitedGroup;
 
   @override
   String toString() {
@@ -584,7 +602,7 @@ class GroupJoinViewArguments {
 class GroupJoinRequestsViewArguments {
   const GroupJoinRequestsViewArguments({required this.group});
 
-  final _i34.Group group;
+  final _i35.Group group;
 
   @override
   String toString() {
@@ -606,7 +624,7 @@ class GroupJoinRequestsViewArguments {
 class GroupHomeViewArguments {
   const GroupHomeViewArguments({required this.group});
 
-  final _i34.Group group;
+  final _i35.Group group;
 
   @override
   String toString() {
@@ -632,9 +650,9 @@ class GroupMemberProfileViewArguments {
     required this.isGroupAdmin,
   });
 
-  final _i27.Key? key;
+  final _i28.Key? key;
 
-  final _i36.SeeAllMembersUser member;
+  final _i37.SeeAllMembersUser member;
 
   final bool isGroupAdmin;
 
@@ -663,9 +681,9 @@ class GroupCreateViewArguments {
     required this.group,
   });
 
-  final _i37.GroupAction action;
+  final _i38.GroupAction action;
 
-  final _i34.Group? group;
+  final _i35.Group? group;
 
   @override
   String toString() {
@@ -687,7 +705,7 @@ class GroupCreateViewArguments {
 class AddMemberViewArguments {
   const AddMemberViewArguments({required this.group});
 
-  final _i34.Group group;
+  final _i35.Group group;
 
   @override
   String toString() {
@@ -709,7 +727,7 @@ class AddMemberViewArguments {
 class AllMembersViewArguments {
   const AllMembersViewArguments({required this.group});
 
-  final _i34.Group group;
+  final _i35.Group group;
 
   @override
   String toString() {
@@ -731,7 +749,7 @@ class AllMembersViewArguments {
 class InviteMiddleScreenViewArguments {
   const InviteMiddleScreenViewArguments({required this.group});
 
-  final _i34.Group group;
+  final _i35.Group group;
 
   @override
   String toString() {
@@ -753,31 +771,53 @@ class InviteMiddleScreenViewArguments {
 class EventCreateViewArguments {
   const EventCreateViewArguments({
     required this.action,
-    required this.group,
+    required this.event,
   });
 
-  final _i37.GroupAction action;
+  final _i39.EventAction action;
 
-  final _i34.Group? group;
+  final _i40.Event? event;
 
   @override
   String toString() {
-    return '{"action": "$action", "group": "$group"}';
+    return '{"action": "$action", "event": "$event"}';
   }
 
   @override
   bool operator ==(covariant EventCreateViewArguments other) {
     if (identical(this, other)) return true;
-    return other.action == action && other.group == group;
+    return other.action == action && other.event == event;
   }
 
   @override
   int get hashCode {
-    return action.hashCode ^ group.hashCode;
+    return action.hashCode ^ event.hashCode;
   }
 }
 
-extension NavigatorStateExtension on _i38.NavigationService {
+class EventDetailViewArguments {
+  const EventDetailViewArguments({required this.event});
+
+  final _i40.Event event;
+
+  @override
+  String toString() {
+    return '{"event": "$event"}';
+  }
+
+  @override
+  bool operator ==(covariant EventDetailViewArguments other) {
+    if (identical(this, other)) return true;
+    return other.event == event;
+  }
+
+  @override
+  int get hashCode {
+    return event.hashCode;
+  }
+}
+
+extension NavigatorStateExtension on _i41.NavigationService {
   Future<dynamic> navigateToSplashView([
     int? routerId,
     bool preventDuplicates = true,
@@ -891,8 +931,8 @@ extension NavigatorStateExtension on _i38.NavigationService {
   }
 
   Future<dynamic> navigateToVehicleDetailView({
-    required _i28.VehicleRegistrationAction action,
-    required _i29.Vehicle? vehicle,
+    required _i29.VehicleRegistrationAction action,
+    required _i30.Vehicle? vehicle,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -908,9 +948,9 @@ extension NavigatorStateExtension on _i38.NavigationService {
   }
 
   Future<dynamic> navigateToOperationalCostDetailView({
-    required _i28.VehicleRegistrationAction action,
-    _i30.OperatingCost? operatingCost,
-    _i29.Vehicle? vehicle,
+    required _i29.VehicleRegistrationAction action,
+    _i31.OperatingCost? operatingCost,
+    _i30.Vehicle? vehicle,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -927,9 +967,9 @@ extension NavigatorStateExtension on _i38.NavigationService {
   }
 
   Future<dynamic> navigateToAccessoryDetailView({
-    required _i28.VehicleRegistrationAction action,
-    _i31.Accessory? accessory,
-    _i29.Vehicle? vehicle,
+    required _i29.VehicleRegistrationAction action,
+    _i32.Accessory? accessory,
+    _i30.Vehicle? vehicle,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -960,7 +1000,7 @@ extension NavigatorStateExtension on _i38.NavigationService {
   }
 
   Future<dynamic> navigateToGroupsListsView({
-    required _i32.GroupType groupType,
+    required _i33.GroupType groupType,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -990,9 +1030,9 @@ extension NavigatorStateExtension on _i38.NavigationService {
   }
 
   Future<dynamic> navigateToGroupJoinView({
-    required _i33.GroupJoin groupJoin,
-    required _i34.Group group,
-    required _i35.InvitedGroup? invitedGroup,
+    required _i34.GroupJoin groupJoin,
+    required _i35.Group group,
+    required _i36.InvitedGroup? invitedGroup,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1009,7 +1049,7 @@ extension NavigatorStateExtension on _i38.NavigationService {
   }
 
   Future<dynamic> navigateToGroupJoinRequestsView({
-    required _i34.Group group,
+    required _i35.Group group,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1025,7 +1065,7 @@ extension NavigatorStateExtension on _i38.NavigationService {
   }
 
   Future<dynamic> navigateToGroupHomeView({
-    required _i34.Group group,
+    required _i35.Group group,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1041,8 +1081,8 @@ extension NavigatorStateExtension on _i38.NavigationService {
   }
 
   Future<dynamic> navigateToGroupMemberProfileView({
-    _i27.Key? key,
-    required _i36.SeeAllMembersUser member,
+    _i28.Key? key,
+    required _i37.SeeAllMembersUser member,
     required bool isGroupAdmin,
     int? routerId,
     bool preventDuplicates = true,
@@ -1060,8 +1100,8 @@ extension NavigatorStateExtension on _i38.NavigationService {
   }
 
   Future<dynamic> navigateToGroupCreateView({
-    required _i37.GroupAction action,
-    required _i34.Group? group,
+    required _i38.GroupAction action,
+    required _i35.Group? group,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1077,7 +1117,7 @@ extension NavigatorStateExtension on _i38.NavigationService {
   }
 
   Future<dynamic> navigateToAddMemberView({
-    required _i34.Group group,
+    required _i35.Group group,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1093,7 +1133,7 @@ extension NavigatorStateExtension on _i38.NavigationService {
   }
 
   Future<dynamic> navigateToAllMembersView({
-    required _i34.Group group,
+    required _i35.Group group,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1109,7 +1149,7 @@ extension NavigatorStateExtension on _i38.NavigationService {
   }
 
   Future<dynamic> navigateToInviteMiddleScreenView({
-    required _i34.Group group,
+    required _i35.Group group,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1139,8 +1179,8 @@ extension NavigatorStateExtension on _i38.NavigationService {
   }
 
   Future<dynamic> navigateToEventCreateView({
-    required _i37.GroupAction action,
-    required _i34.Group? group,
+    required _i39.EventAction action,
+    required _i40.Event? event,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1148,7 +1188,7 @@ extension NavigatorStateExtension on _i38.NavigationService {
         transition,
   }) async {
     return navigateTo<dynamic>(Routes.eventCreateView,
-        arguments: EventCreateViewArguments(action: action, group: group),
+        arguments: EventCreateViewArguments(action: action, event: event),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
@@ -1163,6 +1203,22 @@ extension NavigatorStateExtension on _i38.NavigationService {
         transition,
   ]) async {
     return navigateTo<dynamic>(Routes.eventsMainView,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> navigateToEventDetailView({
+    required _i40.Event event,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return navigateTo<dynamic>(Routes.eventDetailView,
+        arguments: EventDetailViewArguments(event: event),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
@@ -1282,8 +1338,8 @@ extension NavigatorStateExtension on _i38.NavigationService {
   }
 
   Future<dynamic> replaceWithVehicleDetailView({
-    required _i28.VehicleRegistrationAction action,
-    required _i29.Vehicle? vehicle,
+    required _i29.VehicleRegistrationAction action,
+    required _i30.Vehicle? vehicle,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1299,9 +1355,9 @@ extension NavigatorStateExtension on _i38.NavigationService {
   }
 
   Future<dynamic> replaceWithOperationalCostDetailView({
-    required _i28.VehicleRegistrationAction action,
-    _i30.OperatingCost? operatingCost,
-    _i29.Vehicle? vehicle,
+    required _i29.VehicleRegistrationAction action,
+    _i31.OperatingCost? operatingCost,
+    _i30.Vehicle? vehicle,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1318,9 +1374,9 @@ extension NavigatorStateExtension on _i38.NavigationService {
   }
 
   Future<dynamic> replaceWithAccessoryDetailView({
-    required _i28.VehicleRegistrationAction action,
-    _i31.Accessory? accessory,
-    _i29.Vehicle? vehicle,
+    required _i29.VehicleRegistrationAction action,
+    _i32.Accessory? accessory,
+    _i30.Vehicle? vehicle,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1351,7 +1407,7 @@ extension NavigatorStateExtension on _i38.NavigationService {
   }
 
   Future<dynamic> replaceWithGroupsListsView({
-    required _i32.GroupType groupType,
+    required _i33.GroupType groupType,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1381,9 +1437,9 @@ extension NavigatorStateExtension on _i38.NavigationService {
   }
 
   Future<dynamic> replaceWithGroupJoinView({
-    required _i33.GroupJoin groupJoin,
-    required _i34.Group group,
-    required _i35.InvitedGroup? invitedGroup,
+    required _i34.GroupJoin groupJoin,
+    required _i35.Group group,
+    required _i36.InvitedGroup? invitedGroup,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1400,7 +1456,7 @@ extension NavigatorStateExtension on _i38.NavigationService {
   }
 
   Future<dynamic> replaceWithGroupJoinRequestsView({
-    required _i34.Group group,
+    required _i35.Group group,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1416,7 +1472,7 @@ extension NavigatorStateExtension on _i38.NavigationService {
   }
 
   Future<dynamic> replaceWithGroupHomeView({
-    required _i34.Group group,
+    required _i35.Group group,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1432,8 +1488,8 @@ extension NavigatorStateExtension on _i38.NavigationService {
   }
 
   Future<dynamic> replaceWithGroupMemberProfileView({
-    _i27.Key? key,
-    required _i36.SeeAllMembersUser member,
+    _i28.Key? key,
+    required _i37.SeeAllMembersUser member,
     required bool isGroupAdmin,
     int? routerId,
     bool preventDuplicates = true,
@@ -1451,8 +1507,8 @@ extension NavigatorStateExtension on _i38.NavigationService {
   }
 
   Future<dynamic> replaceWithGroupCreateView({
-    required _i37.GroupAction action,
-    required _i34.Group? group,
+    required _i38.GroupAction action,
+    required _i35.Group? group,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1468,7 +1524,7 @@ extension NavigatorStateExtension on _i38.NavigationService {
   }
 
   Future<dynamic> replaceWithAddMemberView({
-    required _i34.Group group,
+    required _i35.Group group,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1484,7 +1540,7 @@ extension NavigatorStateExtension on _i38.NavigationService {
   }
 
   Future<dynamic> replaceWithAllMembersView({
-    required _i34.Group group,
+    required _i35.Group group,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1500,7 +1556,7 @@ extension NavigatorStateExtension on _i38.NavigationService {
   }
 
   Future<dynamic> replaceWithInviteMiddleScreenView({
-    required _i34.Group group,
+    required _i35.Group group,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1530,8 +1586,8 @@ extension NavigatorStateExtension on _i38.NavigationService {
   }
 
   Future<dynamic> replaceWithEventCreateView({
-    required _i37.GroupAction action,
-    required _i34.Group? group,
+    required _i39.EventAction action,
+    required _i40.Event? event,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1539,7 +1595,7 @@ extension NavigatorStateExtension on _i38.NavigationService {
         transition,
   }) async {
     return replaceWith<dynamic>(Routes.eventCreateView,
-        arguments: EventCreateViewArguments(action: action, group: group),
+        arguments: EventCreateViewArguments(action: action, event: event),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
@@ -1554,6 +1610,22 @@ extension NavigatorStateExtension on _i38.NavigationService {
         transition,
   ]) async {
     return replaceWith<dynamic>(Routes.eventsMainView,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> replaceWithEventDetailView({
+    required _i40.Event event,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return replaceWith<dynamic>(Routes.eventDetailView,
+        arguments: EventDetailViewArguments(event: event),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,

@@ -17,4 +17,5 @@ class SupabaseTables {
   static const groupLogs = 'group_logs';
 
   static const events = 'events';
+  static const waypoints = 'waypoints';
 }

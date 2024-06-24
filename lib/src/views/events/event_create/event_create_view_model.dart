@@ -5,9 +5,11 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:stacked/stacked.dart';
-import 'package:starter_app/src/base/enums/group_action.dart';
+import 'package:starter_app/src/base/enums/event_action.dart';
 import 'package:starter_app/src/base/utils/constants.dart';
-import 'package:starter_app/src/models/group.dart';
+import 'package:starter_app/src/models/app_user.dart';
+import 'package:starter_app/src/models/event.dart';
+import 'package:starter_app/src/models/ors_models/get_geocode_response_model.dart';
 import 'package:starter_app/src/services/local/base/data_view_model.dart';
 import 'package:starter_app/src/services/local/bottom_sheet_service.dart';
 import 'package:starter_app/src/services/local/navigation_service.dart';
@@ -16,43 +18,77 @@ import 'package:starter_app/src/services/remote/base/supabase_auth_view_model.da
 
 class EventCreateViewModel extends ReactiveViewModel
     with SupabaseAuthViewModel, DatabaseViewModel, DataViewModel {
-  // final int maxGroupSize = 50;
-  final int minGroupSize = 5;
-  final int defaultGroupSize = 20;
+  Event? editEvent;
+  late final EventAction eventAction;
 
-  Group? editGroup;
-  late final GroupAction groupAction;
+  double? destLat;
+  double? destLong;
+  AppUser? organizer;
+  int? noOfDays;
 
   final TextEditingController nameController = TextEditingController();
-  final TextEditingController adminAndCreatedByController =
-      TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
-  bool isPublic = false;
-  final TextEditingController totalLimitController = TextEditingController();
-  final TextEditingController createdOnController = TextEditingController();
-  final TextEditingController locationController = TextEditingController();
+  final TextEditingController destinationController = TextEditingController();
+  final TextEditingController startDateController = TextEditingController();
+  final TextEditingController endDateController = TextEditingController();
 
-  init(GroupAction action, Group? group) {
-    groupAction = action;
-    editGroup = group;
+  DateTime? startDate;
+  DateTime? endDate;
+
+  init(EventAction action, Event? event) {
+    eventAction = action;
+    editEvent = event;
     notifyListeners();
-    if (editGroup != null) {
-      nameController.text = editGroup!.name ?? '';
-      descriptionController.text = editGroup!.description ?? '';
-      isPublic = editGroup!.isPublic ?? true;
-      totalLimitController.text =
-          editGroup?.maxMembers != null ? editGroup!.maxMembers.toString() : '';
-      createdOnController.text =
-          editGroup!.createdAt != null ? formatDate(editGroup!.createdAt!) : '';
-      adminAndCreatedByController.text = editGroup!.admin?.firstname ?? '';
-      locationController.text = editGroup!.locationCity ?? '';
+    if (editEvent != null) {
+      nameController.text = editEvent!.name ?? '';
+      descriptionController.text = editEvent!.description ?? '';
+
+      startDate = editEvent!.startTime;
+      if (startDate != null) {
+        startDateController.text = formatDate(startDate!);
+      }
+
+      endDate = editEvent!.endTime;
+      if (endDate != null) {
+        endDateController.text = formatDate(endDate!);
+      }
+
+      destinationController.text = editEvent!.destination ?? '';
+
+      destLat = editEvent!.destLat;
+      destLong = editEvent!.destLong;
+      organizer = editEvent?.organizer;
+      noOfDays = editEvent?.noOfDays;
     } else {
-      createdOnController.text = formatDate(DateTime.now());
-      adminAndCreatedByController.text =
-          supabaseAuthService.user?.firstname ?? '';
-      totalLimitController.text = defaultGroupSize.toString();
-      locationController.text = supabaseAuthService.user?.city ?? '';
+      startDate = DateTime.now();
+      startDateController.text = formatDate(startDate!);
+      endDate = DateTime.now().add(const Duration(days: 1));
+      endDateController.text = formatDate(endDate!);
+      noOfDays = 1;
+      organizer = supabaseAuthService.user;
     }
+    notifyListeners();
+  }
+
+  onChangeStartDate(DateTime? date) {
+    if (date == null) return;
+    startDate = date;
+    startDateController.text = formatDate(date);
+    notifyListeners();
+  }
+
+  onChangeEndDate(DateTime? date) {
+    if (date == null) return;
+    endDate = date;
+    endDateController.text = formatDate(date);
+    notifyListeners();
+  }
+
+  onChangeDestination(Features? v) {
+    if (v == null) return;
+    destinationController.text = v.properties?.label ?? '';
+    destLong = v.geometry?.coordinates?.first;
+    destLat = v.geometry?.coordinates?.last;
     notifyListeners();
   }
 
@@ -111,19 +147,22 @@ class EventCreateViewModel extends ReactiveViewModel
     StringBuffer message = StringBuffer('Please fill all required fields: ');
 
     if (nameController.text.isEmpty) {
-      message.write('Group Name, ');
+      message.write('Event Name, ');
       isValid = false;
     }
 
-    if (locationController.text.isEmpty) {
-      message.write('Location, ');
+    if (destinationController.text.isEmpty) {
+      message.write('Destination, ');
       isValid = false;
     }
 
-    if (totalLimitController.text.isEmpty ||
-        int.tryParse(totalLimitController.text) == null ||
-        (int.tryParse(totalLimitController.text) ?? 0) < minGroupSize) {
-      message.write('Total limit (min $minGroupSize), ');
+    if (startDate == null) {
+      message.write('Start Date, ');
+      isValid = false;
+    }
+
+    if (endDate == null) {
+      message.write('End Date, ');
       isValid = false;
     }
 
@@ -140,104 +179,106 @@ class EventCreateViewModel extends ReactiveViewModel
     return isValid;
   }
 
-  Group _createGroup() {
-    return Group(
-      id: groupAction == GroupAction.edit ? editGroup?.id : null,
+  Event _createEvent() {
+    noOfDays = calculateDays(startDate: startDate, endDate: endDate);
+    return Event(
+      id: eventAction == EventAction.edit ? editEvent?.id : null,
       name: nameController.text,
       description: descriptionController.text,
-      isPublic: isPublic,
-      maxMembers: int.tryParse(totalLimitController.text),
-      admin: supabaseAuthService.user,
-      locationCity: locationController.text,
-      createdAt: DateTime.now(),
+      destLat: destLat,
+      destLong: destLong,
+      endTime: endDate,
+      startTime: startDate,
+      destination: destinationController.text,
+      organizer: organizer,
+      noOfDays: noOfDays,
     );
   }
 
-  updateOrInsertGroup() async {
+  updateOrInsertEvent() async {
     if (!validateInput()) {
       return;
     }
-    if (editGroup == null && groupAction == GroupAction.add) {
+    if (editEvent == null && eventAction == EventAction.add) {
       setBusy(true);
 
-      final inserted = await databaseService.insertGroup(_createGroup());
+      final inserted = await databaseService.insertEvent(_createEvent());
 
       if (inserted != null && selectedImage != null) {
-        final updatedGroupWithImage = await databaseService.uploadGroupImage(
+        final updatedEventWithImage =
+            await databaseService.uploadEventCoverImage(
           inserted.id!,
           selectedImage!,
         );
         setBusy(false);
 
-        if (updatedGroupWithImage != null) {
-          getMyGroups();
-          getJoinedGroups();
+        if (updatedEventWithImage != null) {
+          // getMyGroups();
+          // getJoinedGroups();
           NavService.back();
           // clearFeilds();
-          Constants.customSuccessSnack('Group created successfully');
+          Constants.customSuccessSnack('Event created successfully');
         }
         return;
       }
       setBusy(false);
 
       if (inserted != null) {
-        getMyGroups();
-        getJoinedGroups();
+        // getMyGroups();
+        // getJoinedGroups();
         NavService.back();
         // clearFeilds();
-        Constants.customSuccessSnack('Group created successfully');
+        Constants.customSuccessSnack('Event created successfully');
       }
     } else {
-      setBusy(true);
-      final inserted = await databaseService.updateGroup(_createGroup());
-      setBusy(false);
+      //   setBusy(true);
+      //   final inserted = await databaseService.updateEvent(_createEvent());
+      //   setBusy(false);
 
-      if (inserted != null && selectedImage != null) {
-        final updatedUserWithProfile = await databaseService.uploadGroupImage(
-          inserted.id!,
-          selectedImage!,
-        );
-        setBusy(false);
+      //   if (inserted != null && selectedImage != null) {
+      //     final updatedUserWithProfile = await databaseService.uploadGroupImage(
+      //       inserted.id!,
+      //       selectedImage!,
+      //     );
+      //     setBusy(false);
 
-        if (updatedUserWithProfile != null) {
-          getMyGroups();
-          getJoinedGroups();
-          NavService.back();
-          // clearFeilds();
-          Constants.customSuccessSnack('Group updated successfully');
-        }
-        return;
-      }
+      //     if (updatedUserWithProfile != null) {
+      //       getMyGroups();
+      //       getJoinedGroups();
+      //       NavService.back();
+      //       // clearFeilds();
+      //       Constants.customSuccessSnack('Group updated successfully');
+      //     }
+      //     return;
+      //   }
 
-      setBusy(false);
+      //   setBusy(false);
 
-      if (inserted != null) {
-        getMyGroups();
-        getJoinedGroups();
-        NavService.back();
-        // clearFeilds();
-        Constants.customSuccessSnack('Group updated successfully');
-      }
+      //   if (inserted != null) {
+      //     getMyGroups();
+      //     getJoinedGroups();
+      //     NavService.back();
+      //     // clearFeilds();
+      //     Constants.customSuccessSnack('Group updated successfully');
+      //   }
+      // }
     }
   }
 
-  //TODO: add this function in the future.
-  clearFeilds() {
-    selectedImage = null;
-    nameController.clear();
-    descriptionController.clear();
-    isPublic = true;
-    locationController.clear();
-    totalLimitController.text = defaultGroupSize.toString();
-    notifyListeners();
-  }
+  // getMyGroups() async {
+  //   dataService.myGroups = await databaseService.getMyCreatedGroups() ?? [];
+  // }
 
-  getMyGroups() async {
-    dataService.myGroups = await databaseService.getMyCreatedGroups() ?? [];
-  }
+  // getJoinedGroups() async {
+  //   dataService.joinedGroups = await databaseService.getJoinedGroups() ?? [];
+  // }
 
-  getJoinedGroups() async {
-    dataService.joinedGroups = await databaseService.getJoinedGroups() ?? [];
+  int calculateDays({DateTime? startDate, DateTime? endDate}) {
+    if (startDate == null || endDate == null) {
+      return 0;
+    } else {
+      return endDate.difference(startDate).inDays;
+    }
   }
 
   String formatDate(DateTime time) {

@@ -23,6 +23,7 @@ import 'package:starter_app/src/models/operating_cost.dart';
 import 'package:starter_app/src/models/see_all_members_user.dart';
 import 'package:starter_app/src/models/vehicle.dart';
 import 'package:starter_app/src/models/vehicle_model.dart';
+import 'package:starter_app/src/models/waypoint.dart';
 import 'package:starter_app/src/services/local/connectivity_service.dart';
 import 'package:starter_app/src/services/remote/supabase_auth_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -1946,12 +1947,12 @@ class DatabaseService with ListenableServiceMixin {
 
       if (doesExists) {
         final res = await _supabase.storage
-            .from(SupabaseBuckets.groupImagesBucket)
+            .from(SupabaseBuckets.eventImagesBucket)
             .update(imageName, image);
         print('update res: $res');
       } else {
         final res = await _supabase.storage
-            .from(SupabaseBuckets.groupImagesBucket)
+            .from(SupabaseBuckets.eventImagesBucket)
             .upload(imageName, image);
         print('upload res: $res');
       }
@@ -1964,6 +1965,51 @@ class DatabaseService with ListenableServiceMixin {
           .single();
 
       return Event.fromMap(updatedEvent);
+    } catch (e) {
+      print(e);
+      Constants.customErrorSnack(e.toString());
+      return null;
+    }
+  }
+
+  //INSERT WAYPOINT
+  Future<Waypoint?> insertWaypoint(Waypoint waypoint) async {
+    try {
+      if (!_isConnected()) {
+        return null;
+      }
+
+      final res = await _supabase
+          .from(SupabaseTables.waypoints)
+          .insert(waypoint.insertToMap())
+          .select(waypointsQuery)
+          .single();
+
+      print(res);
+
+      return Waypoint.fromMap(res);
+    } catch (e) {
+      print(e);
+      Constants.customErrorSnack(e.toString());
+      return null;
+    }
+  }
+
+  // GET ALL WAYPOINTS OF AN EVENT
+  Future<List<Waypoint>?> getAllWaypoints(int eventId) async {
+    try {
+      if (!_isConnected()) {
+        return null;
+      }
+
+      final res = await _supabase
+          .from(SupabaseTables.waypoints)
+          .select(waypointsQuery)
+          .eq('event', eventId);
+
+      print(res);
+
+      return Waypoint.fromJsonList(res);
     } catch (e) {
       print(e);
       Constants.customErrorSnack(e.toString());
@@ -2062,4 +2108,9 @@ const String groupMembersQuery = '''
 const String eventsQuery = '''
         *,
         organizer(*)
+        ''';
+
+const String waypointsQuery = '''
+        *,
+        added_by(*)
         ''';

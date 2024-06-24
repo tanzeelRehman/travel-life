@@ -7,10 +7,14 @@ class MainFloatingActionButton extends StatelessWidget {
     Key? key,
     required this.onTap,
     this.heightAndWidth,
+    this.icon,
+    this.iconColor,
   }) : super(key: key);
 
   final VoidCallback onTap;
   final double? heightAndWidth;
+  final IconData? icon;
+  final Color? iconColor;
 
   @override
   Widget build(BuildContext context) {
@@ -24,9 +28,9 @@ class MainFloatingActionButton extends StatelessWidget {
           shape: BoxShape.circle,
         ),
         child: Icon(
-          Icons.add,
+          icon ?? Icons.add,
           size: 36.w,
-          color: AppColors.white,
+          color: iconColor ?? AppColors.white,
         ),
       ),
     );
