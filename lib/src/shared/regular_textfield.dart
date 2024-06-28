@@ -17,6 +17,7 @@ class RegularTextFeild extends StatelessWidget {
     this.inputFormatters,
     this.fillColor,
     this.textStyle,
+    this.borderSide,
   }) : super(key: key);
 
   final String hintText;
@@ -30,6 +31,7 @@ class RegularTextFeild extends StatelessWidget {
   final List<TextInputFormatter>? inputFormatters;
   final Color? fillColor;
   final TextStyle? textStyle;
+  final BorderSide? borderSide;
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +54,7 @@ class RegularTextFeild extends StatelessWidget {
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.r),
-          borderSide: BorderSide.none,
+          borderSide: borderSide ?? BorderSide.none,
         ),
         focusedBorder: (readOnly != null && readOnly!)
             ? null

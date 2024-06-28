@@ -66,78 +66,79 @@ class EventCreateView extends StackedView<EventCreateViewModel> {
           ),
           child: Stack(
             children: [
-              Positioned(
-                top: 0,
-                child: Container(
-                  height: context.screenSize().height * 0.30,
-                  width: context.screenSize().width,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(20.r),
-                      bottomRight: Radius.circular(20.r),
-                    ),
-                    color: AppColors.white.withOpacity(0.1),
-                    image: action == EventAction.edit
-                        ? event?.coverImage != null &&
-                                model.selectedImage == null
-                            ? DecorationImage(
-                                image: NetworkImage(
-                                  event!.coverImage!,
-                                ),
-                                fit: BoxFit.cover,
-                                opacity: 0.5,
-                              )
-                            : model.selectedImage != null
-                                ? DecorationImage(
-                                    image:
-                                        Image.file(model.selectedImage!).image,
-                                    fit: BoxFit.cover,
-                                    opacity: 0.5,
-                                  )
-                                : null
-                        : model.selectedImage != null
-                            ? DecorationImage(
-                                image: Image.file(model.selectedImage!).image,
-                                fit: BoxFit.cover,
-                                opacity: 0.5,
-                              )
-                            : null,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      VerticalSpacing(40.h), //TODO: for extra space
-                      GestureDetector(
-                        onTap: () {
-                          //TODO add image or whatever
-                          model.onClickAddImage();
-                        },
-                        child: Container(
-                          height: 60.sp,
-                          width: 60.sp,
-                          decoration: BoxDecoration(
-                            gradient: AppColors.mainButtonGradient,
-                            borderRadius: BorderRadius.circular(10.r),
-                          ),
-                          child: Icon(
-                            Icons.add,
-                            color: AppColors.white,
-                            size: 40.sp,
-                          ),
-                        ),
-                      ),
-                      VerticalSpacing(10.h),
-                      Text(
-                        'Add Image',
-                        style: TextStyling.regular.copyWith(
-                          fontSize: 12.sp,
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
+              // Positioned(
+              //   top: 0,
+              //   child: Container(
+              //     height: context.screenSize().height * 0.30,
+              //     width: context.screenSize().width,
+              //     decoration: BoxDecoration(
+              //       borderRadius: BorderRadius.only(
+              //         bottomLeft: Radius.circular(20.r),
+              //         bottomRight: Radius.circular(20.r),
+              //       ),
+              //       color: AppColors.white.withOpacity(0.1),
+              //       image: action == EventAction.edit
+              //           ? event?.coverImage != null &&
+              //                   model.selectedImage == null
+              //               ? DecorationImage(
+              //                   image: NetworkImage(
+              //                     event!.coverImage!,
+              //                   ),
+              //                   fit: BoxFit.cover,
+              //                   opacity: 0.5,
+              //                 )
+              //               : model.selectedImage != null
+              //                   ? DecorationImage(
+              //                       image:
+              //                           Image.file(model.selectedImage!).image,
+              //                       fit: BoxFit.cover,
+              //                       opacity: 0.5,
+              //                     )
+              //                   : null
+              //           : model.selectedImage != null
+              //               ? DecorationImage(
+              //                   image: Image.file(model.selectedImage!).image,
+              //                   fit: BoxFit.cover,
+              //                   opacity: 0.5,
+              //                 )
+              //               : null,
+              //     ),
+              //     child: Column(
+              //       mainAxisAlignment: MainAxisAlignment.center,
+              //       crossAxisAlignment: CrossAxisAlignment.center,
+              //       children: [
+              //         VerticalSpacing(40.h), //TODO: for extra space
+              //         GestureDetector(
+              //           onTap: () {
+              //             //TODO add image or whatever
+              //             model.onClickAddImage();
+              //           },
+              //           child: Container(
+              //             height: 60.sp,
+              //             width: 60.sp,
+              //             decoration: BoxDecoration(
+              //               gradient: AppColors.mainButtonGradient,
+              //               borderRadius: BorderRadius.circular(10.r),
+              //             ),
+              //             child: Icon(
+              //               Icons.add,
+              //               color: AppColors.white,
+              //               size: 40.sp,
+              //             ),
+              //           ),
+              //         ),
+              //         VerticalSpacing(10.h),
+              //         Text(
+              //           'Add Image',
+              //           style: TextStyling.regular.copyWith(
+              //             fontSize: 12.sp,
+              //           ),
+              //         )
+              //       ],
+              //     ),
+              //   ),
+              // ),
+
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -145,7 +146,8 @@ class EventCreateView extends StackedView<EventCreateViewModel> {
                     titleText:
                         action == EventAction.add ? 'Create Trip' : 'Edit Trip',
                   ),
-                  VerticalSpacing(context.screenSize().height * 0.23),
+                  // VerticalSpacing(context.screenSize().height * 0.23),
+                  VerticalSpacing(20.h),
                   Expanded(
                     child: SingleChildScrollView(
                       padding: EdgeInsets.symmetric(
@@ -212,7 +214,7 @@ class EventCreateView extends StackedView<EventCreateViewModel> {
                                         child: VehicleRegistrationSelectWidget(
                                           hintText: 'Start Date',
                                           isLoading: false,
-                                          showDropdownIcon: false,
+                                          showIcon: false,
                                           onTap: () async {
                                             final v = await showDialog(
                                               context: context,
@@ -283,7 +285,7 @@ class EventCreateView extends StackedView<EventCreateViewModel> {
                                         child: VehicleRegistrationSelectWidget(
                                           hintText: 'End Date',
                                           isLoading: false,
-                                          showDropdownIcon: false,
+                                          showIcon: false,
                                           onTap: () async {
                                             if (model.startDate == null) {
                                               return;
@@ -321,7 +323,7 @@ class EventCreateView extends StackedView<EventCreateViewModel> {
                             child: VehicleRegistrationSelectWidget(
                               hintText: 'Destination',
                               isLoading: false,
-                              showDropdownIcon: true,
+                              showIcon: true,
                               onTap: () async {
                                 final Features? v = await showModalBottomSheet(
                                   constraints: BoxConstraints(

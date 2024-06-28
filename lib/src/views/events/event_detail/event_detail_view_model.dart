@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:stacked/stacked.dart';
 import 'package:starter_app/generated/assets.dart';
@@ -69,21 +70,24 @@ class EventDetailViewModel extends ReactiveViewModel
     getPlace(latLng);
   }
 
-  Future<bool> addWaypoint() async {
+  Future<bool> addWaypoint(Waypoint point) async {
     if (selectedPlace.value == null) {
       return false;
     }
     setBusy(true);
-    final res = await databaseService.insertWaypoint(Waypoint(
-      addedBy: supabaseAuthService.user,
-      noOfDays: 1,
-      startTime: DateTime.now(),
-      endTime: DateTime.now().add(const Duration(days: 1)),
-      event: event.id,
-      lat: selectedPlace.value?.geometry?.coordinates?.last ?? 0,
-      long: selectedPlace.value?.geometry?.coordinates?.first ?? 0,
-      label: selectedPlace.value?.properties?.label ?? '',
-    ));
+    final res = await databaseService.insertWaypoint(
+      // Waypoint(
+      //   addedBy: supabaseAuthService.user,
+      //   noOfDays: 1,
+      //   startTime: DateTime.now(),
+      //   endTime: DateTime.now().add(const Duration(days: 1)),
+      //   event: event.id,
+      //   lat: selectedPlace.value?.geometry?.coordinates?.last ?? 0,
+      //   long: selectedPlace.value?.geometry?.coordinates?.first ?? 0,
+      //   label: selectedPlace.value?.properties?.label ?? '',
+      // ),
+      point,
+    );
 
     if (res == null) {
       setBusy(false);
@@ -166,4 +170,39 @@ class EventDetailViewModel extends ReactiveViewModel
     }
     notifyListeners();
   }
+
+  int selectedBottomNavIndex = 0;
+
+  onChangeBottomNavIndex(int index) {
+    selectedBottomNavIndex = index;
+    notifyListeners();
+  }
+
+  // TextEditingController descriptionController = TextEditingController();
+  // TextEditingController arivalTimeController = TextEditingController();
+  // TextEditingController destinationController = TextEditingController();
+
+  // double? destLat;
+  // double? destLong;
+
+  // DateTime? arrivalTime;
+
+  // onArrivalTimeChanged(DateTime? v) {
+  //   // arrivalTime = DateTime.tryParse(v);
+  //   if (v == null) {
+  //     return;
+  //   }
+  //   arrivalTime = v;
+
+  //   // arivalTimeController.text = DateFormat('yMMMd').format(v);
+  //   notifyListeners();
+  // }
+
+  // onChangeDestination(Features? v) {
+  //   if (v == null) return;
+  //   destinationController.text = v.properties?.label ?? '';
+  //   destLong = v.geometry?.coordinates?.first;
+  //   destLat = v.geometry?.coordinates?.last;
+  //   notifyListeners();
+  // }
 }

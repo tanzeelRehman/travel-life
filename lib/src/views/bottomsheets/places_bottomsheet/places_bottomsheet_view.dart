@@ -16,7 +16,10 @@ class PlacesBottomSheetView extends StackedView<PlacesBottomSheetViewModel> {
       width: double.infinity,
       decoration: BoxDecoration(
         color: AppColors.appFaddedBlue,
-        borderRadius: BorderRadius.circular(10.r),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(10.r),
+          topRight: Radius.circular(10.r),
+        ),
       ),
       padding: EdgeInsets.all(16.w),
       child: Column(
@@ -62,11 +65,13 @@ class PlacesBottomSheetView extends StackedView<PlacesBottomSheetViewModel> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                    model.places[i].properties?.label ?? '',
-                                    style: TextStyling.medium.copyWith(
-                                      fontSize: 14.sp,
-                                      // color: AppColors.black,
+                                  Expanded(
+                                    child: Text(
+                                      model.places[i].properties?.label ?? '',
+                                      style: TextStyling.medium.copyWith(
+                                        fontSize: 14.sp,
+                                        // color: AppColors.black,
+                                      ),
                                     ),
                                   ),
                                 ],

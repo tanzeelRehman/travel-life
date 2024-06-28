@@ -438,7 +438,7 @@ class OperationalCostDetailView
                           child: VehicleRegistrationSelectWidget(
                             hintText: 'Purchase Date',
                             isLoading: false,
-                            showDropdownIcon: false,
+                            showIcon: false,
                             onTap: () async {
                               final v = await showDialog(
                                 context: context,

@@ -41,6 +41,7 @@ class VehicleRegistrationView
           model.onChangeBottomNavIndex(value);
         },
         selectedIndex: model.selectedBottomNavIndex,
+        vehicleRegistrationNav: true,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: QuickNavigationButton(

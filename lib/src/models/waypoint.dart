@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:starter_app/src/models/app_user.dart';
 
 class Waypoint {
@@ -11,6 +12,7 @@ class Waypoint {
   final String? label;
   final dynamic lat;
   final dynamic long;
+  final String? description;
 
   Waypoint({
     this.createdAt,
@@ -23,6 +25,7 @@ class Waypoint {
     this.endTime,
     this.lat,
     this.long,
+    this.description,
   });
 
   Map<String, dynamic> toMap() {
@@ -36,6 +39,7 @@ class Waypoint {
       'no_of_days': noOfDays,
       'lat': lat,
       'long': long,
+      'description': description,
     };
   }
 
@@ -49,7 +53,8 @@ class Waypoint {
       'no_of_days': noOfDays,
       'lat': lat,
       'long': long,
-      'added_by': addedBy?.id
+      'added_by': addedBy?.id,
+      'description': description,
     };
   }
 
@@ -73,6 +78,8 @@ class Waypoint {
       endTime: map['end_time'] != null
           ? DateTime.parse(map['end_time'] as String)
           : null,
+      description:
+          map['description'] != null ? map['description'] as String : null,
     );
   }
 
@@ -93,5 +100,33 @@ class Waypoint {
 
   static List<Waypoint>? fromJsonList(List<Map<String, dynamic>>? jsonList) {
     return jsonList?.map((json) => Waypoint.fromMap(json)).toList();
+  }
+
+  Waypoint copyWith({
+    int? id,
+    int? event,
+    DateTime? createdAt,
+    DateTime? startTime,
+    DateTime? endTime,
+    int? noOfDays,
+    AppUser? addedBy,
+    String? label,
+    dynamic lat,
+    dynamic long,
+    String? description,
+  }) {
+    return Waypoint(
+      id: id ?? this.id,
+      event: event ?? this.event,
+      createdAt: createdAt ?? this.createdAt,
+      startTime: startTime ?? this.startTime,
+      endTime: endTime ?? this.endTime,
+      noOfDays: noOfDays ?? this.noOfDays,
+      addedBy: addedBy ?? this.addedBy,
+      label: label ?? this.label,
+      lat: lat ?? this.lat,
+      long: long ?? this.long,
+      description: description ?? this.description,
+    );
   }
 }

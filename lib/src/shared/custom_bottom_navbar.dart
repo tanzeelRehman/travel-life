@@ -10,8 +10,12 @@ import 'package:starter_app/src/styles/text_theme.dart';
 class CustomBottomNavbar extends StatelessWidget {
   final int selectedIndex;
   final ValueChanged<int> onChange;
+  final bool vehicleRegistrationNav;
   const CustomBottomNavbar(
-      {Key? key, required this.selectedIndex, required this.onChange})
+      {Key? key,
+      required this.selectedIndex,
+      required this.onChange,
+      required this.vehicleRegistrationNav})
       : super(key: key);
 
   @override
@@ -33,50 +37,95 @@ class CustomBottomNavbar extends StatelessWidget {
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          _item(
-            "Home",
-            AssetIcons.navHome,
-            selectedIndex == 0,
-            () {
-              onChange(0);
-            },
-          ),
-          _item(
-            "Downloads",
-            AssetIcons.navDownloads,
-            (selectedIndex == 1) ? true : false,
-            () {
-              onChange(1);
-            },
-          ),
-          //just dummy
-          _item(
-            "",
-            AssetIcons.navDownloads,
-            false,
-            () {
-              // onChange(1);
-            },
-            iconHeight: 0,
-          ),
-          _item(
-            "Search",
-            AssetIcons.navSearch,
-            (selectedIndex == 2) ? true : false,
-            () {
-              onChange(2);
-            },
-          ),
-          _item(
-            "Contact Us",
-            AssetIcons.navContactUs,
-            (selectedIndex == 3) ? true : false,
-            () {
-              onChange(3);
-            },
-          ),
-        ],
+        children: vehicleRegistrationNav
+            ? [
+                _item(
+                  "Home",
+                  AssetIcons.navHome,
+                  selectedIndex == 0,
+                  () {
+                    onChange(0);
+                  },
+                ),
+                _item(
+                  "Downloads",
+                  AssetIcons.navDownloads,
+                  (selectedIndex == 1) ? true : false,
+                  () {
+                    onChange(1);
+                  },
+                ),
+                //just dummy
+                _item(
+                  "",
+                  AssetIcons.navDownloads,
+                  false,
+                  () {
+                    // onChange(1);
+                  },
+                  iconHeight: 0,
+                ),
+                _item(
+                  "Search",
+                  AssetIcons.navSearch,
+                  (selectedIndex == 2) ? true : false,
+                  () {
+                    onChange(2);
+                  },
+                ),
+                _item(
+                  "Contact Us",
+                  AssetIcons.navContactUs,
+                  (selectedIndex == 3) ? true : false,
+                  () {
+                    onChange(3);
+                  },
+                ),
+              ]
+            : [
+                _item(
+                  "Itinerary",
+                  AssetIcons.eventNavItnerary,
+                  selectedIndex == 0,
+                  () {
+                    onChange(0);
+                  },
+                ),
+                _item(
+                  "Stats",
+                  AssetIcons.eventNavStats,
+                  (selectedIndex == 1) ? true : false,
+                  () {
+                    onChange(1);
+                  },
+                ),
+                //just dummy
+                // _item(
+                //   "",
+                //   AssetIcons.eventNavMap,
+                //   false,
+                //   () {
+                //     // onChange(1);
+                //   },
+                //   iconHeight: 0,
+                // ),
+                _item(
+                  "Map",
+                  AssetIcons.eventNavMap,
+                  (selectedIndex == 2) ? true : false,
+                  () {
+                    onChange(2);
+                  },
+                ),
+                _item(
+                  "Settings",
+                  AssetIcons.eventNavSettings,
+                  (selectedIndex == 3) ? true : false,
+                  () {
+                    onChange(3);
+                  },
+                ),
+              ],
       ),
     );
   }
