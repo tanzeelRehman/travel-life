@@ -539,7 +539,7 @@ class DetailsTab extends StatelessWidget {
                   child: VehicleRegistrationSelectWidget(
                     hintText: 'Select Manufacture Year',
                     isLoading: false,
-                    showDropdownIcon: false,
+                    showIcon: false,
                     onTap: () async {
                       final v = await showDialog(
                         context: context,
@@ -674,7 +674,7 @@ class DetailsTab extends StatelessWidget {
                   child: VehicleRegistrationSelectWidget(
                     hintText: 'Purchase Date',
                     isLoading: false,
-                    showDropdownIcon: false,
+                    showIcon: false,
                     onTap: () async {
                       final v = await showDialog(
                         context: context,
@@ -696,7 +696,7 @@ class DetailsTab extends StatelessWidget {
                   child: VehicleRegistrationSelectWidget(
                     hintText: 'Add Warranty Expiry Date',
                     isLoading: false,
-                    showDropdownIcon: false,
+                    showIcon: false,
                     onTap: () async {
                       final v = await showDialog(
                         context: context,
@@ -719,7 +719,7 @@ class DetailsTab extends StatelessWidget {
                   child: VehicleRegistrationSelectWidget(
                     hintText: '----',
                     isLoading: false,
-                    showDropdownIcon: false,
+                    showIcon: false,
                     onTap: () {},
                     value: model.warentyPeriodController.text.isNotEmpty
                         ? model.warentyPeriodController.text
@@ -801,7 +801,7 @@ class DetailsTab extends StatelessWidget {
                   child: VehicleRegistrationSelectWidget(
                     hintText: 'Last Service Date',
                     isLoading: false,
-                    showDropdownIcon: false,
+                    showIcon: false,
                     onTap: () async {
                       final v = await showDialog(
                         context: context,
@@ -1019,7 +1019,7 @@ class AddView extends StatelessWidget {
                       child: VehicleRegistrationSelectWidget(
                         hintText: 'Select Manufacture Year',
                         isLoading: false,
-                        showDropdownIcon: false,
+                        showIcon: false,
                         onTap: () async {
                           final v = await showDialog(
                             context: context,
@@ -1154,7 +1154,7 @@ class AddView extends StatelessWidget {
                       child: VehicleRegistrationSelectWidget(
                         hintText: 'Purchase Date',
                         isLoading: false,
-                        showDropdownIcon: false,
+                        showIcon: false,
                         onTap: () async {
                           final v = await showDialog(
                             context: context,
@@ -1177,7 +1177,7 @@ class AddView extends StatelessWidget {
                       child: VehicleRegistrationSelectWidget(
                         hintText: 'Add Warranty Expiry Date',
                         isLoading: false,
-                        showDropdownIcon: false,
+                        showIcon: false,
                         onTap: () async {
                           final v = await showDialog(
                             context: context,
@@ -1200,7 +1200,7 @@ class AddView extends StatelessWidget {
                       child: VehicleRegistrationSelectWidget(
                         hintText: '----',
                         isLoading: false,
-                        showDropdownIcon: false,
+                        showIcon: false,
                         onTap: () {},
                         value: model.warentyPeriodController.text.isNotEmpty
                             ? model.warentyPeriodController.text
@@ -1282,7 +1282,7 @@ class AddView extends StatelessWidget {
                       child: VehicleRegistrationSelectWidget(
                         hintText: 'Last Service Date',
                         isLoading: false,
-                        showDropdownIcon: false,
+                        showIcon: false,
                         onTap: () async {
                           final v = await showDialog(
                             context: context,

@@ -12,6 +12,7 @@ import 'package:starter_app/src/models/accessory.dart';
 import 'package:starter_app/src/models/accessory_category.dart';
 import 'package:starter_app/src/models/app_user.dart';
 import 'package:starter_app/src/models/cost_category.dart';
+import 'package:starter_app/src/models/event.dart';
 import 'package:starter_app/src/models/group.dart';
 import 'package:starter_app/src/models/group_log.dart';
 import 'package:starter_app/src/models/group_member.dart';
@@ -22,6 +23,7 @@ import 'package:starter_app/src/models/operating_cost.dart';
 import 'package:starter_app/src/models/see_all_members_user.dart';
 import 'package:starter_app/src/models/vehicle.dart';
 import 'package:starter_app/src/models/vehicle_model.dart';
+import 'package:starter_app/src/models/waypoint.dart';
 import 'package:starter_app/src/services/local/connectivity_service.dart';
 import 'package:starter_app/src/services/remote/supabase_auth_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -1885,6 +1887,135 @@ class DatabaseService with ListenableServiceMixin {
 
   //TODO: important: when a user joins a group joined will be true baki sab false and join date will also be updated
 
+  //////////////////////////////////// GROUP OPERATIONS /////////////////////////////
+
+  //TODO: view all suggested i.e for you groups (with some restrictions i.e for you groups etc)
+  Future<List<Event>?> getAllEvents() async {
+    try {
+      if (!_isConnected()) {
+        return null;
+      }
+
+      final res =
+          await _supabase.from(SupabaseTables.events).select(eventsQuery);
+
+      return Event.fromJsonList(res);
+    } catch (e) {
+      print(e);
+      Constants.customErrorSnack(e.toString());
+      return null;
+    }
+  }
+
+  //INSERT EVENT
+  Future<Event?> insertEvent(Event event) async {
+    try {
+      if (!_isConnected()) {
+        return null;
+      }
+
+      final res = await _supabase
+          .from(SupabaseTables.events)
+          .insert(event.insertToMap())
+          .select(eventsQuery)
+          .single();
+
+      print(res);
+
+      return Event.fromMap(res);
+    } catch (e) {
+      print(e);
+      Constants.customErrorSnack(e.toString());
+      return null;
+    }
+  }
+
+  //TODO: add or update event image/cover
+  Future<Event?> uploadEventCoverImage(int eventId, File image) async {
+    try {
+      if (!_isConnected()) {
+        return null;
+      }
+
+      final imageName = '${_authService.user?.id}/$eventId';
+
+      final publicUrl = _supabase.storage
+          .from(SupabaseBuckets.eventImagesBucket)
+          .getPublicUrl(imageName);
+
+      final bool doesExists = await UtilFunctions.isResourceFound(publicUrl);
+
+      if (doesExists) {
+        final res = await _supabase.storage
+            .from(SupabaseBuckets.eventImagesBucket)
+            .update(imageName, image);
+        print('update res: $res');
+      } else {
+        final res = await _supabase.storage
+            .from(SupabaseBuckets.eventImagesBucket)
+            .upload(imageName, image);
+        print('upload res: $res');
+      }
+
+      final updatedEvent = await _supabase
+          .from(SupabaseTables.events)
+          .update({'cover_image': publicUrl})
+          .eq('id', eventId)
+          .select(eventsQuery)
+          .single();
+
+      return Event.fromMap(updatedEvent);
+    } catch (e) {
+      print(e);
+      Constants.customErrorSnack(e.toString());
+      return null;
+    }
+  }
+
+  //INSERT WAYPOINT
+  Future<Waypoint?> insertWaypoint(Waypoint waypoint) async {
+    try {
+      if (!_isConnected()) {
+        return null;
+      }
+
+      final res = await _supabase
+          .from(SupabaseTables.waypoints)
+          .insert(waypoint.insertToMap())
+          .select(waypointsQuery)
+          .single();
+
+      print(res);
+
+      return Waypoint.fromMap(res);
+    } catch (e) {
+      print(e);
+      Constants.customErrorSnack(e.toString());
+      return null;
+    }
+  }
+
+  // GET ALL WAYPOINTS OF AN EVENT
+  Future<List<Waypoint>?> getAllWaypoints(int eventId) async {
+    try {
+      if (!_isConnected()) {
+        return null;
+      }
+
+      final res = await _supabase
+          .from(SupabaseTables.waypoints)
+          .select(waypointsQuery)
+          .eq('event', eventId);
+
+      print(res);
+
+      return Waypoint.fromJsonList(res);
+    } catch (e) {
+      print(e);
+      Constants.customErrorSnack(e.toString());
+      return null;
+    }
+  }
   ///////////////////////////////HELPER FUNCTIONS///////////////////////////////////
 
   // get the list of users with userIds
@@ -1973,4 +2104,13 @@ const String groupMembersQuery = '''
         *,
         user(*),
         group($groupsQuery)
+        ''';
+const String eventsQuery = '''
+        *,
+        organizer(*)
+        ''';
+
+const String waypointsQuery = '''
+        *,
+        added_by(*)
         ''';

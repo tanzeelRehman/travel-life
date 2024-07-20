@@ -10,14 +10,24 @@ class VehicleRegistrationSelectWidget extends StatelessWidget {
     required this.hintText,
     required this.isLoading,
     required this.onTap,
-    this.showDropdownIcon = true,
+    this.showIcon = true,
+    this.hintTextEmptyStateColor,
+    this.hintTextColor,
+    this.border,
+    this.borderRadius,
+    this.icon,
   }) : super(key: key);
 
   final String? value;
   final String hintText;
   final bool isLoading;
   final VoidCallback onTap;
-  final bool showDropdownIcon;
+  final bool showIcon;
+  final Color? hintTextEmptyStateColor;
+  final Color? hintTextColor;
+  final Border? border;
+  final BorderRadius? borderRadius;
+  final Widget? icon;
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +39,7 @@ class VehicleRegistrationSelectWidget extends StatelessWidget {
         ),
         width: double.infinity,
         height: 50.h,
+        decoration: BoxDecoration(border: border, borderRadius: borderRadius),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: isLoading
@@ -46,28 +57,30 @@ class VehicleRegistrationSelectWidget extends StatelessWidget {
               )
             else ...[
               Text(
-                value ?? hintText,
+                (value != null && value!.isNotEmpty) ? value! : hintText,
                 style: TextStyling.medium.copyWith(
                   fontSize: 13.sp,
-                  color: value != null
-                      ? AppColors.lightGrey
-                      : AppColors.grey.withOpacity(
-                          0.5,
-                        ),
+                  color: (value != null && value!.isNotEmpty)
+                      ? hintTextColor ?? AppColors.lightGrey
+                      : hintTextEmptyStateColor ??
+                          AppColors.grey.withOpacity(
+                            0.5,
+                          ),
                 ),
               ),
-              if (showDropdownIcon)
-                Container(
-                  decoration: BoxDecoration(
-                    gradient: AppColors.mainButtonGradient,
-                    borderRadius: BorderRadius.circular(4.r),
-                  ),
-                  child: Icon(
-                    Icons.arrow_drop_down,
-                    color: AppColors.white,
-                    size: 20.sp,
-                  ),
-                ),
+              if (showIcon)
+                icon ??
+                    Container(
+                      decoration: BoxDecoration(
+                        gradient: AppColors.mainButtonGradient,
+                        borderRadius: BorderRadius.circular(4.r),
+                      ),
+                      child: Icon(
+                        Icons.arrow_drop_down,
+                        color: AppColors.white,
+                        size: 20.sp,
+                      ),
+                    ),
             ],
           ],
         ),

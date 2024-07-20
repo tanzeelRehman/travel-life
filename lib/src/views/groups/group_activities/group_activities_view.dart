@@ -9,10 +9,9 @@ import 'package:starter_app/src/models/group_log.dart';
 import 'package:starter_app/src/shared/custom_app_bar.dart';
 import 'package:starter_app/src/shared/empty_state_widget.dart';
 import 'package:starter_app/src/shared/loading_indicator.dart';
-import 'package:starter_app/src/shared/spacing.dart';
 import 'package:starter_app/src/styles/app_colors.dart';
 import 'package:starter_app/src/styles/text_theme.dart';
-import 'package:starter_app/src/views/group_activities/group_activities_view_model.dart';
+import 'package:starter_app/src/views/groups/group_activities/group_activities_view_model.dart';
 
 class GroupActivitiesView extends StackedView<GroupActivitiesViewModel> {
   GroupActivitiesView();

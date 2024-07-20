@@ -28,6 +28,11 @@ class FlavorService {
     return "";
   }
 
+  static String get getORSBaseApi => "https://api.openrouteservice.org";
+
+  static String get getORSApiKey =>
+      "5b3ce3597851110001cf624833fa518aceae4e1b8fb38866fee91852";
+
   static String dummyImageUrl =
       'https://evimsreigandkjuinogy.supabase.co/storage/v1/object/public/common/dummy_image.jpg?t=2024-04-02T23%3A04%3A29.105Z';
 }

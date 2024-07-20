@@ -186,4 +186,15 @@ class AssetIcons {
 
   //DRAWER ICONS
   static const drawerFeedbackIcon = 'assets/icons/feedback_icon.svg';
+
+  //EVENT
+  static const locationIcon = 'assets/icons/location_icon.svg';
+  static const locationMarker = 'assets/icons/location_marker.svg';
+  static const distanceIcon = 'assets/icons/distance_icon.svg';
+
+  // FOR Bottom Navbar in event screen
+  static const eventNavItnerary = 'assets/icons/itnerary.svg';
+  static const eventNavStats = 'assets/icons/stats.svg';
+  static const eventNavMap = 'assets/icons/map.svg';
+  static const eventNavSettings = 'assets/icons/settings.svg';
 }

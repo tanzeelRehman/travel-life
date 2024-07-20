@@ -232,4 +232,15 @@ class AppColors {
     ]),
     width: 2,
   );
+
+  //EVENTS
+
+  static Gradient eventDetailCardGradient = LinearGradient(
+    colors: [
+      HexColor("#5C6374"),
+      HexColor("#4F5970"),
+    ],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
 }

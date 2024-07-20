@@ -6,9 +6,13 @@ import 'package:starter_app/src/services/local/data_service.dart';
 import 'package:starter_app/src/services/local/keyboard_service.dart';
 import 'package:starter_app/src/services/remote/api_service.dart';
 import 'package:starter_app/src/services/remote/database_service.dart';
+import 'package:starter_app/src/services/remote/ors/ors_service.dart';
 import 'package:starter_app/src/services/remote/supabase_auth_service.dart';
 import 'package:starter_app/src/views/email_confirmation/email_confirmation_view.dart';
-import 'package:starter_app/src/views/group_activities/group_activities_view.dart';
+import 'package:starter_app/src/views/events/event_create/event_create_view.dart';
+import 'package:starter_app/src/views/events/event_detail/event_detail_view.dart';
+import 'package:starter_app/src/views/events/events_main/events_main_view.dart';
+import 'package:starter_app/src/views/groups/group_activities/group_activities_view.dart';
 import 'package:starter_app/src/views/groups/add_members/add_member_view.dart';
 import 'package:starter_app/src/views/groups/all_members/all_members_view.dart';
 import 'package:starter_app/src/views/groups/group_create/group_create_view.dart';
@@ -60,6 +64,9 @@ import 'package:starter_app/src/views/welcome/welcome_view.dart';
     MaterialRoute(page: AllMembersView),
     MaterialRoute(page: InviteMiddleScreenView),
     MaterialRoute(page: GroupActivitiesView),
+    MaterialRoute(page: EventCreateView),
+    MaterialRoute(page: EventsMainView),
+    MaterialRoute(page: EventDetailView),
   ],
   dependencies: [
     // Lazy singletons
@@ -73,6 +80,7 @@ import 'package:starter_app/src/views/welcome/welcome_view.dart';
     LazySingleton(classType: ApiService),
     LazySingleton(classType: DatabaseService),
     LazySingleton(classType: DataService),
+    LazySingleton(classType: OrsService),
   ],
 )
 class AppSetup {

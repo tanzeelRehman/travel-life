@@ -56,6 +56,14 @@ class CustomDatePickerDialog extends StatelessWidget {
                   color: AppColors.white,
                   fontSize: 10.sp,
                 ),
+                blackoutDateTextStyle: TextStyling.medium.copyWith(
+                  color: AppColors.lightGrey,
+                  fontSize: 10.sp,
+                ),
+                disabledDatesTextStyle: TextStyling.medium.copyWith(
+                  color: AppColors.lightGrey.withOpacity(0.4),
+                  fontSize: 10.sp,
+                ),
               ),
               maxDate: maxDate,
               minDate: minDate,
