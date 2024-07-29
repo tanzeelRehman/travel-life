@@ -1,24 +1,36 @@
-# Flutter starter app with MVVM stacked architecture and RxDart 
+# Travel Life
+This product aims to help users arrange their road trips and keep them connected and well-informed about the events of their journey.
 
-## Setup
+![Travel_Life](https://github.com/tanzeelRehman/travel-life/blob/main/travelLifeCover.jpg)
 
-### Change AppName and Package Name in pubspec.yaml
+# Installation
+- Updated to Flutter 3.22.2 Now!
+- Dart SDK 3.4.3 with Sound Null Safety
+
 ```bash
 flutter clean
 flutter pub get
 dart setup/setup.dart --packageName=com.starter.project --dartBundleName=starter --appName=Starter
 flutter pub get
 ```
-### Note: After Project Configured Remove setup Folder
 
+# Main Features
+- Vehicle Registration / Accessories / Operating Costs
+- Vehicle Accessories
+- Event creation
+- Event Groups
+- Group Chat
+- Live navigation on the road
+- Event Money Manager
 
-## build release
+# Technologies
+- Flutter with STACKED Architecture
+- SUPABASE for backend
+- Open route service for maps
 
-### Dev: 
-`flutter build apk --release --flavor dev -t lib/main_dev.dart`
+# API Information
+- All API keys are removed because database access is restricted
 
-### Prod: 
-`flutter build apk --release --flavor prod -t lib/main_prod.dart`
 
 ### AppBundle:
 `flutter build appbundle --release --flavor prod -t lib/main_prod.dart`
